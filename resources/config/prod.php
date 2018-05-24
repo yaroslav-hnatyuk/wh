@@ -10,6 +10,6 @@ $app['db.options'] = array(
     "driver" => "pdo_mysql",
     "user" => "root",
     "password" => "root",
-    "dbname" => "prod_db",
-    "host" => "prod_host",
+    "dbname" => "wh",
+    "host" => "localhost",
 );

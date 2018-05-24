@@ -2,8 +2,7 @@
 
 You need at least php **5.5.9*** with **SQLite extension** enabled and **Composer**
     
-    composer install 
-    sqlite3 app.db < resources/sql/schema.sql
+    composer install
     php -S 0:9001 -t web/
     
 Your api is now available at http://localhost:9001/api/v1.
