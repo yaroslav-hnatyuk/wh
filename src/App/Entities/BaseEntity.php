@@ -9,10 +9,12 @@ abstract class BaseEntity
         if (!empty($data) && is_array($data)) {
             $refl = new \ReflectionClass($this);
             foreach ($data as $propertyToSet => $value) {
-              $property = $refl->getProperty($propertyToSet);
-              if ($property instanceof \ReflectionProperty) {
-                $property->setValue($this, $value);
-              }
+                if ($refl->hasProperty($propertyToSet)) {
+                    $property = $refl->getProperty($propertyToSet);
+                    if ($property instanceof \ReflectionProperty) {
+                        $property->setValue($this, $value);
+                    }
+                }
             }
         }
     }

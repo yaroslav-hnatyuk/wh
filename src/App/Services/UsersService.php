@@ -10,6 +10,7 @@ class UsersService extends BaseService
     {
         $data =$this->db->fetchAssoc("SELECT * FROM user WHERE id=?", [(int) $id]);
         $user = new User($data);
+
         return $user->getArray();
     }
 
@@ -22,12 +23,17 @@ class UsersService extends BaseService
     {
         $user = new User($data);
         $this->db->insert("user", $user->getArray());
-        return $this->db->lastInsertId();
+        $user->id = $this->db->lastInsertId();
+
+        return $user->getArray();
     }
 
-    function update($id, $user)
+    function update($data = array())
     {
-        return $this->db->update('user', $user, ['id' => $id]);
+        $user = new User($data);
+        $this->db->update('user', $user->getArray(), ['id' => $user->id]);
+
+        return $user->getArray();
     }
 
     function delete($id)
