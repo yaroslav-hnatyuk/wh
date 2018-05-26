@@ -9,7 +9,7 @@ $app['api.endpoint'] = "/api";
 $app['db.options'] = array(
     "driver" => "pdo_mysql",
     "user" => "root",
-    "password" => "root",
+    "password" => "wh",
     "dbname" => "wh",
-    "host" => "localhost",
+    "host" => "127.0.0.1",
 );
