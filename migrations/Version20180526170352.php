@@ -127,7 +127,8 @@ class Version20180526170352 extends AbstractMigration
     {
         $menuDish = $schema->createTable('menu_dish');
         $menuDish->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
-        $menuDish->addColumn('day', 'date', ['notnull' => true]);
+        $menuDish->addColumn('start', 'date', ['notnull' => true]);
+        $menuDish->addColumn('end', 'date', ['notnull' => true]);
         $menuDish->addColumn('dish_id', 'integer', ['unsigned' => true]);
         $menuDish->setPrimaryKey(['id']);
 
@@ -139,7 +140,9 @@ class Version20180526170352 extends AbstractMigration
         $order = $schema->createTable('order');
         $order->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
         $order->addColumn('day', 'date', ['notnull' => true]);
-        $order->addColumn('dish_id', 'integer', ['unsigned' => true]);
+        $order->addColumn('count', 'integer', ['unsigned' => true]);
+        $order->addColumn('menu_dish_id', 'integer', ['unsigned' => true]);
+        $order->addColumn('user_id', 'integer', ['unsigned' => true]);
         $order->setPrimaryKey(['id']);
 
         return $order;
