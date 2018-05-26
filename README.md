@@ -2,10 +2,10 @@
 
 You need at least php **5.5.9*** with **SQLite extension** enabled and **Composer**
     
-	php composer.phar install
-	docker-compose up
-	php console.php migrations:migrate
-    php -S 0:9001 -t web/
+	Install dependecies		->	php composer.phar install
+	Start mysql && frontend ->	docker-compose up
+	Migrate database		-> 	php console.php migrations:migrate
+    Start backend REST API 	-> 	php -S 0:9001 -t web/
     
 Your api is now available at http://localhost:9001/api/v1.
 
