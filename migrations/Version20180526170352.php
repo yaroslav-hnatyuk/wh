@@ -54,6 +54,7 @@ class Version20180526170352 extends AbstractMigration
      */
     public function down(Schema $schema)
     {
+        $schema->dropTable('order');
         $schema->dropTable('menu_dish');
         $schema->dropTable('dish');
         $schema->dropTable('dish_group');
@@ -87,12 +88,12 @@ class Version20180526170352 extends AbstractMigration
     {
         $user = $schema->createTable('user');
         $user->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
-        $user->addColumn('emal', 'string', ['length' => 255]);
+        $user->addColumn('email', 'string', ['length' => 255]);
         $user->addColumn('role', 'string', ['length' => 45]);
         $user->addColumn('first_name', 'string', ['length' => 45]);
         $user->addColumn('last_name', 'string', ['length' => 45]);
         $user->addColumn('phone', 'string', ['length' => 45]);
-        $user->addColumn('office_id', 'integer', ['unsigned'=>true]);
+        $user->addColumn('office_id', 'integer', ['unsigned'=>true, 'notnull' => false]);
         $user->setPrimaryKey(['id']);
 
         return $user;
