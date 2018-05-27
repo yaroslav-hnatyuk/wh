@@ -38,12 +38,18 @@ $app->register(new MonologServiceProvider(), array(
     "monolog.name" => "application"
 ));
 
+$resources = array(
+    'users',
+    'companies',
+    'offices'
+);
+
 //load services
-$servicesLoader = new App\ServicesLoader($app);
+$servicesLoader = new App\ServicesLoader($app, $resources);
 $servicesLoader->bindServicesIntoContainer();
 
 //load routes
-$routesLoader = new App\RoutesLoader($app);
+$routesLoader = new App\RoutesLoader($app, $resources);
 $routesLoader->bindRoutesToControllers();
 
 $app->error(function (\Exception $e, $code) use ($app) {
