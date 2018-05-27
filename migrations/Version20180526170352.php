@@ -47,6 +47,26 @@ class Version20180526170352 extends AbstractMigration
             $menuDish, array('menu_dish_id'), array('id'),
             array('onUpdate'=>'CASCADE', 'onDelete' => 'CASCADE')
         );
+
+        $rating = $this->createRating($schema);
+        $rating->addForeignKeyConstraint(
+            $user, array('user_id'), array('id'),
+            array('onUpdate'=>'CASCADE', 'onDelete' => 'CASCADE')
+        );
+        $rating->addForeignKeyConstraint(
+            $dish, array('dish_id'), array('id'),
+            array('onUpdate'=>'CASCADE', 'onDelete' => 'CASCADE')
+        );
+
+        $feedback = $this->createFeedback($schema);
+        $feedback->addForeignKeyConstraint(
+            $user, array('user_id'), array('id'),
+            array('onUpdate'=>'CASCADE', 'onDelete' => 'CASCADE')
+        );
+        $feedback->addForeignKeyConstraint(
+            $dish, array('dish_id'), array('id'),
+            array('onUpdate'=>'CASCADE', 'onDelete' => 'CASCADE')
+        );
     }
 
     /**
@@ -54,6 +74,8 @@ class Version20180526170352 extends AbstractMigration
      */
     public function down(Schema $schema)
     {
+        $schema->dropTable('feedback');
+        $schema->dropTable('rating');
         $schema->dropTable('order');
         $schema->dropTable('menu_dish');
         $schema->dropTable('dish');
@@ -147,5 +169,30 @@ class Version20180526170352 extends AbstractMigration
         $order->setPrimaryKey(['id']);
 
         return $order;
+    }
+
+    private function createRating(Schema $schema)
+    {
+        $rating = $schema->createTable('rating');
+        $rating->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
+        $rating->addColumn('mark', 'integer', ['unsigned' => true]);
+        $rating->addColumn('dish_id', 'integer', ['unsigned' => true]);
+        $rating->addColumn('user_id', 'integer', ['unsigned' => true]);
+        $rating->setPrimaryKey(['id']);
+
+        return $rating;
+    }
+
+    private function createFeedback(Schema $schema)
+    {
+        $feedback = $schema->createTable('feedback');
+        $feedback->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
+        $feedback->addColumn('text', 'string', ['length' => 3000]);
+        $feedback->addColumn('created', 'datetime', ['notnull' => true]);
+        $feedback->addColumn('dish_id', 'integer', ['unsigned' => true]);
+        $feedback->addColumn('user_id', 'integer', ['unsigned' => true]);
+        $feedback->setPrimaryKey(['id']);
+
+        return $feedback;
     }
 }

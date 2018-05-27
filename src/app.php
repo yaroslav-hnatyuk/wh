@@ -46,7 +46,9 @@ $resources = array(
     'dishgroups',
     'dishes',
     'menudishes',
-    'orders'
+    'orders',
+    'ratings',
+    'feedback'
 );
 
 //load services
