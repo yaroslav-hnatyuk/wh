@@ -42,7 +42,8 @@ $resources = array(
     'users',
     'companies',
     'offices',
-    'dishgroups'
+    'dishgroups',
+    'dishes'
 );
 
 //load services
