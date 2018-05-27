@@ -41,7 +41,8 @@ $app->register(new MonologServiceProvider(), array(
 $resources = array(
     'users',
     'companies',
-    'offices'
+    'offices',
+    'dishgroups'
 );
 
 //load services
