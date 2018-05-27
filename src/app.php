@@ -16,6 +16,7 @@ date_default_timezone_set('Europe/London');
 
 //accepting JSON
 $app->before(function (Request $request) {
+    // Get route and check RBAC -> $request->attributes->get('_route'));
     if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
         $data = json_decode($request->getContent(), true);
         $request->request->replace(is_array($data) ? $data : array());
@@ -43,7 +44,8 @@ $resources = array(
     'companies',
     'offices',
     'dishgroups',
-    'dishes'
+    'dishes',
+    'menudishes'
 );
 
 //load services
