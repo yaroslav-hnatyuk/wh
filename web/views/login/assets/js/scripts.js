@@ -5,8 +5,8 @@ jQuery(document).ready(function() {
         Fullscreen background
     */
     $.backstretch([
-                    "assets/img/backgrounds/2.jpg"
-	             ], {duration: 3000, fade: 750});
+		"views/login/assets/img/backgrounds/2.jpg"
+	], {duration: 3000, fade: 750});
     
     $('.login-form input[type="text"], .login-form input[type="password"], .login-form textarea').on('focus', function() {
     	$(this).removeClass('input-error');

@@ -27,6 +27,20 @@ $app->register(new \Euskadi31\Silex\Provider\CorsServiceProvider);
 
 $app->register(new ServiceControllerServiceProvider());
 
+$app->register(new Silex\Provider\TwigServiceProvider(), array(
+    'twig.path' => ROOT_PATH . '/web/views',
+));
+
+$app->register(new Silex\Provider\AssetServiceProvider(), array(
+    'assets.version' => 'v1',
+    'assets.version_format' => '%s?version=%s',
+    'assets.base_path' => 'views/'
+    // 'assets.named_packages' => array(
+        // 'css' => array('base_path' => 'views/'),
+        // 'images' => array('base_urls' => array('http://localhost:9001')),
+    // ),
+));
+
 $app->register(new DoctrineServiceProvider(), array(
     "db.options" => $app["db.options"]
 ));
