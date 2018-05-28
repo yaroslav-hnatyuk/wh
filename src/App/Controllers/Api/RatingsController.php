@@ -1,35 +1,35 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Api;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
-class MenudishesController
+class RatingsController
 {
 
-    protected $menuDishesService;
+    protected $ratingsService;
 
     public function __construct($service)
     {
-        $this->menuDishesService = $service;
+        $this->ratingsService = $service;
     }
 
     public function getOne($id)
     {
-        return new JsonResponse($this->menuDishesService->getOne($id));
+        return new JsonResponse($this->ratingsService->getOne($id));
     }
 
     public function getAll()
     {
-        return new JsonResponse($this->menuDishesService->getAll());
+        return new JsonResponse($this->ratingsService->getAll());
     }
 
     public function save(Request $request)
     {
         return new JsonResponse(
-            $this->menuDishesService->save($request->request->all())
+            $this->ratingsService->save($request->request->all())
         );
     }
 
@@ -38,12 +38,12 @@ class MenudishesController
         $data = $request->request->all();
         $data['id'] = $id;
         return new JsonResponse(
-            $this->menuDishesService->update($data)
+            $this->ratingsService->update($data)
         );
     }
 
     public function delete($id)
     {
-        return new JsonResponse($this->menuDishesService->delete($id));
+        return new JsonResponse($this->ratingsService->delete($id));
     }
 }

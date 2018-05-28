@@ -1,35 +1,35 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Api;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
-class OrdersController
+class FeedbackController
 {
 
-    protected $ordersService;
+    protected $feedbackService;
 
     public function __construct($service)
     {
-        $this->ordersService = $service;
+        $this->feedbackService = $service;
     }
 
     public function getOne($id)
     {
-        return new JsonResponse($this->ordersService->getOne($id));
+        return new JsonResponse($this->feedbackService->getOne($id));
     }
 
     public function getAll()
     {
-        return new JsonResponse($this->ordersService->getAll());
+        return new JsonResponse($this->feedbackService->getAll());
     }
 
     public function save(Request $request)
     {
         return new JsonResponse(
-            $this->ordersService->save($request->request->all())
+            $this->feedbackService->save($request->request->all())
         );
     }
 
@@ -38,12 +38,12 @@ class OrdersController
         $data = $request->request->all();
         $data['id'] = $id;
         return new JsonResponse(
-            $this->ordersService->update($data)
+            $this->feedbackService->update($data)
         );
     }
 
     public function delete($id)
     {
-        return new JsonResponse($this->ordersService->delete($id));
+        return new JsonResponse($this->feedbackService->delete($id));
     }
 }

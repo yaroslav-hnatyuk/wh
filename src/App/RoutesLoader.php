@@ -21,14 +21,11 @@ class RoutesLoader
     {
         foreach($this->resources as $resource) {
             $this->app["{$resource}.controller"] = function() use($resource) {
-                $rc = new \ReflectionClass('App\\Controllers\\' . ucfirst($resource) . "Controller");
+                $rc = new \ReflectionClass('App\\Controllers\\Api\\' . ucfirst($resource) . "Controller");
                 return $rc->newInstanceArgs(array($this->app["{$resource}.service"]));
             };
         }  
-        
-        $this->app['web.controller'] = function() {
-            return new Controllers\WebController($this->app);
-        };
+        $this->instantiateWebControllers();
     }
 
     public function bindRoutesToControllers()
@@ -53,8 +50,21 @@ class RoutesLoader
         }
     }
 
-    private function bindWebRoutes($web) {
-        $web->get("/login", "web.controller:login");
+    private function bindWebRoutes($web) 
+    {
+        $web->get("/login", "auth.web.controller:index");
+        $web->post("/login", "auth.web.controller:login");
+    }
+
+    private function instantiateWebControllers()
+    {
+        $this->app['auth.web.controller'] = function() {
+            return new Controllers\Web\AuthController($this->app);
+        };
+
+        $this->app['orders.web.controller'] = function() {
+            return new Controllers\Web\OrdersController($this->app);
+        };
     }
 
 }

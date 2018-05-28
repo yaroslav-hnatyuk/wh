@@ -1,9 +1,9 @@
 {
-	"name": "vesparny/silex-simple-rest",
-	"type": "library",
-	"description": "A simple silex skeleton for rest api",
+	"name": "yaroslav-hnatyuk/wh",
+	"type": "project",
+	"description": "A wh project skeleton for rest api",
 	"keywords": [
-		"framework", "silex", "rest", "api"
+		"silex", "rest", "api"
 	],
 	"require": {
 		"silex/silex": "~2.0",

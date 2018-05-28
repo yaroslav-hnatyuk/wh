@@ -1,35 +1,35 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Api;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
-class CompaniesController
+class UsersController
 {
 
-    protected $companiesService;
+    protected $usersService;
 
     public function __construct($service)
     {
-        $this->companiesService = $service;
+        $this->usersService = $service;
     }
 
     public function getOne($id)
     {
-        return new JsonResponse($this->companiesService->getOne($id));
+        return new JsonResponse($this->usersService->getOne($id));
     }
 
     public function getAll()
     {
-        return new JsonResponse($this->companiesService->getAll());
+        return new JsonResponse($this->usersService->getAll());
     }
 
     public function save(Request $request)
     {
         return new JsonResponse(
-            $this->companiesService->save($request->request->all())
+            $this->usersService->save($request->request->all())
         );
     }
 
@@ -38,12 +38,12 @@ class CompaniesController
         $data = $request->request->all();
         $data['id'] = $id;
         return new JsonResponse(
-            $this->companiesService->update($data)
+            $this->usersService->update($data)
         );
     }
 
     public function delete($id)
     {
-        return new JsonResponse($this->companiesService->delete($id));
+        return new JsonResponse($this->usersService->delete($id));
     }
 }

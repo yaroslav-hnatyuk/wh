@@ -1,35 +1,35 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Api;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
-class DishesController
+class DishgroupsController
 {
 
-    protected $dishesService;
+    protected $dishGroupService;
 
     public function __construct($service)
     {
-        $this->dishesService = $service;
+        $this->dishGroupService = $service;
     }
 
     public function getOne($id)
     {
-        return new JsonResponse($this->dishesService->getOne($id));
+        return new JsonResponse($this->dishGroupService->getOne($id));
     }
 
     public function getAll()
     {
-        return new JsonResponse($this->dishesService->getAll());
+        return new JsonResponse($this->dishGroupService->getAll());
     }
 
     public function save(Request $request)
     {
         return new JsonResponse(
-            $this->dishesService->save($request->request->all())
+            $this->dishGroupService->save($request->request->all())
         );
     }
 
@@ -38,12 +38,12 @@ class DishesController
         $data = $request->request->all();
         $data['id'] = $id;
         return new JsonResponse(
-            $this->dishesService->update($data)
+            $this->dishGroupService->update($data)
         );
     }
 
     public function delete($id)
     {
-        return new JsonResponse($this->dishesService->delete($id));
+        return new JsonResponse($this->dishGroupService->delete($id));
     }
 }
