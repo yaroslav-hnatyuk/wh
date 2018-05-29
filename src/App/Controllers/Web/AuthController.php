@@ -34,10 +34,8 @@ class AuthController
         $user = $this->usersService->getByEmail($email);
 
         if ($user->id !== null) {
-            $this->app['session']->set('user', $user);
             $response = new RedirectResponse('/order');
-            $cookie = new Cookie("X-Access-Token", $user->id, time() + self::ONE_YEAR * 5);
-            $response->headers->setCookie($cookie);
+            $response->headers->set('X-AUTH-TOKEN', $user->email . ':secret');
         } else {
             $response = new RedirectResponse('/login');
         }

@@ -18,8 +18,6 @@ class OrdersController
     public function index()
     {
         $userRole = 'user'; //TODO: get user role after successful login
-        //var_dump($this->app['session']->get('user'));
-        //die;
 
         return $this->app['twig']->render("order/{$userRole}.twig", array(
             'name' => $name,

@@ -16,9 +16,6 @@ date_default_timezone_set('Europe/London');
 
 //accepting JSON
 $app->before(function (Request $request) {
-    // echo "<pre>";
-    // var_dump($request->cookies);
-    // die;
     // Get route and check RBAC -> $request->attributes->get('_route'));
     if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
         $data = json_decode($request->getContent(), true);
@@ -46,7 +43,31 @@ $app->register(new DoctrineServiceProvider(), array(
 
 $app->register(new HttpCacheServiceProvider(), array("http_cache.cache_dir" => ROOT_PATH . "/storage/cache",));
 
-$app->register(new Silex\Provider\SessionServiceProvider());
+$app['app.token_authenticator'] = function ($app) {
+    return new App\Security\TokenAuthenticator($app['security.encoder_factory']);
+};
+
+$app->register(new Silex\Provider\SecurityServiceProvider(), array(
+    'security.firewalls' => array(
+        'login' => array(
+            'pattern' => '^/login$',
+        ),
+        'secured' => array(
+            'pattern' => '^.*$',
+            'guard' => array(
+                'authenticators' => array(
+                    'app.token_authenticator'
+                ),
+            ),
+            'users' => function () use ($app) {
+                return new App\Security\UserProvider($app['db']);
+            }
+        )
+    )
+));
+
+
+
 
 $app->register(new MonologServiceProvider(), array(
     "monolog.logfile" => ROOT_PATH . "/storage/logs/" . Carbon::now('Europe/London')->format("Y-m-d") . ".log",
