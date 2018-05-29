@@ -66,9 +66,6 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
     )
 ));
 
-
-
-
 $app->register(new MonologServiceProvider(), array(
     "monolog.logfile" => ROOT_PATH . "/storage/logs/" . Carbon::now('Europe/London')->format("Y-m-d") . ".log",
     "monolog.level" => $app["log.level"],

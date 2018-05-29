@@ -23,7 +23,12 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     public function getCredentials(Request $request)
     {
         // Checks if the credential header is provided
-        if (!$token = $request->headers->get('X-AUTH-TOKEN')) {
+        $token = $request->headers->get('X-AUTH-TOKEN');
+        if (!$token) {
+            $token = $request->cookies->get('X-AUTH-TOKEN');
+        }
+
+        if (!$token) {
             return;
         }
 

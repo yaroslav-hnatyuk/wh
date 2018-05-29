@@ -69,9 +69,14 @@
 			                        	<label class="sr-only" for="password">Password</label>
 			                        	<input type="password" name="password" placeholder="Password..." class="form-password form-control" id="form-password">
 			                        </div>
-			                        <button type="submit" class="btn">Sign in!</button>
+			                        <button type="submit" class="btn" id="login-btn">Sign in!</button>
 			                    </form>
 		                    </div>
+                            <br/><br/>
+                            <div class="alert alert-warning" id="alert-error">
+                            </div>
+                            <div class="alert alert-info" id="alert-success">
+                            </div>
                         </div>
                     </div>
                     <!-- <div class="row">
@@ -101,6 +106,7 @@
         <script src={{ asset('login/assets/bootstrap/js/bootstrap.min.js') }}></script>
         <script src={{ asset('login/assets/js/jquery.backstretch.min.js') }}></script>
         <script src={{ asset('login/assets/js/scripts.js') }}></script>
+        <script src={{ asset('assets/js/jquery.fn.js') }}></script>
         
         <!--[if lt IE 10]>
             <script src={{ asset('login/assets/js/placeholder.js') }}></script>

@@ -183,3 +183,6 @@ img { max-width: 100%; }
 
 }
 
+#alert-error, #alert-success {
+	display: none;
+}

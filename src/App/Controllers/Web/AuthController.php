@@ -4,6 +4,7 @@ namespace App\Controllers\Web;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Cookie;
 use App\Services\UsersService;
@@ -33,13 +34,22 @@ class AuthController
         $email = $request->request->get('email');
         $user = $this->usersService->getByEmail($email);
 
-        if ($user->id !== null) {
-            $response = new RedirectResponse('/order');
-            $response->headers->set('X-AUTH-TOKEN', $user->email . ':secret');
-        } else {
-            $response = new RedirectResponse('/login');
+        if ($user->id === null) {
+            return new JsonResponse(
+                array(
+                    'status' => 'ERROR',
+                    'message' => 'Login failed! Please check your email and password.'
+                )
+            );
         }
 
-        return $response;
+        return new JsonResponse(
+            array(
+                'status' => 'OK',
+                'message' => 'Login successful!',
+                'token' =>  "{$user->email}:secret",
+                'user' => $user->getArray()
+            )
+        );
     }
 }
