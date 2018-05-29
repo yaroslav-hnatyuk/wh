@@ -54,12 +54,14 @@ class RoutesLoader
     {
         $web->get("/login", "auth.web.controller:index");
         $web->post("/login", "auth.web.controller:login");
+        
+        $web->get("/order", "orders.web.controller:index");
     }
 
     private function instantiateWebControllers()
     {
         $this->app['auth.web.controller'] = function() {
-            return new Controllers\Web\AuthController($this->app);
+            return new Controllers\Web\AuthController($this->app, $this->app["users.service"]);
         };
 
         $this->app['orders.web.controller'] = function() {

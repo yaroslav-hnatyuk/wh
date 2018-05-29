@@ -17,14 +17,11 @@ class OrdersController
 
     public function index()
     {
-        return $this->app['twig']->render('login/index.twig', array(
-            'name' => $name,
-        ));
-    }
+        $userRole = 'user'; //TODO: get user role after successful login
+        //var_dump($this->app['session']->get('user'));
+        //die;
 
-    public function login()
-    {
-        return $this->app['twig']->render('login/index.twig', array(
+        return $this->app['twig']->render("order/{$userRole}.twig", array(
             'name' => $name,
         ));
     }
