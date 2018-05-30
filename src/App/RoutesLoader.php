@@ -65,7 +65,7 @@ class RoutesLoader
         };
 
         $this->app['orders.web.controller'] = function() {
-            return new Controllers\Web\OrdersController($this->app);
+            return new Controllers\Web\OrdersController($this->app, $this->app["orders.service"]);
         };
     }
 

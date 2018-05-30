@@ -190,38 +190,16 @@
                         <ul class="pager">
                             <li><a href="#" class="btn btn-default" style="color: rgba(0, 0, 0, 0.7);"><b>Today</b></a></li>
                             <li><a href="#" class="btn"><</a></li>
-                            <li class="date-range">May 14 - May 20</li>
+                            <li class="date-range">{{ currentPeriod.start }} - {{ currentPeriod.end }}</li>
                             <li><a href="#" class="btn">></a></li>
                         </ul>
                     </th>
-                    <th>
-                        <span class="day-name">Mon</span><br/>
-                        <span class="day-date">14</span>
-                    </th>
-                    <th>
-                        <span class="day-name">Tue</span><br/>
-                        <span class="day-date">15</span>
-                    </th>
-                    <th>
-                        <span class="day-name">Wed</span><br/>
-                        <span class="day-date">16</span>
-                    </th>
-                    <th>
-                        <span class="day-name">Thu</span><br/>
-                        <span class="day-date">17</span>
-                    </th>
-                    <th>
-                        <span class="day-name">Fri</span><br/>
-                        <span class="day-date">18</span>
-                    </th>
-                    <th>
-                        <span class="day-name">Sat</span><br/>
-                        <span class="day-date">19</span>
-                    </th>
-                    <th>
-                        <span class="day-name">San</span><br/>
-                        <span class="day-date">20</span>
-                    </th>
+                    {% for date, weekday in currentPeriod.week %}
+                        <th>
+                            <span class="day-name">{{ weekday.day }}</span><br/>
+                            <span class="day-date">{{ weekday.number }}</span>
+                        </th>
+                    {% endfor %}
                 </tr>
                 <tr>
                     <th style="text-align: right; padding-right: 20px">Всього: <b>265 грн</b></th>

@@ -23,6 +23,9 @@ $(document).ready(function (){
             });
         },
 
+        getUserOrder: function() {
+
+        }
 
     };
 

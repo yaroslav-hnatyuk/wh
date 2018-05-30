@@ -1,26 +1,25 @@
 <?php
 
 namespace App\Controllers\Web;
-use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Controllers\BaseController;
+use Silex\Application;
 
-
-class OrdersController
+class OrdersController extends BaseController
 {
-    protected $app;
+    private $ordersService;
 
-    public function __construct(Application $app) 
+    public function __construct(Application $app, $ordersService) 
     {
         $this->app = $app;
+        $this->ordersService = $ordersService;
     }
 
     public function index()
     {
-        $userRole = 'user'; //TODO: get user role after successful login
-
-        return $this->app['twig']->render("order/{$userRole}.twig", array(
-            'name' => $name,
+        return $this->app['twig']->render("order/{$this->getUser()->role}.twig", array(
+            'currentPeriod' => $this->ordersService->getCurrentPeriod()
         ));
     }
 }
