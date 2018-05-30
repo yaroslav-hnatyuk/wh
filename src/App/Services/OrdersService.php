@@ -62,9 +62,15 @@ class OrdersService extends BaseService
         }
 
         return array(
-            'start' => date("M d", $monday),
-            'end' => date("M d", $day),
-            'week' => $week
+            'start' => array(
+                'date' => date("Y-m-d", $monday),
+                'day' => date("M d", $monday)
+            ),
+            'end' => array(
+                'date' => date("Y-m-d", $day),
+                'day' => date("M d", $day)
+            ),
+            'items' => $week
         );
     }
 }

@@ -178,11 +178,7 @@
                 <input name="save_order" value="Save" class="btn btn-primary" type="button">
             </div>
             
-            
-            
             <br/><br/><br/>
-
-
 
             <table class="table order-table" style="margin: 0">
                 <tr style="background-color:#efefef;">
@@ -190,11 +186,11 @@
                         <ul class="pager">
                             <li><a href="#" class="btn btn-default" style="color: rgba(0, 0, 0, 0.7);"><b>Today</b></a></li>
                             <li><a href="#" class="btn"><</a></li>
-                            <li class="date-range">{{ currentPeriod.start }} - {{ currentPeriod.end }}</li>
+                            <li class="date-range">{{ period.start.day }} - {{ period.end.day }}</li>
                             <li><a href="#" class="btn">></a></li>
                         </ul>
                     </th>
-                    {% for date, weekday in currentPeriod.week %}
+                    {% for date, weekday in period.items %}
                         <th>
                             <span class="day-name">{{ weekday.day }}</span><br/>
                             <span class="day-date">{{ weekday.number }}</span>
@@ -213,188 +209,35 @@
                 </tr>
             </table>
 
-            <!-- САЛАТИ -->
-            <table class="table order-table" id="salads-header" style="cursor: pointer; width: 100%; margin: 0px">
-                <tr>
-                    <th><b>САЛАТИ</b></th>
-                    <th><div>&nbsp;</div></th>
-                    <th><div>&nbsp;</div></th>
-                    <th><div>&nbsp;</div></th>
-                    <th><div>&nbsp;</div></th>
-                    <th><div>&nbsp;</div></th>
-                    <th><div>&nbsp;</div></th>
-                    <th><div>&nbsp;</div></th>
-                </tr>
-            </table>
-            <table class="dish-list table order-table" id="salads-list"  style="margin: 0px">
-                <tr>
-                    <th style="padding-left: 40px;"><div><a class="dish-link" >Цезар</a></div></th>
-                    <th><div><input type="number" value="1"/></div></th>
-                    <th><div><input type="number" value="2"/></div></th>
-                    <th><div><input type="number" value="0"/></div></th>
-                    <th><div><input type="number" value="0"/></div></th>
-                    <th><div><input type="number" value="1"/></div></th>
-                    <th><div><input type="number" value="0"/></div></th>
-                    <th><div><input type="number" value="0"/></div></th>
-                </tr>
-                <tr>
-                    <th style="padding-left: 40px;"><a class="dish-link" >Мізерія</a></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="2"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                </tr>
-            </table>
-
-            <!-- СУПИ -->
-            <table class="table order-table" id="soups-header" style="cursor: pointer; margin: 0">
-                <tr>
-                    <th><b>СУПИ</b></th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
-                </tr>
-            </table>
-            <table class="table dish-list order-table" id="soups-list">
-                <tr>
-                    <th style="padding-left: 40px;"><a class="dish-link" >Борщ</a></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="2"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                </tr>
-                <tr>
-                    <th style="padding-left: 40px;"><a class="dish-link">Бульйон</a></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="2"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                </tr>
-                <tr>
-                <th style="padding-left: 40px;"><a class="dish-link" >Суп з морепродуктів</a></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="2"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                </tr>
-            </table>
-
-
-            <!-- ОСНОВНА СТРАВА -->
-            <table class="table order-table" id="main-dish-header" style="cursor: pointer">
-                <tr>
-                    <th><b>ОСНОВНА СТРАВА</b></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </table>
-            <table class="table order-table dish-list" id="main-dish-list">
-                <tr>
-                    <th style="padding-left: 40px;">
-                        <a class="dish-link" style="position: relative">
-                            Гуляш по-угорськи
-                            <div class="dish-hint">
-                                <div class="col-md-12 probootstrap-animate">
-                                    <div class="probootstrap-block-image">
-                                        <figure><img src={{ asset('assets/img/img_square_3.jpg') }} alt="Free Bootstrap Template by uicookies.com"></figure>
-                                    </div>
-                                    <b>Description</b>
-                                    <p style="font-size: 11px">
-                                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium 
-                                        doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et 
-                                        quasi.
-                                    </p>
-                                </div> 
-                            </div>
-                        </a>
-                    </th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="2"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                </tr>
-                <tr>
-                    <th style="padding-left: 40px; "><a class="dish-link" >Відбивна з курячого філе</a></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="2"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                </tr>
-                <tr>
-                    <th style="padding-left: 40px; "><a class="dish-link" >Свинячі реберця на меду</a></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="2"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                </tr>
-            </table>
-
-
-            <!-- ДЕСЕРТ -->
-            <table class="table order-table" id="dessert-header" style="cursor: pointer;">
-                <tr>
-                    <th><b>ДЕСЕРТИ</b></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </table>
-            <table class="table order-table dish-list" id="dessert-list"style="width: 100%; margin: 0">
-                <tr>
-                    <th style="padding-left: 40px;"><a class="dish-link" >Молочний пудинг</a></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="2"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                </tr>
-                <tr>
-                    <th style="padding-left: 40px; "><a class="dish-link" >Наполеон</a></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="2"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="1"/></th>
-                    <th><input type="number" value="0"/></th>
-                    <th><input type="number" value="0"/></th>
-                </tr>
-            </table>
+            {% for group in menu %}
+                <table class="table order-table" id="salads-header" style="cursor: pointer; width: 100%; margin: 0px">
+                    <tr>
+                        <th><b style="text-transform: uppercase;">{{ group.group_name}}</b></th>
+                        <th><div>&nbsp;</div></th>
+                        <th><div>&nbsp;</div></th>
+                        <th><div>&nbsp;</div></th>
+                        <th><div>&nbsp;</div></th>
+                        <th><div>&nbsp;</div></th>
+                        <th><div>&nbsp;</div></th>
+                        <th><div>&nbsp;</div></th>
+                    </tr>
+                </table>
+                <table class="dish-list table order-table" id="salads-list"  style="margin: 0px">
+                    {% for dish in group.dishes %}
+                    <tr>
+                        <th style="padding-left: 40px;"><div><a class="dish-link" >{{ dish.dish_name }}</a></div></th>
+                        <th><div><input type="number" value="1"/></div></th>
+                        <th><div><input type="number" value="2"/></div></th>
+                        <th><div><input type="number" value="0"/></div></th>
+                        <th><div><input type="number" value="0"/></div></th>
+                        <th><div><input type="number" value="1"/></div></th>
+                        <th><div><input type="number" value="0"/></div></th>
+                        <th><div><input type="number" value="0"/></div></th>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% endfor %}
+            
             <hr class="bottom-table-border"/>
       </div>
     </section>
