@@ -22,7 +22,7 @@ class RoutesLoader
         foreach($this->resources as $resource) {
             $this->app["{$resource}.controller"] = function() use($resource) {
                 $rc = new \ReflectionClass('App\\Controllers\\Api\\' . ucfirst($resource) . "Controller");
-                return $rc->newInstanceArgs(array($this->app["{$resource}.service"]));
+                return $rc->newInstanceArgs(array($this->app, $this->app["{$resource}.service"]));
             };
         }  
         $this->instantiateWebControllers();

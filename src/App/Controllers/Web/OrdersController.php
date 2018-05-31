@@ -21,7 +21,10 @@ class OrdersController extends BaseController
     public function index()
     {
         $period = $this->ordersService->getCurrentPeriod();
-        $menu = $this->menuService->getForPeriod($period, true);
+        $menu = $this->menuService->getForPeriod($period);
+        $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
+        $menu = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
+        $menu = $this->menuService->groupMenuDishes($menu, true);
 
         return $this->app['twig']->render("order/{$this->getUser()->role}.twig", array(
             'period' => $period,

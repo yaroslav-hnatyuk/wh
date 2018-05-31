@@ -4,15 +4,17 @@ namespace App\Controllers\Api;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Controllers\BaseController;
+use Silex\Application;
 
-
-class UsersController
+class UsersController extends BaseController
 {
 
     protected $usersService;
 
-    public function __construct($service)
+    public function __construct(Application $app, $service)
     {
+        $this->app = $app;
         $this->usersService = $service;
     }
 

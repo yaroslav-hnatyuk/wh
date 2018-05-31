@@ -23,8 +23,37 @@ $(document).ready(function (){
             });
         },
 
-        getUserOrder: function() {
+        saveUserOrder: function() {
 
+            var defer = jQuery.Deferred();
+
+            defer.then(function(){
+                var ordersData = [];
+                $( ".order-cell" ).each(function(  ) {
+                    ordersData.push({
+                        day: $(this).data('day'),
+                        menu_dish_id: $(this).parent().parent().data('menu-id'),
+                        count: $(this).val()
+                    });
+                });
+
+                return ordersData;
+            }).then(function(ordersData) {
+                $.ajax({
+                    url: "/api/v1/orders",
+                    method: "POST",
+                    data: JSON.stringify(ordersData),
+                    dataType: "json",
+                    success: function (result) {
+                        console.log(result);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+
+            defer.resolve();
         }
 
     };
@@ -95,7 +124,6 @@ $(document).ready(function (){
 
     $(".dish-list tr th input").blur(function (e) {
         num = parseInt($(this).val());
-        console.info(num);
 
         if (isNaN(num) || num < 0) {
             $(this).val('0');
@@ -119,6 +147,12 @@ $(document).ready(function (){
             email: $("#form-username").val(),
             password: $("#form-password").val()
         });
+        return false;
+    });
+
+    //SAVE ORDER
+    $("#save-order").click(function(){
+        API.saveUserOrder();
         return false;
     });
 

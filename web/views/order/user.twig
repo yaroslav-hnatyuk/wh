@@ -174,8 +174,8 @@
                 </div> 
             </div>
             <div class="col-md-3 text-right" style="padding-right: 0">
-                <input name="save_order" value="Cancel" class="btn" type="button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">
-                <input name="save_order" value="Save" class="btn btn-primary" type="button">
+                <input id="cancel-changes" value="Cancel" class="btn" type="button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">
+                <input id="save-order" name="save_order" value="Save" class="btn btn-primary" type="button">
             </div>
             
             <br/><br/><br/>
@@ -190,6 +190,7 @@
                             <li><a href="#" class="btn">></a></li>
                         </ul>
                     </th>
+                    {# <th style="background-color: #eee;"></th> MANAGER #}
                     {% for date, weekday in period.items %}
                         <th>
                             <span class="day-name">{{ weekday.day }}</span><br/>
@@ -199,6 +200,7 @@
                 </tr>
                 <tr>
                     <th style="text-align: right; padding-right: 20px">Всього: <b>265 грн</b></th>
+                    {# <th style="background-color: #eee"></th> MANAGER #}
                     <th style="color: #aaa">53</th>
                     <th style="color: #aaa">50</th>
                     <th style="color: #aaa">56</th>
@@ -213,6 +215,7 @@
                 <table class="table order-table" id="salads-header" style="cursor: pointer; width: 100%; margin: 0px">
                     <tr>
                         <th><b style="text-transform: uppercase;">{{ group.group_name}}</b></th>
+                        {# <th style="background-color: #eee"></th> MANAGER #}
                         <th><div>&nbsp;</div></th>
                         <th><div>&nbsp;</div></th>
                         <th><div>&nbsp;</div></th>
@@ -224,15 +227,12 @@
                 </table>
                 <table class="dish-list table order-table" id="salads-list"  style="margin: 0px">
                     {% for dish in group.dishes %}
-                    <tr>
+                    <tr data-menu-id={{ dish.menu_id }}>
                         <th style="padding-left: 40px;"><div><a class="dish-link" >{{ dish.dish_name }}</a></div></th>
-                        <th><div><input type="number" value="1"/></div></th>
-                        <th><div><input type="number" value="2"/></div></th>
-                        <th><div><input type="number" value="0"/></div></th>
-                        <th><div><input type="number" value="0"/></div></th>
-                        <th><div><input type="number" value="1"/></div></th>
-                        <th><div><input type="number" value="0"/></div></th>
-                        <th><div><input type="number" value="0"/></div></th>
+                        {# <th style="background-color: #eee">{{ dish.orders_count }}</th> MANAGER #}
+                        {% for date, order in dish.orders %}
+                            <th><input class="order-cell" data-day={{ date }} data-changed="0" type="number" value="{{ order }}"/></th>
+                        {% endfor %}
                     </tr>
                     {% endfor %}
                 </table>

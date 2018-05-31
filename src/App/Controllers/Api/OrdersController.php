@@ -4,15 +4,18 @@ namespace App\Controllers\Api;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Controllers\BaseController;
+use Silex\Application;
 
 
-class OrdersController
+class OrdersController extends BaseController
 {
 
     protected $ordersService;
 
-    public function __construct($service)
+    public function __construct(Application $app, $service)
     {
+        $this->app = $app;
         $this->ordersService = $service;
     }
 
@@ -28,8 +31,10 @@ class OrdersController
 
     public function save(Request $request)
     {
+        $orders = json_decode($request->getContent(), true);
+        $this->ordersService->saveUserOrders($this->getUser()->id, $orders);
         return new JsonResponse(
-            $this->ordersService->save($request->request->all())
+            // $this->ordersService->save($orders)
         );
     }
 

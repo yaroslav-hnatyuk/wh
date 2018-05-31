@@ -8,7 +8,7 @@ class MenudishesService extends BaseService
 
     public function getOne($id)
     {
-        $data = $this->db->fetchAssoc("SELECT * FROM menu_dish WHERE id=?", [(int) $id]);
+        $data = $this->db->fetchAssoc("SELECT * FROM menu_dish WHERE id=?", array((int) $id));
         $menuDish = new MenuDish($data);
 
         return $menuDish->getArray();
@@ -35,7 +35,8 @@ class MenudishesService extends BaseService
             m.end as end
             FROM menu_dish m, dish d, dish_group g
             WHERE m.dish_id = d.id AND d.dish_group_id = g.id
-            AND m.start >= '2018-05-28' AND m.end <='2018-06-03'"
+            AND m.start >= ? AND m.end <= ?", 
+            array($period['start']['date'], $period['end']['date'])
         );
 
         return $group ? $this->groupMenuDishes($result) : $result;
@@ -44,7 +45,7 @@ class MenudishesService extends BaseService
     public function groupMenuDishes($dishes)
     {
         $result = array();
-        foreach ($dishes as $dish) {
+        foreach ($dishes as &$dish) {
             if (!isset($result[$dish['group_id']])) {
                 $result[$dish['group_id']] = array(
                     'group_id' => $dish['group_id'],
@@ -52,8 +53,11 @@ class MenudishesService extends BaseService
                     'dishes' => array()
                 );
             }
+            $dish['orders_count'] = array_sum($dish['orders']);
             $result[$dish['group_id']]['dishes'][] = $dish; 
         }
+
+        unset($dish);
 
         return $result;
     }
