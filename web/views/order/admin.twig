@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Walnut House</title>
-    <meta name="description" content="">
-    <meta name="keywords" content="">
+    <meta name="description" content="Free Bootstrap Theme by uicookies.com">
+    <meta name="keywords" content="free website templates, free bootstrap themes, free template, free bootstrap, free website template">
     
     <link rel="stylesheet" href={{ asset('assets/css/styles-merged.css') }}>
     <link rel="stylesheet" href={{ asset('assets/css/style.css') }}>    
@@ -136,7 +136,11 @@
         <div id="navbar-collapse" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li class="active"><a class="nav-link" href="/order">Замовлення</a></li>
-            <li><a class="nav-link" href="/profile">Профіль</a></li>
+            <li><a class="nav-link" href="/users">Користувачі</a></li>
+            <li><a class="nav-link" href="/companies">Компанії</a></li>
+            <li><a class="nav-link" href="/dishes">Страви</a></li>
+            <li><a class="nav-link" href="/menu">Меню</a></li>
+            <li><a class="nav-link" href="/reports">Звіти</a></li>
             <li><a class="nav-link" href="/login">Вихід</a></li>
           </ul>
         </div>
@@ -146,7 +150,23 @@
     <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 610px">
       <div class="container" style="padding-top: 70px;">
         <div class="row">
-            <div class="col-md-9 text-left" style="padding-left: 0">
+            <div class="col-md-2 text-left" style="padding-left: 0">
+                <div class="probootstrap-form" style="margin: 0">
+                    <div class="form-group">
+                        <div class="form-field">
+                            <i class="icon icon-chevron-down"></i>
+                            <select name="people" id="people" class="form-control" style="height: 35px;">
+                            <option disabled>Select company</option>
+                            <option value="Intelias">Intelias</option>
+                            <option value="Sorserve">Sorserve</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1 text-center">
+            </div>
+            <div class="col-md-6 text-center">
                 <div class="btn-group">
                     <button type="button" class="btn order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Week</button>
                     <button type="button" class="btn btn-default order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Month</button>

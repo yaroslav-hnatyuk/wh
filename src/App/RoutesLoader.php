@@ -56,6 +56,12 @@ class RoutesLoader
         $web->post("/login", "auth.web.controller:login");
         
         $web->get("/order", "orders.web.controller:index");
+        $web->get("/profile", "profile.web.controller:index");
+        $web->get("/users", "users.web.controller:index");
+        $web->get("/reports", "reports.web.controller:index");
+        $web->get("/menu", "menu.web.controller:index");
+        $web->get("/companies", "companies.web.controller:index");
+        $web->get("/dishes", "dishes.web.controller:index");
     }
 
     private function instantiateWebControllers()
@@ -69,6 +75,13 @@ class RoutesLoader
                 $this->app, $this->app["orders.service"], $this->app["menudishes.service"]
             );
         };
+
+        $this->app['profile.web.controller'] = function() {return new Controllers\Web\ProfileController($this->app);};
+        $this->app['users.web.controller'] = function() {return new Controllers\Web\UsersController($this->app);};
+        $this->app['companies.web.controller'] = function() {return new Controllers\Web\CompaniesController($this->app);};
+        $this->app['menu.web.controller'] = function() {return new Controllers\Web\MenuController($this->app);};
+        $this->app['dishes.web.controller'] = function() {return new Controllers\Web\DishesController($this->app);};
+        $this->app['reports.web.controller'] = function() {return new Controllers\Web\ReportsController($this->app);};
     }
 
 }

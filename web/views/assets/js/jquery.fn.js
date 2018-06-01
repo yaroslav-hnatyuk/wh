@@ -9,7 +9,6 @@ $(document).ready(function (){
                 dataType: "json",
                 success: function (result) {
                     if (result.status === 'OK') {
-                        $('#alert-success').html(result.message).fadeIn(0).fadeOut(5000);
                         localStorage.setItem('token', result.token);
                         setCookie('X-AUTH-TOKEN', result.token, 365 * 5);
                         $(location).attr('href', 'http://localhost:9001/order');
@@ -139,6 +138,10 @@ $(document).ready(function (){
             $(".dish-hint").css("display", "none")
         }
     );
+
+    $(".nav-link").click(function() {
+        $(location).attr('href', $(this).attr('href'));
+    });
 
     
     //LOGIN

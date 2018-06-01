@@ -20,15 +20,49 @@ class OrdersController extends BaseController
 
     public function index()
     {
+        $handler = $this->getUser()->role . "Order";
+        return $this->$handler();
+    }
+
+    private function userOrder()
+    {
         $period = $this->ordersService->getCurrentPeriod();
         $menu = $this->menuService->getForPeriod($period);
         $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
         $menu = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
         $menu = $this->menuService->groupMenuDishes($menu, true);
 
-        return $this->app['twig']->render("order/{$this->getUser()->role}.twig", array(
+        return $this->app['twig']->render("order/user.twig", array(
             'period' => $period,
             'menu' => $menu
+        ));
+    }
+
+    private function managerOrder()
+    {
+        $period = $this->ordersService->getCurrentPeriod();
+        // $menu = $this->menuService->getForPeriod($period);
+        // $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
+        // $menu = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
+        // $menu = $this->menuService->groupMenuDishes($menu, true);
+
+        return $this->app['twig']->render("order/manager.twig", array(
+            'period' => $period,
+            // 'menu' => $menu
+        ));
+    }
+
+    private function adminOrder()
+    {
+        $period = $this->ordersService->getCurrentPeriod();
+        // $menu = $this->menuService->getForPeriod($period);
+        // $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
+        // $menu = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
+        // $menu = $this->menuService->groupMenuDishes($menu, true);
+
+        return $this->app['twig']->render("order/admin.twig", array(
+            'period' => $period,
+            // 'menu' => $menu
         ));
     }
 }
