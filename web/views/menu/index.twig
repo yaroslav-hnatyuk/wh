@@ -40,7 +40,55 @@
         </div>
     </nav>
 
-    <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 610px"></section>
+    <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 610px">
+      <div class="container" style="padding-top: 70px;">
+        <div class="row">
+            <div class="col-md-12 text-right" style="padding-right: 0">
+                <input id="cancel-changes" value="Cancel" class="btn" type="button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">
+                <input id="save-order" name="save_order" value="Save" class="btn btn-primary" type="button">
+            </div>
+            
+            <br/><br/><br/>
+
+            <table class="table wh-table" style="margin: 0">
+                <tr class="wh-head">
+                    <th>  
+                        <ul class="pager">
+                            <li><a href="#" class="btn btn-default" style="color: rgba(0, 0, 0, 0.7);"><b>Today</b></a></li>
+                            <li><a href="#" class="btn"><</a></li>
+                            <li class="date-range">{{ period.start.day }} - {{ period.end.day }}</li>
+                            <li><a href="#" class="btn">></a></li>
+                        </ul>
+                    </th>
+                    <th class="wh-rating" style="padding-top: 20px">Рейтинг</th>
+                    <th class="wh-reviews" style="padding-top: 20px">Відгуки</th>
+                </tr>
+
+            {% for group in menu %}
+                <tr>
+                    <th colspan="3" class="wh-group-name"><div>{{ group.group_name}}</div></th>
+                </tr>
+                {% for dish in group.dishes %}
+                <tr data-menu-id={{ dish.menu_id }}>
+                    <th class="wh-name">{{ dish.dish_name }}</th>
+                    <th class="wh-rating">
+                      <div>
+                        <span style="color: #FFA33E;">★</span>
+                        <span style="color: #FFA33E;">★</span>
+                        <span style="color: #FFA33E;">★</span>
+                        <span>☆</span>
+                        <span>☆</span>
+                      </div>
+                    </th>
+                    <th class="wh-reviews"><a>122 reviews</a></th>
+                </tr>
+                {% endfor %}
+            {% endfor %}
+            </table>
+            
+            <hr class="bottom-table-border"/>
+      </div>
+    </section>
 
     <script src={{ asset('assets/js/scripts.min.js') }}></script>
     <script src={{ asset('assets/js/custom.min.js') }}></script>

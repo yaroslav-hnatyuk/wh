@@ -77,8 +77,13 @@ class RoutesLoader
         };
 
         $this->app['profile.web.controller'] = function() {return new Controllers\Web\ProfileController($this->app);};
-        $this->app['menu.web.controller'] = function() {return new Controllers\Web\MenuController($this->app);};
         $this->app['reports.web.controller'] = function() {return new Controllers\Web\ReportsController($this->app);};
+
+        $this->app['menu.web.controller'] = function() {
+            return new Controllers\Web\MenuController(
+                $this->app, $this->app["menudishes.service"], $this->app["orders.service"]
+            );
+        };
 
         $this->app['companies.web.controller'] = function() {
             return new Controllers\Web\CompaniesController(

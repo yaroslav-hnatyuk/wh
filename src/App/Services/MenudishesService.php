@@ -53,7 +53,9 @@ class MenudishesService extends BaseService
                     'dishes' => array()
                 );
             }
-            $dish['orders_count'] = array_sum($dish['orders']);
+            if (isset($dish['orders'])) {
+                $dish['orders_count'] = array_sum($dish['orders']);
+            }
             $result[$dish['group_id']]['dishes'][] = $dish; 
         }
 

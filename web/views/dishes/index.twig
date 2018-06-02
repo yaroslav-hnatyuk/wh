@@ -64,11 +64,10 @@
               </tr>
             {% for group in dishes %}
                 <tr>
-                  <th class="wh-group-name"><input type="text" value="{{ group.name}}" /></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
+                  <th colspan="5" class="wh-group-name">
+                  <input type="text" value="{{ group.name}}" style="float: left; width: 50%"/>
+                  <input name="save_order" value="Додати" class="btn btn-info add-new-item" type="button" style="">
+                  </th>
                 </tr>
                 {% for dish in group.dishes %}
                   <tr data-dish-id={{ dish.id }}>
