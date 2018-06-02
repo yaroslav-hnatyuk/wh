@@ -61,7 +61,6 @@ $(document).ready(function (){
             $( ".wh-table tr" ).each(function() {
                 var className = $(this).attr('class');
                 if (className !== undefined && className.startsWith('group')) {
-
                     dishesData.push({
                         id: $(this).data('dish-id'),
                         name: $(this).children( "th" ).children("input[name='name']").val(),
@@ -214,7 +213,7 @@ $(document).ready(function (){
     $(".add-dish").click(function(){
         var groupId = $(this).data('group-id');
         $(".group-" + groupId).last().after( 
-            '<tr class="group-' + groupId + '" data-dish-id="">' +
+            '<tr class="group-' + groupId + '" data-dish-id="" data-group-id="' + groupId + '">' +
                 '<th class="wh-name"><input type="text" name="name" value="" placeholder="Введіть ім\'я" /></th>' +
                 '<th><input name="description" type="text" value="" placeholder="Опис.."/></th>' +
                 '<th><input name="ingredients" type="text" value="" placeholder="Інгредієнти.."/></th>' +
