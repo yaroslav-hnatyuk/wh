@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Controllers\BaseController;
 use Silex\Application;
 
-class ProfileController extends BaseController
+class ReportsController extends BaseController
 {
     public function __construct(Application $app) 
     {
@@ -15,6 +15,8 @@ class ProfileController extends BaseController
 
     public function index()
     {
-        return $this->app['twig']->render("reports/index.twig", array());
+        return $this->app['twig']->render("reports/index.twig", array(
+            'userRole' => $this->getUser()->role
+        ));
     }
 }

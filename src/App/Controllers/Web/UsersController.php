@@ -8,13 +8,21 @@ use Silex\Application;
 
 class UsersController extends BaseController
 {
-    public function __construct(Application $app) 
+    private $usersService;
+
+    public function __construct(Application $app, $usersService) 
     {
         $this->app = $app;
+        $this->usersService = $usersService;
     }
 
     public function index()
     {
-        return $this->app['twig']->render("users/index.twig", array());
+        $users = $this->usersService->getAllWithCompaniesAndOffices();
+
+        return $this->app['twig']->render("users/index.twig", array(
+            'userRole' => $this->getUser()->role,
+            'users' => $users
+        ));
     }
 }

@@ -8,13 +8,27 @@ use Silex\Application;
 
 class CompaniesController extends BaseController
 {
-    public function __construct(Application $app) 
+    private $companiesService;
+    private $officesService;
+
+    public function __construct(Application $app, $companiesService, $officesService) 
     {
         $this->app = $app;
+        $this->companiesService = $companiesService;
+        $this->officesService = $officesService;
     }
 
     public function index()
     {
-        return $this->app['twig']->render("companies/index.twig", array());
+        $companies = $this->companiesService->getAllGroupedById();
+        $offices = $this->officesService->getAll();
+        foreach ($offices as $office) {
+            $companies[$office['company_id']]['offices'][] = $office; 
+        }
+
+        return $this->app['twig']->render("companies/index.twig", array(
+            'userRole' => $this->getUser()->role,
+            'companies' => $companies
+        ));
     }
 }

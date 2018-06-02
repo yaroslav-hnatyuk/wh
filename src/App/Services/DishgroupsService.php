@@ -41,4 +41,29 @@ class DishgroupsService extends BaseService
         return $this->db->delete("dish_group", array("id" => $id));
     }
 
+    function getAllAndGroupById()
+    {
+        $groups = $this->getAll();
+
+        $result = array();
+        foreach ($groups as $group) {
+            $result[$group['id']] = $group;
+            $result[$group['id']]['dishes'] = array();
+        }
+
+        return $result;
+    }
+
+    function groupDishes($dishes)
+    {
+        $groups = $this->getAllAndGroupById();
+        foreach ($dishes as $dish) {
+            if (isset($groups[$dish['dish_group_id']])) {
+                $groups[$dish['dish_group_id']]['dishes'][] = $dish;
+            }
+        }
+
+        return $groups;
+    }
+
 }

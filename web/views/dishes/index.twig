@@ -36,17 +36,55 @@
           <a class="navbar-brand" href="index.html" title="uiCookies:FineOak">FineOak</a>
         </div>
 
-        <div id="navbar-collapse" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a class="nav-link" href="/order">Замовлення</a></li>
-            <li class="active"><a class="nav-link" href="/profile">Профіль</a></li>
-            <li><a class="nav-link" href="/login">Вихід</a></li>
-          </ul>
-        </div>
+        {% include 'parts/menu/' ~ userRole ~ '.twig' %}
       </div>
     </nav>
 
-    <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 610px"></section>
+    <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 610px">
+      <div class="container" style="padding-top: 70px;">
+        <div class="row">
+            
+            <div class="col-md-9 text-left" style="padding-left: 0">
+                <input id="save-order" name="save_order" value="Add new group" class="btn btn-primary" type="button">
+            </div>
+            <div class="col-md-3 text-right" style="padding-right: 0">
+                <input id="cancel-changes" value="Cancel" class="btn" type="button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">
+                <input id="save-order" name="save_order" value="Save" class="btn btn-primary" type="button">
+            </div>
+            
+            <br/><br/><br/>
+
+            <table class="table wh-table" style="cursor: pointer; width: 100%; margin: 0px">
+              <tr class="wh-head">
+                <th>Назва</th>
+                <th>Опис</th>
+                <th>Інгредієнти</th>
+                <th>Вага</th>
+                <th>Ціна</th>
+              </tr>
+            {% for group in dishes %}
+                <tr>
+                  <th class="wh-group-name"><input type="text" value="{{ group.name}}" /></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+                {% for dish in group.dishes %}
+                  <tr data-dish-id={{ dish.id }}>
+                    <th class="wh-name"><input type="text" value="{{ dish.name }}" /></th>
+                    <th><input type="text" value="{{ dish.description }}" /></th>
+                    <th><input type="text" value="{{ dish.ingredients }}" /></th>
+                    <th width="5%"><input type="number" value="{{ dish.weight }}" /></th>
+                    <th width="5%"><input type="number" value="{{ dish.price }}" /></th>
+                  </tr>
+                {% endfor %}
+            {% endfor %}
+            </table>
+            <hr class="bottom-table-border"/>
+        </div>
+      </div>
+    </section>
 
     <script src={{ asset('assets/js/scripts.min.js') }}></script>
     <script src={{ asset('assets/js/custom.min.js') }}></script>

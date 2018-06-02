@@ -36,14 +36,8 @@
           <a class="navbar-brand" href="index.html" title="uiCookies:FineOak">FineOak</a>
         </div>
 
-        <div id="navbar-collapse" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a class="nav-link" href="/order">Замовлення</a></li>
-            <li class="active"><a class="nav-link" href="/profile">Профіль</a></li>
-            <li><a class="nav-link" href="/login">Вихід</a></li>
-          </ul>
+        {% include 'parts/menu/' ~ userRole ~ '.twig' %}
         </div>
-      </div>
     </nav>
 
     <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 610px"></section>

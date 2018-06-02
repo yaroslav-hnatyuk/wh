@@ -15,6 +15,8 @@ class ProfileController extends BaseController
 
     public function index()
     {
-        return $this->app['twig']->render("profile/user.twig", array());
+        return $this->app['twig']->render("profile/user.twig", array(
+            'userRole' => $this->getUser()->role
+        ));
     }
 }

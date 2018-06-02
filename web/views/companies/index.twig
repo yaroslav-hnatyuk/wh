@@ -36,17 +36,46 @@
           <a class="navbar-brand" href="index.html" title="uiCookies:FineOak">FineOak</a>
         </div>
 
-        <div id="navbar-collapse" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a class="nav-link" href="/order">Замовлення</a></li>
-            <li class="active"><a class="nav-link" href="/profile">Профіль</a></li>
-            <li><a class="nav-link" href="/login">Вихід</a></li>
-          </ul>
-        </div>
+        {% include 'parts/menu/' ~ userRole ~ '.twig' %}
       </div>
     </nav>
 
-    <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 610px"></section>
+    <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 610px">
+      <div class="container" style="padding-top: 70px;">
+        <div class="row">
+            
+            <div class="col-md-9 text-left" style="padding-left: 0">
+                <input id="save-order" name="save_order" value="Add new company" class="btn btn-primary" type="button">
+            </div>
+            <div class="col-md-3 text-right" style="padding-right: 0">
+                <input id="cancel-changes" value="Cancel" class="btn" type="button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">
+                <input id="save-order" name="save_order" value="Save" class="btn btn-primary" type="button">
+            </div>
+            
+            <br/><br/><br/>
+
+            <table class="table wh-table" style="cursor: pointer; width: 100%; margin: 0px">
+              <tr class="wh-head">
+                <th>Компанія/Офіс</th>
+                <th>Посилання на реєстрацію користувачів</th>
+              </tr>
+            {% for company in companies %}
+                <tr>
+                  <th class="wh-group-name"><input type="text" value="{{ company.name}}" /></th>
+                  <th></th>
+                </tr>
+                {% for office in company.offices %}
+                  <tr data-office-id={{ office.id }}>
+                    <th class="wh-name"><input type="text" value="{{ office.address }}" /></th>
+                    <th>http://localhost:9001/ksaldhkasjdash23298sajdhas7123</th>
+                  </tr>
+                {% endfor %}
+            {% endfor %}
+            </table>
+            <hr class="bottom-table-border"/>
+        </div>
+      </div>
+    </section>
 
     <script src={{ asset('assets/js/scripts.min.js') }}></script>
     <script src={{ asset('assets/js/custom.min.js') }}></script>

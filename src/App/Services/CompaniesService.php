@@ -19,6 +19,18 @@ class CompaniesService extends BaseService
         return $this->db->fetchAll("SELECT * FROM company");
     }
 
+    public function getAllGroupedById()
+    {
+        $result = array();
+        $data = $this->getAll();
+        foreach ($data as $company) {
+            $company['offices'] = array();
+            $result[$company['id']] = $company;
+        }
+
+        return $result;
+    }
+
     function save($data = array())
     {
         $company = new Company($data);

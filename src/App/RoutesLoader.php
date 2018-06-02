@@ -77,11 +77,26 @@ class RoutesLoader
         };
 
         $this->app['profile.web.controller'] = function() {return new Controllers\Web\ProfileController($this->app);};
-        $this->app['users.web.controller'] = function() {return new Controllers\Web\UsersController($this->app);};
-        $this->app['companies.web.controller'] = function() {return new Controllers\Web\CompaniesController($this->app);};
         $this->app['menu.web.controller'] = function() {return new Controllers\Web\MenuController($this->app);};
-        $this->app['dishes.web.controller'] = function() {return new Controllers\Web\DishesController($this->app);};
         $this->app['reports.web.controller'] = function() {return new Controllers\Web\ReportsController($this->app);};
+
+        $this->app['companies.web.controller'] = function() {
+            return new Controllers\Web\CompaniesController(
+                $this->app, $this->app["companies.service"], $this->app["offices.service"]
+            );
+        };
+        
+        $this->app['dishes.web.controller'] = function() {
+            return new Controllers\Web\DishesController(
+                $this->app, $this->app["dishes.service"], $this->app["dishgroups.service"]
+            );
+        };
+
+        $this->app['users.web.controller'] = function() {
+            return new Controllers\Web\UsersController(
+                $this->app, $this->app["users.service"]
+            );
+        };
     }
 
 }

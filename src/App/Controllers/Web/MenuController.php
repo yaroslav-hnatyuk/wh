@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Controllers\BaseController;
 use Silex\Application;
 
-class ReportsController extends BaseController
+class MenuController extends BaseController
 {
     public function __construct(Application $app) 
     {
@@ -15,6 +15,8 @@ class ReportsController extends BaseController
 
     public function index()
     {
-        return $this->app['twig']->render("menu/index.twig", array());
+        return $this->app['twig']->render("menu/index.twig", array(
+            'userRole' => $this->getUser()->role
+        ));
     }
 }

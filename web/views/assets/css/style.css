@@ -2460,3 +2460,38 @@ hr.bottom-table-border {
 .order-table .dish-hint b {
   color: rgba(0, 0, 0, 0.7);
 }
+ 
+.wh-table tr th {
+  border-right: 1px solid #ddd;
+  font-weight: normal;
+}
+
+.wh-table .wh-head {
+  height: 59;
+  background-color:#efefef;
+}
+
+.wh-table .wh-head th {
+  padding: 15px;
+  color: rgba(0, 0, 0, 0.7);
+  font-weight: bold;
+}
+
+.wh-table th input {
+  border: 0;
+  width: 100%;
+}
+
+.wh-table .wh-name{
+  padding-left: 40px;
+}
+
+.wh-table .wh-group-name input{
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.7);
+  font-weight: bold;
+}
+
+.wh-table .wh-name input{
+  color: #FFA33E;
+}

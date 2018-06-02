@@ -34,6 +34,7 @@ class OrdersController extends BaseController
 
         return $this->app['twig']->render("order/user.twig", array(
             'period' => $period,
+            'userRole' => $this->getUser()->role,
             'menu' => $menu
         ));
     }
@@ -48,6 +49,7 @@ class OrdersController extends BaseController
 
         return $this->app['twig']->render("order/manager.twig", array(
             'period' => $period,
+            'userRole' => $this->getUser()->role
             // 'menu' => $menu
         ));
     }
@@ -62,6 +64,7 @@ class OrdersController extends BaseController
 
         return $this->app['twig']->render("order/admin.twig", array(
             'period' => $period,
+            'userRole' => $this->getUser()->role
             // 'menu' => $menu
         ));
     }
