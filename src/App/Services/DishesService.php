@@ -19,13 +19,30 @@ class DishesService extends BaseService
         return $this->db->fetchAll("SELECT * FROM dish");
     }
 
-    function save($data = array())
+    function save(Dish $dish)
     {
-        $dish = new Dish($data);
         $this->db->insert("dish", $dish->getArray());
         $dish->id = $this->db->lastInsertId();
 
         return $dish->getArray();
+    }
+
+    function saveDishes($dishes)
+    {
+        foreach ($dishes as &$dishData) {
+            $dish = $this->getOne($dishData['id']);
+            $dish = new Dish($dishData);
+            if ($dishData['tmp_id'] !== null) {
+                $dish = $this->save($dish);
+                $dish['tmp_id'] = $dishData['tmp_id'];
+                $dishData = $dish;
+            } else {
+                $this->db->update('`dish`', $dish->getArray(), ['id' => $dish->id]);
+            }
+        }
+        unset($dishData);
+
+        return $dishes;
     }
 
     function update($data = array())

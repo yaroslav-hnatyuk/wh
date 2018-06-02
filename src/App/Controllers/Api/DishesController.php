@@ -30,8 +30,9 @@ class DishesController extends BaseController
 
     public function save(Request $request)
     {
+        $dishes = json_decode($request->getContent(), true);
         return new JsonResponse(
-            $this->dishesService->save($request->request->all())
+            $this->dishesService->saveDishes($dishes)
         );
     }
 
