@@ -18,29 +18,35 @@ class FiltersController
         $office = $request->query->get('office');
         $user = $request->query->get('user');
 
-        if ($company) {
-            if ($company === 'none') {
-                $this->app['session']->remove('filter_company');
-            } else {
-                $this->app['session']->set('filter_company', $company);
-            }
+        $sCompany = $this->app['session']->get('filter_company');
+        $sOffice = $this->app['session']->get('filter_office');
+        $sUser = $this->app['session']->get('filter_user');
+
+        if ($company && ($company === 'none' || $company != $sCompany)) {
             $this->app['session']->remove('filter_office');
             $this->app['session']->remove('filter_user');
+            if ($company === 'none') {
+                $this->app['session']->remove('filter_company');
+            } elseif ($company != $sCompany) {
+                $this->app['session']->set('filter_company', $company);
+            }
+            return new RedirectResponse('/order');
         }
 
-        if ($office) {
+        if ($office && ($office === 'none' || $office != $sOffice)) {
+            $this->app['session']->remove('filter_user');
             if ($office === 'none') {
                 $this->app['session']->remove('filter_office');
-            } else {
+            } else if ($office != $sOffice) {
                 $this->app['session']->set('filter_office', $office);
             }
-            $this->app['session']->remove('filter_user');
+            return new RedirectResponse('/order');
         }
 
-        if ($user) {
+        if ($user && ($user === 'none' || $user != $sUser)) {
             if ($user === 'none') {
                 $this->app['session']->remove('filter_user');
-            } else {
+            } else if ($user != $sUser) {
                 $this->app['session']->set('filter_user', $user);
             }
         }
