@@ -75,6 +75,40 @@ class OrdersService extends BaseService
         );
     }
 
+    function getOrdersByFilters($filters = array())
+    {
+        $params = array();
+        $sql = "SELECT r.* FROM `order` r, `user` u, `office` o 
+            WHERE r.user_id = u.id AND u.office_id = o.id";
+
+        if (empty($filters['company']) && empty($filters['office']) && empty($filters['user'])) {
+            return array();
+        }
+
+        if (!empty($filters['company'])) {
+            $sql .= " AND o.company_id = ?";
+            $params[] = $filters['company'];
+        }
+
+        if (!empty($filters['office'])) {
+            $sql .= " AND u.office_id = ?";
+            $params[] = $filters['office'];
+        }
+
+        if (!empty($filters['user'])) {
+            $sql .= " AND r.user_id = ?";
+            $params[] = $filters['user'];
+        }
+
+        if (!empty($filters['start_date']) && !empty($filters['end_date'])) {
+            $sql .= " AND r.day BETWEEN ? AND ?";
+            $params[] = $filters['start_date'];
+            $params[] = $filters['end_date'];
+        } 
+
+        return $this->db->fetchAll($sql, $params);
+    }
+
     function mergeMenuWithOrders($menu, $orders, $period)
     {
         $userOrders = array_combine(
@@ -86,7 +120,7 @@ class OrdersService extends BaseService
             $dish['orders'] = $userOrders;
             foreach($orders as $order) {
                 if ($dish['menu_id'] === $order['menu_dish_id']) {
-                    $dish['orders'][$order['day']] = $order['count'];
+                    $dish['orders'][$order['day']] += $order['count'];
                 }
             }
         }
@@ -94,34 +128,56 @@ class OrdersService extends BaseService
         return $menu;
     }
 
-    function getCurrentPeriod()
+    function getPeriodForYearAndWeek($year = null, $weekNumber = null)
     {
-        $monday = strtotime("last monday");
-        $monday = date('w', $monday) == date('w') ? $monday + 7*86400 : $monday;
+        $weekNumber = !$weekNumber ? (new \DateTime())->format("W") : $weekNumber;
+        $year = !$year ? (new \DateTime())->format("Y") : $year;
+        $prev = array();
+        $next = array();
         
-        $week = array(
-            date("Y-m-d",$monday) => array(
-                'day' => date("D",$monday),
-                'number' => date("d",$monday)
-            )
-        );
-
-        for ($i = 1; $i <= 6; $i++) {
-            $day = strtotime(date("Y-m-d", $monday). " +{$i} days");
-            $week[date("Y-m-d", $day)] = array(
-                'day' => date("D",$day),
-                'number' => date("d",$day)
-            );
+        if ($weekNumber + 1 > 52) {
+            $next['week'] = 1;
+            $next['year'] = $year + 1;
+        } else {
+            $next['week'] = $weekNumber + 1;
+            $next['year'] = $year;
         }
 
+        if ($weekNumber - 1 == 0) {
+            $prev['week'] = 52;
+            $prev['year'] = $year - 1;
+        } else {
+            $prev['week'] = $weekNumber - 1;
+            $prev['year'] = $year;
+        }
+        
+        
+        $weekNumber = str_pad($weekNumber, 2, '0', STR_PAD_LEFT);
+        $monday = null;
+        $sunday = null;
+        
+        $week = array();
+        for($i = 1; $i <= 7; $i++) {
+            $day = strtotime($year."W".$weekNumber.$i);
+            if ($i == 1) $monday = $day;
+            if ($i == 7) $sunday = $day;
+
+            $week[date("Y-m-d", $day)] = array(
+                'day' => date("D", $day),
+                'number' => date("d", $day)
+            );
+        }
+        
         return array(
+            'next' => $next,
+            'prev' => $prev,
             'start' => array(
                 'date' => date("Y-m-d", $monday),
                 'day' => date("M d", $monday)
             ),
             'end' => array(
-                'date' => date("Y-m-d", $day),
-                'day' => date("M d", $day)
+                'date' => date("Y-m-d", $sunday),
+                'day' => date("M d", $sunday)
             ),
             'items' => $week
         );

@@ -140,23 +140,44 @@
     <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 610px">
       <div class="container" style="padding-top: 70px;">
         <div class="row">
-            <div class="col-md-2 text-left" style="padding-left: 0">
-                <div class="probootstrap-form" style="margin: 0">
-                    <div class="form-group">
+            <div class="col-md-6 text-left" style="padding-left: 0">
+                <form id="order-filters" class="probootstrap-form" style="margin: 0" methos="GET" action="/filters">
+                    <div class="form-group" style="width: 160px; float: left; margin-right: 5px">
                         <div class="form-field">
                             <i class="icon icon-chevron-down"></i>
-                            <select name="people" id="people" class="form-control" style="height: 35px;">
-                            <option disabled>Select company</option>
-                            <option value="Intelias">Intelias</option>
-                            <option value="Sorserve">Sorserve</option>
+                            <select name="company" class="form-control order-filter" style="height: 35px;">
+                            <option value="none">Компанія</option>
+                            {% for companyItem in companies %}
+                                <option {% if companyItem.id == company %} {{'selected="selected"'}} {% endif %} value="{{ companyItem.id }}">{{ companyItem.name }}</option>
+                            {% endfor %}
                             </select>
                         </div>
                     </div>
-                </div>
+                    <div class="form-group" style="width: 160px; float: left; margin-right: 5px">
+                        <div class="form-field">
+                            <i class="icon icon-chevron-down"></i>
+                            <select name="office" class="form-control order-filter"  style="height: 35px;">
+                            <option value="none">Офіс</option>
+                            {% for officeItem in offices %}
+                                <option {% if officeItem.id == office %} {{'selected="selected"'}} {% endif %} value="{{ officeItem.id }}">{{ officeItem.address }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" style="width: 160px; float: left; margin-right: 5px">
+                        <div class="form-field">
+                            <i class="icon icon-chevron-down"></i>
+                            <select name="user" class="form-control order-filter" style="height: 35px;">
+                            <option value="none">Користувач</option>
+                            {% for userItem in users %}
+                                <option {% if userItem.id == user %} {{'selected="selected"'}} {% endif %} value="{{ userItem.id }}">{{ userItem.first_name ~ ' ' ~ userItem.last_name }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="col-md-1 text-center">
-            </div>
-            <div class="col-md-6 text-center">
+            <div class="col-md-3 text-center">
                 <div class="btn-group">
                     <button type="button" class="btn order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Week</button>
                     <button type="button" class="btn btn-default order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Month</button>
@@ -173,10 +194,10 @@
                 <tr style="background-color:#efefef;">
                     <th style="padding-left: 5px">  
                         <ul class="pager">
-                            <li><a href="#" class="btn btn-default" style="color: rgba(0, 0, 0, 0.7);"><b>Today</b></a></li>
-                            <li><a href="#" class="btn"><</a></li>
+                            <li><a href="/order" class="btn btn-default" style="color: rgba(0, 0, 0, 0.7);"><b>Today</b></a></li>
+                            <li><a href="/order?year={{period.prev.year}}&week={{period.prev.week}}" class="btn"><</a></li>
                             <li class="date-range">{{ period.start.day }} - {{ period.end.day }}</li>
-                            <li><a href="#" class="btn">></a></li>
+                             <li><a href="/order?year={{period.next.year}}&week={{period.next.week}}" class="btn">></a></li>
                         </ul>
                     </th>
                     {# <th style="background-color: #eee;"></th> MANAGER #}

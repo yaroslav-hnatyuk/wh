@@ -310,4 +310,8 @@ $(document).ready(function (){
         return false;
     });
 
+    $(".order-filter").change(function() {
+        $("#order-filters").submit();
+    });
+
 });   

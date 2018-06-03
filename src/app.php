@@ -43,6 +43,8 @@ $app->register(new DoctrineServiceProvider(), array(
 
 $app->register(new HttpCacheServiceProvider(), array("http_cache.cache_dir" => ROOT_PATH . "/storage/cache",));
 
+$app->register(new Silex\Provider\SessionServiceProvider());
+
 $app['app.token_authenticator'] = function ($app) {
     return new App\Security\TokenAuthenticator($app['security.encoder_factory']);
 };

@@ -18,15 +18,18 @@ class OrdersController extends BaseController
         $this->menuService = $menuService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $handler = $this->getUser()->role . "Order";
-        return $this->$handler();
+        return $this->$handler($request);
     }
 
-    private function userOrder()
+    private function userOrder(Request $request)
     {
-        $period = $this->ordersService->getCurrentPeriod();
+        $week = $request->query->get('week');
+        $year = $request->query->get('year');
+        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week);
+
         $menu = $this->menuService->getForPeriodForOrders($period);
         $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
         $menu = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
@@ -39,24 +42,46 @@ class OrdersController extends BaseController
         ));
     }
 
-    private function managerOrder()
+    private function managerOrder(Request $request)
     {
-        $period = $this->ordersService->getCurrentPeriod();
-        // $menu = $this->menuService->getForPeriodForOrders($period);
-        // $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
-        // $menu = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
-        // $menu = $this->menuService->groupMenuDishes($menu, true);
+        $week = $request->query->get('week');
+        $year = $request->query->get('year');
+
+        $company = $this->app['session']->get('filter_company');
+        $office = $this->app['session']->get('filter_office');
+        $user = $this->app['session']->get('filter_user');
+
+        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week);
+        $menu = $this->menuService->getForPeriodForOrders($period);
+        $orders = $this->ordersService->getOrdersByFilters(array(
+            'company' => $company,
+            'office' => $office,
+            'user' => $user,
+            'start_date' => $period['start']['date'],
+            'end_date' => $period['end']['date']
+        ));
+
+        $menu = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
+        $menu = $this->menuService->groupMenuDishes($menu, true);
 
         return $this->app['twig']->render("order/manager.twig", array(
             'period' => $period,
-            'userRole' => $this->getUser()->role
-            // 'menu' => $menu
+            'userRole' => $this->getUser()->role,
+            'menu' => $menu,
+            'company' => $company,
+            'office' => $office,
+            'user' => $user,
+            'companies' => $this->app['companies.service']->getAll(),
+            'offices' => $this->app['offices.service']->getAllByCompany($company),
+            'users' => $this->app['users.service']->getAllByOffice($office)
         ));
     }
 
-    private function adminOrder()
+    private function adminOrder(Request $request)
     {
-        $period = $this->ordersService->getCurrentPeriod();
+        $week = $request->query->get('week');
+        $year = $request->query->get('year');
+        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week);
         // $menu = $this->menuService->getForPeriodForOrders($period);
         // $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
         // $menu = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);

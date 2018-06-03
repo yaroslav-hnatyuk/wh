@@ -19,6 +19,15 @@ class OfficesService extends BaseService
         return $this->db->fetchAll("SELECT * FROM office");
     }
 
+    public function getAllByCompany($company)
+    {
+        if (empty($company)) {
+            return array();
+        }
+
+        return $this->db->fetchAll("SELECT * FROM office WHERE company_id = ?", array($company));
+    }
+
     function save($data = array())
     {
         $office = new Office($data);

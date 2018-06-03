@@ -62,6 +62,7 @@ class RoutesLoader
         $web->get("/menu", "menu.web.controller:index");
         $web->get("/companies", "companies.web.controller:index");
         $web->get("/dishes", "dishes.web.controller:index");
+        $web->get("/filters", "filters.web.controller:index");
     }
 
     private function instantiateWebControllers()
@@ -106,6 +107,8 @@ class RoutesLoader
                 $this->app, $this->app["users.service"]
             );
         };
+
+        $this->app['filters.web.controller'] = function() { return new Controllers\Web\FiltersController($this->app); };
     }
 
 }

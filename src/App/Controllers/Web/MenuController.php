@@ -30,7 +30,7 @@ class MenuController extends BaseController
 
     public function index()
     {
-        $period = $this->ordersService->getCurrentPeriod();
+        $period = $this->ordersService->getPeriodForYearAndWeek();
         $dishes = $this->dishesService->getAll();
         $menu = $this->menuService->getForPeriod($period, true);
         foreach ($dishes as &$dish) {

@@ -45,6 +45,17 @@ class UsersService extends BaseService
         );
     }
 
+    public function getAllByOffice($office)
+    {
+        if (empty($office)) {
+            return array();
+        }
+        return $this->db->fetchAll(
+            "SELECT * FROM user WHERE role = ? AND office_id = ?", 
+            array('user', $office)
+        );
+    }
+
     function save($data = array())
     {
         $user = new User($data);
