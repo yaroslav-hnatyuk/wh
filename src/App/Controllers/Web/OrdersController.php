@@ -27,7 +27,7 @@ class OrdersController extends BaseController
     private function userOrder()
     {
         $period = $this->ordersService->getCurrentPeriod();
-        $menu = $this->menuService->getForPeriod($period);
+        $menu = $this->menuService->getForPeriodForOrders($period);
         $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
         $menu = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
         $menu = $this->menuService->groupMenuDishes($menu, true);
@@ -42,7 +42,7 @@ class OrdersController extends BaseController
     private function managerOrder()
     {
         $period = $this->ordersService->getCurrentPeriod();
-        // $menu = $this->menuService->getForPeriod($period);
+        // $menu = $this->menuService->getForPeriodForOrders($period);
         // $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
         // $menu = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
         // $menu = $this->menuService->groupMenuDishes($menu, true);
@@ -57,7 +57,7 @@ class OrdersController extends BaseController
     private function adminOrder()
     {
         $period = $this->ordersService->getCurrentPeriod();
-        // $menu = $this->menuService->getForPeriod($period);
+        // $menu = $this->menuService->getForPeriodForOrders($period);
         // $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
         // $menu = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
         // $menu = $this->menuService->groupMenuDishes($menu, true);

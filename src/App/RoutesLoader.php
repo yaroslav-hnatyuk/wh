@@ -81,7 +81,11 @@ class RoutesLoader
 
         $this->app['menu.web.controller'] = function() {
             return new Controllers\Web\MenuController(
-                $this->app, $this->app["menudishes.service"], $this->app["orders.service"]
+                $this->app, 
+                $this->app["menudishes.service"], 
+                $this->app["orders.service"],
+                $this->app["dishes.service"], 
+                $this->app["dishgroups.service"]
             );
         };
 

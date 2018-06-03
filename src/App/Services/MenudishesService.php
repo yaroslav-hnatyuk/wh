@@ -19,7 +19,7 @@ class MenudishesService extends BaseService
         return $this->db->fetchAll("SELECT * FROM menu_dish");
     }
 
-    public function getForPeriod($period, $group = false)
+    public function getForPeriodForOrders($period, $group = false)
     {
         $result = $this->db->fetchAll("SELECT 
             d.id as dish_id,
@@ -40,6 +40,31 @@ class MenudishesService extends BaseService
         );
 
         return $group ? $this->groupMenuDishes($result) : $result;
+    }
+
+    public function getForPeriod($period, $group = false)
+    {
+        $result = $this->db->fetchAll("SELECT 
+            m.id as menu_id,
+            m.dish_id as dish_id,
+            m.start as start,
+            m.end as end
+            FROM menu_dish m
+            WHERE m.start >= ? AND m.end <= ?", 
+            array($period['start']['date'], $period['end']['date'])
+        );
+
+        return $group ? $this->groupByDishId($result) : $result;
+    }
+
+    public function groupByDishId($menu)
+    {
+        $result = array();
+        foreach ($menu as $menuDish) {
+            $result[$menuDish['dish_id']] = $menuDish;
+        }
+
+        return $result;
     }
 
     public function groupMenuDishes($dishes)

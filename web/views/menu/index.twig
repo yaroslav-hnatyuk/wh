@@ -43,18 +43,19 @@
     <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 610px">
       <div class="container" style="padding-top: 70px;">
         <div class="row">
-            <div class="col-md-12 text-right" style="padding-right: 0">
-                <input id="cancel-changes" value="Cancel" class="btn" type="button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">
-                <input id="save-order" name="save_order" value="Save" class="btn btn-primary" type="button">
+            <div class="col-md-12 text-right" style="padding-right: 0; display: none" id="editable-menu-header">
+                <input id="save-menu" name="edit_menu" value="Завершити редагування" class="btn btn-info" type="button">
             </div>
-            
+            <div class="col-md-12 text-right" style="padding-right: 0" id="menu-header">
+                <input id="edit-menu" name="edit_menu" value="Редагувати меню" class="btn btn-primary" type="button">
+            </div>
+
             <br/><br/><br/>
 
-            <table class="table wh-table" style="margin: 0">
+            <table class="table wh-table" style="margin: 0" id="menu-table">
                 <tr class="wh-head">
                     <th>  
                         <ul class="pager">
-                            <li><a href="#" class="btn btn-default" style="color: rgba(0, 0, 0, 0.7);"><b>Today</b></a></li>
                             <li><a href="#" class="btn"><</a></li>
                             <li class="date-range">{{ period.start.day }} - {{ period.end.day }}</li>
                             <li><a href="#" class="btn">></a></li>
@@ -62,15 +63,18 @@
                     </th>
                     <th class="wh-rating" style="padding-top: 20px">Рейтинг</th>
                     <th class="wh-reviews" style="padding-top: 20px">Відгуки</th>
+                    <th class="wh-actions" style="display: none"></th>
                 </tr>
 
-            {% for group in menu %}
+            {% for group in dishes %}
                 <tr>
-                    <th colspan="3" class="wh-group-name"><div>{{ group.group_name}}</div></th>
+                    <th colspan="4" class="wh-group-name">
+                      <div>{{ group.name}}</div>
+                    </th>
                 </tr>
                 {% for dish in group.dishes %}
-                <tr data-menu-id={{ dish.menu_id }}>
-                    <th class="wh-name">{{ dish.dish_name }}</th>
+                <tr class="menu-item" data-dish-id={{ dish.id }} data-menu-id="{{ dish.menu.menu_id }}" {% if dish.menu.menu_id is not defined %} {{'style="display: none"'}} {% endif %}>
+                    <th class="wh-name">{{ dish.name }}</th>
                     <th class="wh-rating">
                       <div>
                         <span style="color: #FFA33E;">★</span>
@@ -81,6 +85,12 @@
                       </div>
                     </th>
                     <th class="wh-reviews"><a>122 reviews</a></th>
+                    <th class="wh-actions" style="display: none">
+                      <label class="switch">
+                        <input type="checkbox" {% if dish.menu is defined %} {{'checked=true'}} {% endif %}>
+                        <span class="slider round"></span>
+                      </label>
+                    </th>
                 </tr>
                 {% endfor %}
             {% endfor %}

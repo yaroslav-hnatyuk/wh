@@ -11,7 +11,7 @@ $(document).ready(function (){
                     if (result.status === 'OK') {
                         localStorage.setItem('token', result.token);
                         setCookie('X-AUTH-TOKEN', result.token, 365 * 5);
-                        $(location).attr('href', 'http://localhost:9001/order');
+                        $(location).attr('href', '/order');
                     } else {
                         $('#alert-error').html(result.message).fadeIn(0).fadeOut(5000);
                     }
@@ -226,6 +226,44 @@ $(document).ready(function (){
     //SAVE DISHES
     $("#save-dishes").click(function(){
         API.saveDishes();
+        return false;
+    });
+
+    //ADD dish to weekly menu
+    $(".add-menu-dish").click(function(){
+
+    });
+
+    $("#edit-menu").click(function() {
+        $("#menu-header").css('display', 'none');
+        $("#editable-menu-header").css('display', 'block');
+        $(".wh-actions").css('display', 'table-cell');
+        $(".wh-table .menu-item").css('display', 'table-row');
+    });
+
+    $("#save-menu").click(function() {
+        $("#menu-header").css('display', 'block');
+        $("#editable-menu-header").css('display', 'none');
+        $(".wh-actions").css('display', 'none');
+        
+        $( ".wh-table .menu-item .wh-actions input" ).each(function() {
+            if($(this).is(':checked')) {
+                $(this).parent().parent().parent().css('display', 'table-row');
+            } else {
+                $(this).parent().parent().parent().css('display', 'none');
+            }
+        });
+    });
+
+    $(".wh-table .switch").click(function(event) {
+        var checkbox = $(this).children('input');
+        
+        if (checkbox.is(':checked')) {
+            checkbox.prop('checked', false);
+        } else {
+            checkbox.prop('checked', true);
+        }
+
         return false;
     });
 
