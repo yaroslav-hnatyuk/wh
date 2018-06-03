@@ -103,8 +103,40 @@ $(document).ready(function (){
                     console.log(error);
                 }
             });
+        },
+
+        removeDishFromMenu: function(menuId, callback) {
+            $.ajax({
+                url: "/api/v1/menudishes/" + menuId,
+                method: "DELETE",
+                contentType:'application/json',
+                success: function (dish) {
+                    console.log(dish);
+                    callback();
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        },
+
+        addDishToMenu: function(data, callback) {
+            $.ajax({
+                url: "/api/v1/menudishes",
+                method: "POST",
+                data: JSON.stringify(data),
+                dataType: "json",
+                success: function (dish) {
+                    console.log(dish);
+                    callback();
+                    
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
         }
-    };
+    }
 
     function setCookie(cname,cvalue,exdays) {
         var d = new Date();
@@ -254,9 +286,25 @@ $(document).ready(function (){
         var checkbox = $(this).children('input');
         
         if (checkbox.is(':checked')) {
-            checkbox.prop('checked', false);
+            var menuRow = $(this).parent().parent();
+            var menuId = $(this).parent().parent().data('menu-id');
+            if (menuId) {
+                API.removeDishFromMenu(menuId, function(){
+                    checkbox.prop('checked', false);
+                    menuRow.attr('data-menu-id', '');
+                });
+            } else {
+                checkbox.prop('checked', false);
+            }
         } else {
-            checkbox.prop('checked', true);
+            var dishData = {
+                start: $(".date-range").data('start'),
+                end: $(".date-range").data('end'),
+                dish_id: $(this).parent().parent().data('dish-id')
+            };
+            API.addDishToMenu(dishData, function(){
+                checkbox.prop('checked', true);
+            });
         }
 
         return false;

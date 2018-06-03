@@ -30,9 +30,9 @@ class MenudishesController extends BaseController
 
     public function save(Request $request)
     {
-        $menuDishes = json_decode($request->getContent(), true);
+        $menuDish = json_decode($request->getContent(), true);
         return new JsonResponse(
-            $this->menuDishesService->saveMenuDishes($menuDishes)
+            $this->menuDishesService->save($menuDish)
         );
     }
 
