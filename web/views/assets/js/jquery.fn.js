@@ -229,11 +229,6 @@ $(document).ready(function (){
         return false;
     });
 
-    //ADD dish to weekly menu
-    $(".add-menu-dish").click(function(){
-
-    });
-
     $("#edit-menu").click(function() {
         $("#menu-header").css('display', 'none');
         $("#editable-menu-header").css('display', 'block');

@@ -19,9 +19,9 @@ class MenudishesService extends BaseService
         return $this->db->fetchAll("SELECT * FROM menu_dish");
     }
 
-    public function getForPeriodForOrders($period, $group = false)
+    public function getForPeriodForOrders($period)
     {
-        $result = $this->db->fetchAll("SELECT 
+        return $this->db->fetchAll("SELECT 
             d.id as dish_id,
             d.name as dish_name,
             d.description as description,
@@ -38,8 +38,6 @@ class MenudishesService extends BaseService
             AND m.start >= ? AND m.end <= ?", 
             array($period['start']['date'], $period['end']['date'])
         );
-
-        return $group ? $this->groupMenuDishes($result) : $result;
     }
 
     public function getForPeriod($period, $group = false)
