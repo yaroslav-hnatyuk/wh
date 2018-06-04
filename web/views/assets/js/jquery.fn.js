@@ -13,11 +13,21 @@ $(document).ready(function (){
                         setCookie('X-AUTH-TOKEN', result.token, 365 * 5);
                         $(location).attr('href', '/order');
                     } else {
-                        $('#alert-error').html(result.message).fadeIn(0).fadeOut(5000);
+                        spop({
+                            template: 'Помилка :( Перевірте будь-ласка ваш email та пароль.',
+                            position  : 'bottom-right',
+                            style: 'error',
+                            autoclose: 3000
+                        });
                     }
                 },
                 error: function (error) {
-                    $('#alert-error').html("Authentication failed! Please check your email and password.").fadeIn(0).fadeOut(1000);
+                    spop({
+                        template: 'Помилка :( Перевірте будь-ласка ваш email та пароль.',
+                        position  : 'bottom-right',
+                        style: 'error',
+                        autoclose: 3000
+                    });
                 }
             });
         },
@@ -43,10 +53,20 @@ $(document).ready(function (){
                     data: JSON.stringify(ordersData),
                     dataType: "json",
                     success: function (result) {
-                        console.log(result);
+                        spop({
+                            template: 'Замовлення збережене! Дякуємо :)',
+                            position  : 'bottom-right',
+                            style: 'success',
+                            autoclose: 3000
+                        });
                     },
                     error: function (error) {
-                        console.log(error);
+                        spop({
+                            template: 'Помилка :( Перевірте будь-ласка ваше замовлення.',
+                            position  : 'bottom-right',
+                            style: 'error',
+                            autoclose: 3000
+                        });
                     }
                 });
             });
@@ -87,7 +107,6 @@ $(document).ready(function (){
                 data: JSON.stringify(dishesData),
                 dataType: "json",
                 success: function (dishes) {
-                    console.log(dishes);
                     for (const index in dishes) {
                         if (dishes.hasOwnProperty(index)) {
                             var dish = dishes[index];
@@ -98,9 +117,20 @@ $(document).ready(function (){
                             }
                         }
                     }
+                    spop({
+                        template: 'Зміни успішно збережені!',
+                        position  : 'bottom-right',
+                        style: 'success',
+                        autoclose: 3000
+                    });
                 },
                 error: function (error) {
-                    console.log(error);
+                    spop({
+                        template: 'Не вдалося зберегти зміни! Перевірте будь-ласка правильність введених даних!',
+                        position  : 'bottom-right',
+                        style: 'success',
+                        autoclose: 3000
+                    });
                 }
             });
         },
@@ -111,11 +141,15 @@ $(document).ready(function (){
                 method: "DELETE",
                 contentType:'application/json',
                 success: function (dish) {
-                    console.log(dish);
                     callback();
                 },
                 error: function (error) {
-                    console.log(error);
+                    spop({
+                        template: 'Не вдалося видалити страву з меню!',
+                        position  : 'bottom-right',
+                        style: 'error',
+                        autoclose: 3000
+                    });
                 }
             });
         },
@@ -132,7 +166,12 @@ $(document).ready(function (){
                     
                 },
                 error: function (error) {
-                    console.log(error);
+                    spop({
+                        template: 'Не вдалося додати страву в меню!',
+                        position  : 'bottom-right',
+                        style: 'error',
+                        autoclose: 3000
+                    });
                 }
             });
         }

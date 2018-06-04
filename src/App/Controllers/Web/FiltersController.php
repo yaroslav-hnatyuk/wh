@@ -22,6 +22,13 @@ class FiltersController
         $sOffice = $this->app['session']->get('filter_office');
         $sUser = $this->app['session']->get('filter_user');
 
+        $queryParams = "";
+        $year = $request->query->get('selected_year');
+        $week = $request->query->get('selected_week');
+        if ($year || $week) {
+            $queryParams = "?year={$year}&week={$week}";
+        }
+
         if ($company && ($company === 'none' || $company != $sCompany)) {
             $this->app['session']->remove('filter_office');
             $this->app['session']->remove('filter_user');
@@ -30,7 +37,7 @@ class FiltersController
             } elseif ($company != $sCompany) {
                 $this->app['session']->set('filter_company', $company);
             }
-            return new RedirectResponse('/order');
+            return new RedirectResponse('/order' . $queryParams);
         }
 
         if ($office && ($office === 'none' || $office != $sOffice)) {
@@ -40,7 +47,7 @@ class FiltersController
             } else if ($office != $sOffice) {
                 $this->app['session']->set('filter_office', $office);
             }
-            return new RedirectResponse('/order');
+            return new RedirectResponse('/order' . $queryParams);
         }
 
         if ($user && ($user === 'none' || $user != $sUser)) {
@@ -51,7 +58,7 @@ class FiltersController
             }
         }
 
-        return new RedirectResponse('/order');
+        return new RedirectResponse('/order' . $queryParams);
     }
 
 }

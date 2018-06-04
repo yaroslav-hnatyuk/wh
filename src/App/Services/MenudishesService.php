@@ -83,6 +83,7 @@ class MenudishesService extends BaseService
         }
 
         unset($dish);
+        ksort($result);
 
         return $result;
     }

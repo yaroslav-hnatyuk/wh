@@ -8,11 +8,13 @@
     <meta name="keywords" content="">
     
     <link rel="stylesheet" href={{ asset('assets/css/styles-merged.css') }}>
-    <link rel="stylesheet" href={{ asset('assets/css/style.css') }}>    
+    <link rel="stylesheet" href={{ asset('assets/css/style.css') }}>  
+    <link rel="stylesheet" href={{ asset('assets/css/spop.css') }}>    
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src={{ asset('assets/js/jquery.fn.js') }}></script>
+    <script src={{ asset('assets/js/spop.js') }}></script>
 
     <!--[if lt IE 9]>
       <script src={{ asset('assets/js/vendor/html5shiv.min.js') }}></script>
@@ -137,7 +139,7 @@
       </div>
     </nav>
 
-    <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 610px">
+    <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 1080px">
       <div class="container" style="padding-top: 70px;">
         <div class="row">
             <div class="col-md-9 text-left" style="padding-left: 0">
@@ -157,10 +159,10 @@
                 <tr style="background-color:#efefef;">
                     <th style="padding-left: 5px">  
                         <ul class="pager">
-                            <li><a href="#" class="btn btn-default" style="color: rgba(0, 0, 0, 0.7);"><b>Today</b></a></li>
-                            <li><a href="#" class="btn"><</a></li>
+                            <li><a href="/order" class="btn btn-default" style="color: rgba(0, 0, 0, 0.7);"><b>Today</b></a></li>
+                            <li><a href="/order?year={{period.prev.year}}&week={{period.prev.week}}" class="btn"><</a></li>
                             <li class="date-range">{{ period.start.day }} - {{ period.end.day }}</li>
-                            <li><a href="#" class="btn">></a></li>
+                             <li><a href="/order?year={{period.next.year}}&week={{period.next.week}}" class="btn">></a></li>
                         </ul>
                     </th>
                     {# <th style="background-color: #eee;"></th> MANAGER #}
@@ -171,9 +173,9 @@
                         </th>
                     {% endfor %}
                 </tr>
-                <tr>
+                {# <tr>
                     <th style="text-align: right; padding-right: 20px">Всього: <b>265 грн</b></th>
-                    {# <th style="background-color: #eee"></th> MANAGER #}
+                    <th style="background-color: #eee"></th> MANAGER
                     <th style="color: #aaa">53</th>
                     <th style="color: #aaa">50</th>
                     <th style="color: #aaa">56</th>
@@ -181,7 +183,7 @@
                     <th style="color: #aaa">63</th>
                     <th style="color: #aaa">0</th>
                     <th style="color: #aaa">0</th>
-                </tr>
+                </tr> #}
             </table>
 
             {% for group in menu %}

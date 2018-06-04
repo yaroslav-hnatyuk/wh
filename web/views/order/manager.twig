@@ -9,10 +9,12 @@
     
     <link rel="stylesheet" href={{ asset('assets/css/styles-merged.css') }}>
     <link rel="stylesheet" href={{ asset('assets/css/style.css') }}>    
+    <link rel="stylesheet" href={{ asset('assets/css/spop.css') }}>    
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src={{ asset('assets/js/jquery.fn.js') }}></script>
+    <script src={{ asset('assets/js/spop.js') }}></script>
 
     <!--[if lt IE 9]>
       <script src={{ asset('assets/js/vendor/html5shiv.min.js') }}></script>
@@ -140,8 +142,10 @@
     <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 610px">
       <div class="container" style="padding-top: 70px;">
         <div class="row">
-            <div class="col-md-6 text-left" style="padding-left: 0">
+            <div class="col-md-9 text-left" style="padding-left: 0">
                 <form id="order-filters" class="probootstrap-form" style="margin: 0" methos="GET" action="/filters">
+                    <input type="hidden" name="selected_year" value="{{ year }}" />
+                    <input type="hidden" name="selected_week" value="{{ week }}" />
                     <div class="form-group" style="width: 160px; float: left; margin-right: 5px">
                         <div class="form-field">
                             <i class="icon icon-chevron-down"></i>
@@ -177,15 +181,11 @@
                     </div>
                 </form>
             </div>
-            <div class="col-md-3 text-center">
+            <div class="col-md-3 text-right" style="padding-right: 0">
                 <div class="btn-group">
                     <button type="button" class="btn order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Week</button>
                     <button type="button" class="btn btn-default order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Month</button>
-                </div> 
-            </div>
-            <div class="col-md-3 text-right" style="padding-right: 0">
-                <input id="cancel-changes" value="Cancel" class="btn" type="button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">
-                <input id="save-order" name="save_order" value="Save" class="btn btn-primary" type="button">
+                </div>
             </div>
             
             <br/><br/><br/>
@@ -208,9 +208,9 @@
                         </th>
                     {% endfor %}
                 </tr>
-                <tr>
+                {# <tr>
                     <th style="text-align: right; padding-right: 20px">Всього: <b>265 грн</b></th>
-                    {# <th style="background-color: #eee"></th> MANAGER #}
+                    <th style="background-color: #eee"></th> MANAGER
                     <th style="color: #aaa">53</th>
                     <th style="color: #aaa">50</th>
                     <th style="color: #aaa">56</th>
@@ -218,7 +218,7 @@
                     <th style="color: #aaa">63</th>
                     <th style="color: #aaa">0</th>
                     <th style="color: #aaa">0</th>
-                </tr>
+                </tr> #}
             </table>
 
             {% for group in menu %}
@@ -241,7 +241,7 @@
                         <th style="padding-left: 40px;"><div><a class="dish-link" >{{ dish.dish_name }}</a></div></th>
                         {# <th style="background-color: #eee">{{ dish.orders_count }}</th> MANAGER #}
                         {% for date, order in dish.orders %}
-                            <th><input class="order-cell" data-day={{ date }} data-changed="0" type="number" value="{{ order }}"/></th>
+                            <th>{{ order }}</th>
                         {% endfor %}
                     </tr>
                     {% endfor %}

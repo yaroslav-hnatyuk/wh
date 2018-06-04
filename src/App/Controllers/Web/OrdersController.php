@@ -44,6 +44,16 @@ class OrdersController extends BaseController
 
     private function managerOrder(Request $request)
     {
+        return $this->managerAdminOrder($request);
+    }
+
+    private function adminOrder(Request $request)
+    {
+        return $this->managerAdminOrder($request);
+    }
+
+    private function managerAdminOrder(Request $request)
+    {
         $week = $request->query->get('week');
         $year = $request->query->get('year');
 
@@ -71,26 +81,11 @@ class OrdersController extends BaseController
             'company' => $company,
             'office' => $office,
             'user' => $user,
+            'year' => $year,
+            'week' => $week,
             'companies' => $this->app['companies.service']->getAll(),
             'offices' => $this->app['offices.service']->getAllByCompany($company),
             'users' => $this->app['users.service']->getAllByOffice($office)
-        ));
-    }
-
-    private function adminOrder(Request $request)
-    {
-        $week = $request->query->get('week');
-        $year = $request->query->get('year');
-        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week);
-        // $menu = $this->menuService->getForPeriodForOrders($period);
-        // $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
-        // $menu = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
-        // $menu = $this->menuService->groupMenuDishes($menu, true);
-
-        return $this->app['twig']->render("order/admin.twig", array(
-            'period' => $period,
-            'userRole' => $this->getUser()->role
-            // 'menu' => $menu
         ));
     }
 }
