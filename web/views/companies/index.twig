@@ -63,13 +63,15 @@
               </tr>
             {% for company in companies %}
                 <tr>
-                  <th class="wh-group-name"><input type="text" value="{{ company.name}}" /></th>
-                  <th></th>
+                  <th colspan="2" class="wh-group-name">
+                    <input type="text" value="{{ company.name}}" style="float: left; width: 50%"/>
+                    <input data-company-id="{{ company.id }}" value="Додати" class="btn btn-info add-new-item add-dish" type="button">
+                  </th>
                 </tr>
                 {% for office in company.offices %}
                   <tr data-office-id={{ office.id }}>
                     <th class="wh-name"><input type="text" value="{{ office.address }}" /></th>
-                    <th>http://localhost:9001/ksaldhkasjdash23298sajdhas7123</th>
+                    <th>http://localhost:9001/registration?c=ksaldhkasjdash23298sajdhasff7s1d2d3</th>
                   </tr>
                 {% endfor %}
             {% endfor %}

@@ -40,7 +40,36 @@
       </div>
     </nav>
 
-    <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 610px"></section>
+    
+    <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 1080px">
+      <div class="container" style="padding-top: 70px;">
+        <div class="row">
+            <div class="col-md-3 text-left" style="padding-left: 0">
+            <table class="table wh-table" style="cursor: pointer; width: 100%; margin: 0px">
+              <tr class="wh-head" style="border-left: 1px solid #ddd">
+                <th style="font-size: 18px">Гнатюк Ярослав</th>
+              </tr>
+              <tr data-office-id={{ office.id }}>
+                <th style="border-left: 1px solid #ddd; padding: 15px" class="wh-name">Персональні дані</th>
+              </tr>
+              <tr data-office-id={{ office.id }}>
+                <th style="border-left: 1px solid #ddd; padding: 15px" class="wh-name">Відгуки</th>
+              </tr>
+              <tr data-office-id={{ office.id }}>
+                <th style="border-left: 1px solid #ddd; padding: 15px" class="wh-name">Акції</th>
+              </tr>
+              <tr data-office-id={{ office.id }}>
+                <th style="border-left: 1px solid #ddd; padding: 15px" class="wh-name">Бали та промокоди</th>
+              </tr>
+            </table>
+            <hr class="bottom-table-border"/>
+            </div>
+            <div class="col-md-9 text-left" style="padding-right: 0">
+                <img src={{ asset('assets/img/pr.png') }} />
+            </div>
+        </div>
+      </div>
+    </section>
 
     <script src={{ asset('assets/js/scripts.min.js') }}></script>
     <script src={{ asset('assets/js/custom.min.js') }}></script>
