@@ -40,7 +40,7 @@ $(document).ready(function (){
                 $( ".order-cell" ).each(function(  ) {
                     ordersData.push({
                         day: $(this).data('day'),
-                        menu_dish_id: $(this).parent().parent().data('menu-id'),
+                        menu_dish_id: $(this).parent().parent().attr('data-menu-id'),
                         count: $(this).val()
                     });
                 });
@@ -141,6 +141,9 @@ $(document).ready(function (){
                 method: "DELETE",
                 contentType:'application/json',
                 success: function (dish) {
+                    var menuRow = $('tr[data-dish-id="' + dish.dish_id + '"]');
+                    menuRow.attr('data-menu-id', dish.id);
+                    menuRow.attr('data-menu-id', '');
                     callback();
                 },
                 error: function (error) {
@@ -162,6 +165,8 @@ $(document).ready(function (){
                 dataType: "json",
                 success: function (dish) {
                     console.log(dish);
+                    var menuRow = $('tr[data-dish-id="' + dish.dish_id + '"]');
+                    menuRow.attr('data-menu-id', dish.id);
                     callback();
                     
                 },
@@ -281,7 +286,7 @@ $(document).ready(function (){
 
     //ADD dish
     $(".add-dish").click(function() {
-        var groupId = $(this).data('group-id');
+        var groupId = $(this).attr('data-group-id');
         $(".group-" + groupId).last().after( 
             '<tr class="group-' + groupId + '" data-dish-id="" data-group-id="' + groupId + '" data-tmp-id="' + Math.floor(Math.random() * 1000001) +'">' +
                 '<th class="wh-name"><input type="text" name="name" value="" placeholder="Введіть ім\'я" /></th>' +
@@ -325,12 +330,10 @@ $(document).ready(function (){
         var checkbox = $(this).children('input');
         
         if (checkbox.is(':checked')) {
-            var menuRow = $(this).parent().parent();
-            var menuId = $(this).parent().parent().data('menu-id');
+            var menuId = $(this).parent().parent().attr('data-menu-id');
             if (menuId) {
                 API.removeDishFromMenu(menuId, function(){
                     checkbox.prop('checked', false);
-                    menuRow.attr('data-menu-id', '');
                 });
             } else {
                 checkbox.prop('checked', false);
@@ -339,7 +342,7 @@ $(document).ready(function (){
             var dishData = {
                 start: $(".date-range").data('start'),
                 end: $(".date-range").data('end'),
-                dish_id: $(this).parent().parent().data('dish-id')
+                dish_id: $(this).parent().parent().attr('data-dish-id')
             };
             API.addDishToMenu(dishData, function(){
                 checkbox.prop('checked', true);

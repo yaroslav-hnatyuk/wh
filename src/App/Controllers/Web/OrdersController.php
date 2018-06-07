@@ -42,16 +42,6 @@ class OrdersController extends BaseController
         ));
     }
 
-    private function managerOrder(Request $request)
-    {
-        return $this->managerAdminOrder($request);
-    }
-
-    private function adminOrder(Request $request)
-    {
-        return $this->managerAdminOrder($request);
-    }
-
     private function managerAdminOrder(Request $request)
     {
         $week = $request->query->get('week');
@@ -87,5 +77,15 @@ class OrdersController extends BaseController
             'offices' => $this->app['offices.service']->getAllByCompany($company),
             'users' => $this->app['users.service']->getAllByOffice($office)
         ));
+    }
+
+    private function managerOrder(Request $request)
+    {
+        return $this->managerAdminOrder($request);
+    }
+
+    private function adminOrder(Request $request)
+    {
+        return $this->managerAdminOrder($request);
     }
 }

@@ -14,6 +14,13 @@ class MenudishesService extends BaseService
         return $menuDish->getArray();
     }
 
+    public function getOneByDishIdAndPeriod($dishId, $period) {
+        return $this->db->fetchAssoc(
+            "SELECT * FROM `menu_dish` WHERE `dish_id`=? AND `start`=? AND `end`=?", 
+            array((int) $id, $period['start'], $period['end'])
+        );
+    }
+
     public function getAll()
     {
         return $this->db->fetchAll("SELECT * FROM menu_dish");
@@ -91,6 +98,18 @@ class MenudishesService extends BaseService
     function save($data = array())
     {
         $menuDish = new MenuDish($data);
+        $existingMenuDish = $this->getOneByDishIdAndPeriod(
+            $menuDish->dish_id, 
+            array(
+                'start' => $menuDish->start, 
+                'end' => $menuDish->end
+            )
+        );
+
+        if ($existingMenuDish) {
+            return $existingMenuDish;
+        }
+
         $this->db->insert("menu_dish", $menuDish->getArray());
         $menuDish->id = $this->db->lastInsertId();
 
