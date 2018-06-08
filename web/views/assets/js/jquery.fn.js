@@ -179,6 +179,31 @@ $(document).ready(function (){
                     });
                 }
             });
+        },
+
+        removeDish: function(dishId) {
+            $.ajax({
+                url: "/api/v1/dishes/" + dishId,
+                method: "DELETE",
+                contentType:'application/json',
+                success: function (dish) {
+                    $('tr[data-dish-id="' + dishId + '"]').remove();
+                    spop({
+                        template: 'Страва успішно видалена!',
+                        position  : 'bottom-right',
+                        style: 'success',
+                        autoclose: 3000
+                    });
+                },
+                error: function (error) {
+                    spop({
+                        template: 'Не вдалося видалити страву!',
+                        position  : 'bottom-right',
+                        style: 'error',
+                        autoclose: 3000
+                    });
+                }
+            });
         }
     }
 
@@ -294,6 +319,9 @@ $(document).ready(function (){
                 '<th><input name="ingredients" type="text" value="" placeholder="Інгредієнти.."/></th>' +
                 '<th width="5%"><input name="weight" type="number" value="" placeholder="Вага.."/></th>' +
                 '<th width="5%"><input name="price" type="number" value="" placeholder="Ціна.."/></th>' +
+                '<th width="3%">' +
+                '<a href="#" class="btn btn-danger btn-xs remove-dish" style="padding: 3px 10px 3px 10px; text-transform: lowercase">x</a>' +
+                '</th>' +
             '</tr>' 
         );
         return false;
@@ -355,5 +383,15 @@ $(document).ready(function (){
     $(".order-filter").change(function() {
         $("#order-filters").submit();
     });
+
+    $("body").on("click", ".remove-dish", function(){
+        var dishId = $(this).parent().parent().attr('data-dish-id');
+        if (dishId) {
+            API.removeDish(dishId);
+        } else {
+            $(this).parent().parent().remove();
+        }
+        return false;
+    });      
 
 });   

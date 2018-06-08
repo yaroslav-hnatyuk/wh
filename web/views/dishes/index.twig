@@ -63,10 +63,11 @@
                 <th>Інгредієнти</th>
                 <th>Вага</th>
                 <th>Ціна</th>
+                <th></th>
               </tr>
             {% for group in dishes %}
                 <tr>
-                  <th colspan="5" class="wh-group-name">
+                  <th colspan="6" class="wh-group-name">
                   <input type="text" value="{{ group.name}}" style="float: left; width: 50%"/>
                   <input data-group-id="{{ group.id }}" value="Додати" class="btn btn-info add-new-item add-dish" type="button">
                 </th>
@@ -78,6 +79,9 @@
                     <th><input name="ingredients" type="text" value="{{ dish.ingredients }}" /></th>
                     <th width="5%"><input name="weight" type="number" value="{{ dish.weight }}" /></th>
                     <th width="5%"><input name="price" type="number" value="{{ dish.price }}" /></th>
+                    <th width="3%">
+                      <a href="#" class="btn btn-danger btn-xs remove-dish" style="padding: 3px 10px 3px 10px; text-transform: lowercase">x</a>
+                    </th>
                   </tr>
                 {% endfor %}
             {% endfor %}
