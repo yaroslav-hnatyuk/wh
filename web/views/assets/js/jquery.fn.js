@@ -394,4 +394,24 @@ $(document).ready(function (){
         return false;
     });      
 
+    $("#save-companies").click(function(){
+        spop({
+            template: 'Компанії успішно збережені!',
+            position  : 'bottom-right',
+            style: 'success',
+            autoclose: 3000
+        });
+        return false;
+    });
+
+    $("#save-users").click(function(){
+        spop({
+            template: 'Користувачі успішно збережені!',
+            position  : 'bottom-right',
+            style: 'success',
+            autoclose: 3000
+        });
+        return false;
+    });
+
 });   

@@ -47,11 +47,11 @@
         <div class="row">
             
             <div class="col-md-9 text-left" style="padding-left: 0">
-                <input id="save-order" name="save_order" value="Add new company" class="btn btn-primary" type="button">
+                <input id="add-company" name="add_company" value="Додати нову компанію" class="btn btn-primary" type="button">
             </div>
             <div class="col-md-3 text-right" style="padding-right: 0">
-                <input id="cancel-changes" value="Cancel" class="btn" type="button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">
-                <input id="save-order" name="save_order" value="Save" class="btn btn-primary" type="button">
+                <a href="/companies" id="cancel-changes" class="btn" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Відмінити</a>
+                <input id="save-companies" name="save_companies" value="Зберегти" class="btn btn-primary" type="button">
             </div>
             
             <br/><br/><br/>
@@ -65,7 +65,7 @@
                 <tr>
                   <th colspan="2" class="wh-group-name">
                     <input type="text" value="{{ company.name}}" style="float: left; width: 50%"/>
-                    <input data-company-id="{{ company.id }}" value="Додати" class="btn btn-info add-new-item add-dish" type="button">
+                    <input data-company-id="{{ company.id }}" value="Додати" class="btn btn-info add-new-item add-office" type="button">
                   </th>
                 </tr>
                 {% for office in company.offices %}

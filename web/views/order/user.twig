@@ -144,13 +144,13 @@
         <div class="row">
             <div class="col-md-9 text-left" style="padding-left: 0">
                 <div class="btn-group">
-                    <button type="button" class="btn order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Week</button>
-                    <button type="button" class="btn btn-default order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Month</button>
+                    <button type="button" class="btn order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Тиждень</button>
+                    <button type="button" class="btn btn-default order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Місяць</button>
                 </div> 
             </div>
             <div class="col-md-3 text-right" style="padding-right: 0">
-                <input id="cancel-changes" value="Cancel" class="btn" type="button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">
-                <input id="save-order" name="save_order" value="Save" class="btn btn-primary" type="button">
+                <a href="/order" id="cancel-changes" class="btn" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Відмінити</a>
+                <input id="save-order" name="save_order" value="Зберегти" class="btn btn-primary" type="button">
             </div>
             
             <br/><br/><br/>
@@ -159,7 +159,7 @@
                 <tr style="background-color:#efefef;">
                     <th style="padding-left: 5px">  
                         <ul class="pager">
-                            <li><a href="/order" class="btn btn-default" style="color: rgba(0, 0, 0, 0.7);"><b>Today</b></a></li>
+                            <li><a href="/order" class="btn btn-default" style="color: rgba(0, 0, 0, 0.7);"><b>Сьогодні</b></a></li>
                             <li><a href="/order?year={{period.prev.year}}&week={{period.prev.week}}" class="btn"><</a></li>
                             <li class="date-range">{{ period.start.day }} - {{ period.end.day }}</li>
                              <li><a href="/order?year={{period.next.year}}&week={{period.next.week}}" class="btn">></a></li>
