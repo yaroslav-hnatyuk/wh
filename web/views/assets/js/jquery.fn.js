@@ -39,7 +39,7 @@ $(document).ready(function (){
                 var ordersData = [];
                 $( ".order-cell" ).each(function(  ) {
                     ordersData.push({
-                        day: $(this).data('day'),
+                        day: $(this).attr('data-day'),
                         menu_dish_id: $(this).parent().parent().attr('data-menu-id'),
                         count: $(this).val()
                     });
@@ -53,6 +53,55 @@ $(document).ready(function (){
                     data: JSON.stringify(ordersData),
                     dataType: "json",
                     success: function (result) {
+                        spop({
+                            template: 'Замовлення збережене! Дякуємо :)',
+                            position  : 'bottom-right',
+                            style: 'success',
+                            autoclose: 3000
+                        });
+                    },
+                    error: function (error) {
+                        spop({
+                            template: 'Помилка :( Перевірте будь-ласка ваше замовлення.',
+                            position  : 'bottom-right',
+                            style: 'error',
+                            autoclose: 3000
+                        });
+                    }
+                });
+            });
+
+            defer.resolve();
+        },
+
+
+        saveUserOrderFromPopup: function() {
+            var defer = jQuery.Deferred();
+
+            defer.then(function(){
+                var ordersData = [];
+                $( ".modal-order-cell" ).each(function(  ) {
+                    ordersData.push({
+                        day: $(this).attr('data-modal-dish-day'),
+                        menu_dish_id: $(this).attr('data-modal-menu-id'),
+                        count: $(this).val()
+                    });
+                });
+
+                return ordersData;
+            }).then(function(ordersData) {
+                $.ajax({
+                    url: "/api/v1/orders",
+                    method: "POST",
+                    data: JSON.stringify(ordersData),
+                    dataType: "json",
+                    success: function (result) {
+                        for (const index in ordersData) {
+                            if (ordersData.hasOwnProperty(index)) {
+                                const order = ordersData[index];
+                                $('tr[data-menu-id="' + order.menu_dish_id + '"] input[data-day="' + order.day + '"]').val(order.count);
+                            }
+                        }
                         spop({
                             template: 'Замовлення збережене! Дякуємо :)',
                             position  : 'bottom-right',
@@ -204,6 +253,37 @@ $(document).ready(function (){
                     });
                 }
             });
+        },
+
+        getDish: function(dishId) {
+            $.ajax({
+                url: "/api/v1/dishes/" + dishId + "?included[]=reviews_count&included[]=rating",
+                method: "GET",
+                contentType:'application/json',
+                success: function (dish) {
+                    $("#modal-dish-name").html(dish.name);
+                    $("#modal-dish-description").html(dish.description);
+                    $("#modal-dish-reviews-count").html(dish.reviews_count);
+                    let rating = "";
+                    for (let i = 1; i <= 5; i++) {
+                        if (dish.rating >= i) {
+                            rating = '<span style="color: #FFA33E;">&#9733;</span>' + rating;
+                        } else {
+                            rating = '<span>&#9734;</span>' + rating;
+                        }
+                    }
+                    $("#modal-dish-rating").html(rating);
+                    $("#myModal").modal();
+                },
+                error: function (error) {
+                    spop({
+                        template: 'Помилка :( Не вдалося знайти вибрану страву.',
+                        position  : 'bottom-right',
+                        style: 'error',
+                        autoclose: 3000
+                    });
+                }
+            });
         }
     }
 
@@ -249,7 +329,17 @@ $(document).ready(function (){
 
     // SHOW DISH
     $(".dish-link").click(function(){
-        $("#myModal").modal();
+        var dishId = $(this).parent().parent().parent().attr('data-dish-id');
+        var menuId = $(this).parent().parent().parent().attr('data-menu-id');
+
+        $('input[data-modal-menu-id]').attr('data-modal-menu-id', menuId);
+        $(this).parent().parent().parent().find(".order-cell").each(function(  ) {
+            let day = $(this).attr('data-day');
+            let count = $(this).val();
+            $('input[data-modal-dish-day="' + day + '"]').val(count);
+        });
+
+        API.getDish(dishId);
     });
 
 
@@ -306,6 +396,11 @@ $(document).ready(function (){
     //SAVE ORDER
     $("#save-order").click(function(){
         API.saveUserOrder();
+        return false;
+    });
+
+    $("#save-order-popup").click(function(){
+        API.saveUserOrderFromPopup();
         return false;
     });
 

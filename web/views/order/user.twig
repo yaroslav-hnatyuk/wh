@@ -34,82 +34,49 @@
             <div class="modal-body" style="float: left; padding: 35px 10px 0px 20px; margin: 0;">
                 <div class="col-md-6 probootstrap-animate">
                     <div class="probootstrap-block-image">
-                        <figure><img src={{ asset('assets/img/img_square_3.jpg') }} alt="Free Bootstrap Template by uicookies.com"></figure>
+                        <figure><img id="modal-dish-image" src={{ asset('assets/img/img_square_3.jpg') }}/></figure>
                     </div>
                 </div> 
                 <div class="col-md-6 col-sm-6 text-left" style="font-size: 13px; font-weight: normal">
                     <div class="col-md-12 text-left">
-                        <h3 style="padding: 0; margin: 0;">Гуляш по угорськи</h3>
+                        <h3 style="padding: 0; margin: 0;" id="modal-dish-name"></h3>
                     </div>
                     <div class="col-md-12 text-left">
-                        <div class="rating">
-                            <span>☆</span>
-                            <span>☆</span>
-                            <span style="color: #FFA33E;">★</span>
-                            <span style="color: #FFA33E;">★</span>
-                            <span style="color: #FFA33E;">★</span>
+                        <div class="modal-rating" id="modal-dish-rating">
                         </div>
                         <div style="margin-left: 10px; float: left; color: #aaa">
-                            <span style="padding: 15px">122 reviews</span>
+                            {# <span style="padding: 15px">Відгуків: <span id="modal-dish-reviews-count"></span></span> #}
                             <span> | </span>
-                            <span style="padding: 15px"><a href="#">Write review</a></span>
+                            <span style="padding: 15px"><a href="#">Написати відгук</a></span>
                         </div>
                     </div>
                     <div class="col-md-12 text-left" style="height: 126px; padding-top: 10px;">
-                        <b>Description</b>
-                        <p style="font-size: 11px">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium 
-                            doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et 
-                            quasi.
+                        <b>Опис</b>
+                        <p id="modal-dish-description" style="font-size: 11px">
+                            
                         </p>
                     </div>
                     <div class="col-md-12" style="padding-bottom: 15px; margin-top: 5px">
                         <table class="table order-table" style="margin: 0">
                             <tr style="background-color:#efefef;">
-                                <th>
-                                    <span class="day-name">Mon</span><br/>
-                                    <span class="day-date">14</span>
-                                </th>
-                                <th>
-                                    <span class="day-name">Tue</span><br/>
-                                    <span class="day-date">15</span>
-                                </th>
-                                <th>
-                                    <span class="day-name">Wed</span><br/>
-                                    <span class="day-date">16</span>
-                                </th>
-                                <th>
-                                    <span class="day-name">Thu</span><br/>
-                                    <span class="day-date">17</span>
-                                </th>
-                                <th>
-                                    <span class="day-name">Fri</span><br/>
-                                    <span class="day-date">18</span>
-                                </th>
-                                <th>
-                                    <span class="day-name">Sat</span><br/>
-                                    <span class="day-date">19</span>
-                                </th>
-                                <th>
-                                    <span class="day-name">San</span><br/>
-                                    <span class="day-date">20</span>
-                                </th>
+                                {% for date, weekday in period.items %}
+                                    <th>
+                                        <span class="day-name">{{ weekday.day }}</span><br/>
+                                        <span class="day-date">{{ weekday.number }}</span>
+                                    </th>
+                                {% endfor %}
                             </tr>
                             <tr>
-                                <th><div><input type="number" value="1"/></div></th>
-                                <th><div><input type="number" value="2"/></div></th>
-                                <th><div><input type="number" value="0"/></div></th>
-                                <th><div><input type="number" value="0"/></div></th>
-                                <th><div><input type="number" value="1"/></div></th>
-                                <th><div><input type="number" value="0"/></div></th>
-                                <th><div><input type="number" value="0"/></div></th>
+                                {% for date, weekday in period.items %}
+                                    <th><input class="modal-order-cell" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value=""/></th>
+                                {% endfor %}
                             </tr>
                         </table>
                         <hr class="bottom-table-border"/>
                     </div>
                     <div class="col-md-12 text-left">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" style="border: 1px solid #ccc">Close</button>
-                        <button type="button" class="btn btn-primary" style="margin-right: 10px" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" style="border: 1px solid #ccc">Закрити</button>
+                        <button type="button" id="save-order-popup" class="btn btn-primary" style="margin-right: 10px" data-dismiss="modal">Зберегти</button>
                     </div>
                 </div>            
             </div>
@@ -202,7 +169,7 @@
                 </table>
                 <table class="dish-list table order-table" id="salads-list"  style="margin: 0px">
                     {% for dish in group.dishes %}
-                    <tr data-menu-id={{ dish.menu_id }}>
+                    <tr data-menu-id={{ dish.menu_id }} data-dish-id={{ dish.dish_id }}>
                         <th style="padding-left: 40px;"><div><a class="dish-link" >{{ dish.dish_name }}</a></div></th>
                         {# <th style="background-color: #eee">{{ dish.orders_count }}</th> MANAGER #}
                         {% for date, order in dish.orders %}
