@@ -20,7 +20,7 @@ class DishesController extends BaseController
 
     public function getOne(Request $request, $id)
     {
-        $included = $request->query->get('included');
+        $included = $request->query->get('included') ?: array();
         $dish = $this->dishesService->getOne($id);
 
         if (in_array('reviews_count', $included, TRUE)) {
