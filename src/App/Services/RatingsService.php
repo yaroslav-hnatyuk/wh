@@ -13,6 +13,17 @@ class RatingsService extends BaseService
 
         return $rating->getArray();
     }
+    
+    public function getAverageByDishId($dishId) 
+    {
+        $average = $this->db->fetchColumn("SELECT AVG(mark) FROM `rating` WHERE dish_id=?", [(int) $dishId]);
+        return round($average);
+    }
+
+    public function getAllByDishId($dishId) 
+    {
+        return $this->db->fetchAll("SELECT * FROM `rating` WHERE dish_id=?", [(int) $dishId]);
+    }
 
     public function getAll()
     {

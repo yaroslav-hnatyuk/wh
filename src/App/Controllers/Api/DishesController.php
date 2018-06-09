@@ -18,9 +18,19 @@ class DishesController extends BaseController
         $this->dishesService = $service;
     }
 
-    public function getOne($id)
+    public function getOne(Request $request, $id)
     {
-        return new JsonResponse($this->dishesService->getOne($id));
+        $included = $request->query->get('included');
+        $dish = $this->dishesService->getOne($id);
+
+        if (in_array('reviews_count', $included, TRUE)) {
+            $dish['reviews_count'] = $this->app['feedback.service']->getCountByDishId($dish['id']);
+        }
+        if (in_array('rating', $included, TRUE)) {
+            $dish['rating'] = $this->app['ratings.service']->getAverageByDishId($dish['id']);
+        }
+
+        return new JsonResponse($dish);
     }
 
     public function getAll()

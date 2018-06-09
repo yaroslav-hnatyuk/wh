@@ -247,7 +247,7 @@ $(document).ready(function (){
     }); 
 
 
-    // MODAL
+    // SHOW DISH
     $(".dish-link").click(function(){
         $("#myModal").modal();
     });

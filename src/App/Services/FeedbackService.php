@@ -14,6 +14,16 @@ class FeedbackService extends BaseService
         return $feedback->getArray();
     }
 
+    public function getCountByDishId($dishId) 
+    {
+        return $this->db->fetchColumn("SELECT COUNT(*) FROM `feedback` WHERE dish_id=?", [(int) $dishId]);
+    }
+
+    public function getAllByDishId($dishId) 
+    {
+        return $this->db->fetchAll("SELECT * FROM `feedback` WHERE dish_id=?", [(int) $dishId]);
+    }
+
     public function getAll()
     {
         return $this->db->fetchAll("SELECT * FROM `feedback`");
