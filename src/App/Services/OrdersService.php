@@ -112,11 +112,6 @@ class OrdersService extends BaseService
     function mergeMenuWithOrders($menu, $orders, $period)
     {
         $result = array();
-        // echo "<pre>";
-        // var_dump($menu);
-        // var_dump($orders);
-        // die;
-        // var_dump($period);
         $userOrders = array_combine(
             array_keys($period['items']),
             array_fill(0, count($period['items']), array(
@@ -134,40 +129,21 @@ class OrdersService extends BaseService
         foreach ($menu as $dish) {
             if (!isset($result[$dish['dish_id']])) {
                 $result[$dish['dish_id']] = $dish;
-                foreach ($userOrders as $date => $orderData) {
-                    $time = strtotime($date);
-                    $result[$dish['dish_id']]['orders'][$date] = $orderData;    
-                    if ($time >= strtotime($dish['start']) && $time <= strtotime($dish['end'])) {
-                        $result[$dish['dish_id']]['orders'][$date]['menu_id'] = $dish['menu_id'];
-                        $result[$dish['dish_id']]['orders'][$date]['available'] = true;
-                        if (isset($groupedOrders[$dish['menu_id'] . '__' . $date])) {
-                            $result[$dish['dish_id']]['orders'][$date]['count'] = $groupedOrders[$dish['menu_id'] . '__' . $date];
-                        }
-                    }
+            }
+            foreach ($userOrders as $date => $orderData) {
+                $time = strtotime($date);
+                if (!isset($result[$dish['dish_id']]['orders'][$date])) {
+                    $result[$dish['dish_id']]['orders'][$date] = $orderData;
                 }
-            } else {
-                foreach ($userOrders as $date => $orderData) {
-                    $time = strtotime($date);
-                    if ($time >= strtotime($dish['start']) && $time <= strtotime($dish['end'])) {
-                        $result[$dish['dish_id']]['orders'][$date]['menu_id'] = $dish['menu_id'];
-                        $result[$dish['dish_id']]['orders'][$date]['available'] = true;
-                        if (isset($groupedOrders[$dish['menu_id'] . '__' . $date])) {
-                            $result[$dish['dish_id']]['orders'][$date]['count'] = $groupedOrders[$dish['menu_id'] . '__' . $date];
-                        }
+                if ($time >= strtotime($dish['start']) && $time <= strtotime($dish['end'])) {
+                    $result[$dish['dish_id']]['orders'][$date]['menu_id'] = $dish['menu_id'];
+                    $result[$dish['dish_id']]['orders'][$date]['available'] = true;
+                    if (isset($groupedOrders[$dish['menu_id'] . '__' . $date])) {
+                        $result[$dish['dish_id']]['orders'][$date]['count'] = $groupedOrders[$dish['menu_id'] . '__' . $date];
                     }
                 }
             }
-            // foreach($orders as $order) {
-            //     $dish['orders'][$order['day']]['menu_id'] = $dish['menu_id'];
-            //     if ($dish['menu_id'] === $order['menu_dish_id']) {
-            //         $dish['orders'][$order['day']]['count'] = $order['count'];
-            //     }
-            // }
         }
-
-        // echo "<pre>";
-        // var_dump($result);
-        // die;
 
         return $result;
     }
