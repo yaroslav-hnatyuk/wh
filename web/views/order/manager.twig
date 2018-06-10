@@ -241,7 +241,11 @@
                         <th style="padding-left: 40px;"><div><a class="dish-link" >{{ dish.dish_name }}</a></div></th>
                         {# <th style="background-color: #eee">{{ dish.orders_count }}</th> MANAGER #}
                         {% for date, order in dish.orders %}
-                            <th>{{ order }}</th>
+                            {% if order.available %}
+                            <th>{{ order.count }}</th>
+                            {% else %}
+                            <th style="background-color: #efefef; color: #ccc">-</th>
+                            {% endif %}
                         {% endfor %}
                     </tr>
                     {% endfor %}

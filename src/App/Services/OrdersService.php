@@ -123,7 +123,7 @@ class OrdersService extends BaseService
 
         $groupedOrders = array();
         foreach($orders as $order) {
-            $groupedOrders[$order['menu_dish_id'] . '__' . $order['day']] = $order['count'];
+            $groupedOrders[$order['menu_dish_id'] . '__' . $order['day']] += $order['count'];
         }
 
         foreach ($menu as $dish) {
