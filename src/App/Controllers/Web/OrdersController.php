@@ -28,15 +28,18 @@ class OrdersController extends BaseController
     {
         $week = $request->query->get('week');
         $year = $request->query->get('year');
-        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week);
+        $filterPeriod = $this->app['session']->get('filter_period') ?: 'week';
+        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week, $filterPeriod);
 
         $menu = $this->menuService->getForPeriodForOrders($period);
+
         $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
         $menu = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
         $menu = $this->menuService->groupMenuDishes($menu, true);
 
         return $this->app['twig']->render("order/user.twig", array(
             'period' => $period,
+            'filterPeriod' => $filterPeriod,
             'userRole' => $this->getUser()->role,
             'menu' => $menu
         ));
@@ -50,6 +53,7 @@ class OrdersController extends BaseController
         $company = $this->app['session']->get('filter_company');
         $office = $this->app['session']->get('filter_office');
         $user = $this->app['session']->get('filter_user');
+        $filterPeriod = $this->app['session']->get('filter_period') ?: FiltersController::FILTER_PERIOD_WEEK;
 
         $period = $this->ordersService->getPeriodForYearAndWeek($year, $week);
         $menu = $this->menuService->getForPeriodForOrders($period);
@@ -73,6 +77,7 @@ class OrdersController extends BaseController
             'user' => $user,
             'year' => $year,
             'week' => $week,
+            'filterPeriod' => $filterPeriod,
             'companies' => $this->app['companies.service']->getAll(),
             'offices' => $this->app['offices.service']->getAllByCompany($company),
             'users' => $this->app['users.service']->getAllByOffice($office)

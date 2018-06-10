@@ -111,24 +111,68 @@ class OrdersService extends BaseService
 
     function mergeMenuWithOrders($menu, $orders, $period)
     {
+        $result = array();
+        // echo "<pre>";
+        // var_dump($menu);
+        // var_dump($orders);
+        // die;
+        // var_dump($period);
         $userOrders = array_combine(
             array_keys($period['items']),
-            array_fill(0, count($period['items']), 0)
+            array_fill(0, count($period['items']), array(
+                'menu_id' => null,
+                'count' => 0,
+                'available' => false
+            ))
         );
 
-        foreach ($menu as &$dish) {
-            $dish['orders'] = $userOrders;
-            foreach($orders as $order) {
-                if ($dish['menu_id'] === $order['menu_dish_id']) {
-                    $dish['orders'][$order['day']] += $order['count'];
-                }
-            }
+        $groupedOrders = array();
+        foreach($orders as $order) {
+            $groupedOrders[$order['menu_dish_id'] . '__' . $order['day']] = $order['count'];
         }
 
-        return $menu;
+        foreach ($menu as $dish) {
+            if (!isset($result[$dish['dish_id']])) {
+                $result[$dish['dish_id']] = $dish;
+                foreach ($userOrders as $date => $orderData) {
+                    $time = strtotime($date);
+                    $result[$dish['dish_id']]['orders'][$date] = $orderData;    
+                    if ($time >= strtotime($dish['start']) && $time <= strtotime($dish['end'])) {
+                        $result[$dish['dish_id']]['orders'][$date]['menu_id'] = $dish['menu_id'];
+                        $result[$dish['dish_id']]['orders'][$date]['available'] = true;
+                        if (isset($groupedOrders[$dish['menu_id'] . '__' . $date])) {
+                            $result[$dish['dish_id']]['orders'][$date]['count'] = $groupedOrders[$dish['menu_id'] . '__' . $date];
+                        }
+                    }
+                }
+            } else {
+                foreach ($userOrders as $date => $orderData) {
+                    $time = strtotime($date);
+                    if ($time >= strtotime($dish['start']) && $time <= strtotime($dish['end'])) {
+                        $result[$dish['dish_id']]['orders'][$date]['menu_id'] = $dish['menu_id'];
+                        $result[$dish['dish_id']]['orders'][$date]['available'] = true;
+                        if (isset($groupedOrders[$dish['menu_id'] . '__' . $date])) {
+                            $result[$dish['dish_id']]['orders'][$date]['count'] = $groupedOrders[$dish['menu_id'] . '__' . $date];
+                        }
+                    }
+                }
+            }
+            // foreach($orders as $order) {
+            //     $dish['orders'][$order['day']]['menu_id'] = $dish['menu_id'];
+            //     if ($dish['menu_id'] === $order['menu_dish_id']) {
+            //         $dish['orders'][$order['day']]['count'] = $order['count'];
+            //     }
+            // }
+        }
+
+        // echo "<pre>";
+        // var_dump($result);
+        // die;
+
+        return $result;
     }
 
-    function getPeriodForYearAndWeek($year = null, $weekNumber = null)
+    function getPeriodForYearAndWeek($year = null, $weekNumber = null, $period = 'week')
     {
         $weekNumber = !$weekNumber ? (new \DateTime())->format("W") : $weekNumber;
         $year = !$year ? (new \DateTime())->format("Y") : $year;
@@ -150,8 +194,8 @@ class OrdersService extends BaseService
             $prev['week'] = $weekNumber - 1;
             $prev['year'] = $year;
         }
-        
-        
+
+
         $weekNumber = str_pad($weekNumber, 2, '0', STR_PAD_LEFT);
         $monday = null;
         $sunday = null;
@@ -166,6 +210,18 @@ class OrdersService extends BaseService
                 'day' => date("D", $day),
                 'number' => date("d", $day)
             );
+        }
+
+        if ($period == '2weeks') {
+            for($i = 1; $i <= 7; $i++) {
+                $day = strtotime($year."W".($weekNumber + 1).$i);
+                if ($i == 7) $sunday = $day;
+    
+                $week[date("Y-m-d", $day)] = array(
+                    'day' => date("D", $day),
+                    'number' => date("d", $day)
+                );
+            }
         }
         
         return array(

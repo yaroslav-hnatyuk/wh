@@ -40,7 +40,7 @@ $(document).ready(function (){
                 $( ".order-cell" ).each(function(  ) {
                     ordersData.push({
                         day: $(this).attr('data-day'),
-                        menu_dish_id: $(this).parent().parent().attr('data-menu-id'),
+                        menu_dish_id: $(this).attr('data-menu-id'),
                         count: $(this).val()
                     });
                 });
@@ -99,9 +99,10 @@ $(document).ready(function (){
                         for (const index in ordersData) {
                             if (ordersData.hasOwnProperty(index)) {
                                 const order = ordersData[index];
-                                $('tr[data-menu-id="' + order.menu_dish_id + '"] input[data-day="' + order.day + '"]').val(order.count);
+                                $('.order-cell[data-menu-id="' + order.menu_dish_id + '"][data-day="' + order.day + '"]').val(order.count);
                             }
                         }
+                        $("#myModal").modal('hide');
                         spop({
                             template: 'Замовлення збережене! Дякуємо :)',
                             position  : 'bottom-right',
@@ -329,14 +330,14 @@ $(document).ready(function (){
 
     // SHOW DISH
     $(".dish-link").click(function(){
-        var dishId = $(this).parent().parent().parent().attr('data-dish-id');
-        var menuId = $(this).parent().parent().parent().attr('data-menu-id');
+        var dishId = $(this).attr('data-link-dish-id');
 
-        $('input[data-modal-menu-id]').attr('data-modal-menu-id', menuId);
         $(this).parent().parent().parent().find(".order-cell").each(function(  ) {
             let day = $(this).attr('data-day');
+            let menuId = $(this).attr('data-menu-id');
             let count = $(this).val();
             $('input[data-modal-dish-day="' + day + '"]').val(count);
+            $('input[data-modal-dish-day="' + day + '"]').attr('data-modal-menu-id', menuId);
         });
 
         API.getDish(dishId);
@@ -355,13 +356,29 @@ $(document).ready(function (){
         }
     });
 
-    $(".dish-list tr th input").focus(function (e) {
+    $(".order-cell").focus(function (e) {
         if (parseInt($(this).val()) === 0) {
             $(this).val('');
         }
     });
 
-    $(".dish-list tr th input").blur(function (e) {
+    $(".order-cell").blur(function (e) {
+        num = parseInt($(this).val());
+
+        if (isNaN(num) || num < 0) {
+            $(this).val('0');
+        } else {
+            $(this).val(num);
+        }
+    });
+
+    $(".modal-order-cell").focus(function (e) {
+        if (parseInt($(this).val()) === 0) {
+            $(this).val('');
+        }
+    });
+
+    $(".modal-order-cell").blur(function (e) {
         num = parseInt($(this).val());
 
         if (isNaN(num) || num < 0) {

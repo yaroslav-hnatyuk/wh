@@ -7,6 +7,9 @@ use Silex\Application;
 
 class FiltersController
 {
+    const FILTER_PERIOD_WEEK = 'week';
+    const FILTER_PERIOD_2WEEKS = '2weeks';
+
     public function __construct(Application $app) 
     {
         $this->app = $app;
@@ -17,10 +20,18 @@ class FiltersController
         $company = $request->query->get('company');
         $office = $request->query->get('office');
         $user = $request->query->get('user');
+        
+        $params = $request->query->all();
+        if (isset($params['filter_period_week'])) {
+            $this->app['session']->set('filter_period', self::FILTER_PERIOD_WEEK);
+        } elseif (isset($params['filter_period_2weeks'])) {
+            $this->app['session']->set('filter_period', self::FILTER_PERIOD_2WEEKS);
+        }
 
         $sCompany = $this->app['session']->get('filter_company');
         $sOffice = $this->app['session']->get('filter_office');
         $sUser = $this->app['session']->get('filter_user');
+        $sPeriod = $this->app['session']->get('filter_period');
 
         $queryParams = "";
         $year = $request->query->get('selected_year');
@@ -57,7 +68,7 @@ class FiltersController
                 $this->app['session']->set('filter_user', $user);
             }
         }
-
+        
         return new RedirectResponse('/order' . $queryParams);
     }
 
