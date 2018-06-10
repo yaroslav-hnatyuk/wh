@@ -24,9 +24,27 @@ class ProfileController extends BaseController
 
     public function feedback()
     {
+        $period = $this->app['orders.service']->getPeriodForYearAndWeek();
+        $period = $this->app['orders.service']->getPeriodForYearAndWeek($period['prev']['year'], $period['prev']['week']);
+
+        $menu = $this->app['menudishes.service']->getForPeriodForOrders($period);
+        $orders = $this->app['orders.service']->getUserOrdersByPeriod($this->getUser()->id, $period);
+        $menuIds = array();
+        foreach ($orders as $order) {
+            $menuIds[$order['menu_dish_id']] = $order['menu_dish_id'];
+        }
+
+        $dishes = array();
+        foreach ($menu as $dish) {
+            if (isset($menuIds[$dish['menu_id']])) {
+                $dishes[] = $dish;
+            }
+        }
+        
         return $this->app['twig']->render("profile/feedback.twig", array(
             'active' => 'feedback',
-            'userRole' => $this->getUser()->role
+            'userRole' => $this->getUser()->role,
+            'dishes' => $dishes
         ));
     }
 

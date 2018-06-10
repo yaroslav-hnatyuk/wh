@@ -29,6 +29,24 @@ class FeedbackService extends BaseService
         return $this->db->fetchAll("SELECT * FROM `feedback`");
     }
 
+    function saveFeedback($feedback = array())
+    {
+        foreach ($feedback as $item) {
+            $data = $this->db->fetchAssoc(
+                "SELECT * FROM `feedback` WHERE user_id=? AND created=? AND dish_id=?", 
+                [(int) $item['user_id'], $item['created'], $item['dish_id']]
+            );
+
+            if ($data) {
+                $this->update($data['id'], $item);
+            } else {
+                $this->save($item);
+            }
+        }
+
+        return $feedback;
+    }
+
     function save($data = array())
     {
         $feedback = new Feedback($data);
@@ -38,12 +56,10 @@ class FeedbackService extends BaseService
         return $feedback->getArray();
     }
 
-    function update($data = array())
+    function update($id, $data = array())
     {
-        $feedback = new Feedback($data);
-        $this->db->update('`feedback`', $feedback->getArray(), ['id' => $feedback->id]);
-
-        return $feedback->getArray();
+        $this->db->update('`feedback`', $data, ['id' => $id]);
+        return $data;
     }
 
     function delete($id)

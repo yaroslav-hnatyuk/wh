@@ -30,8 +30,22 @@ class FeedbackController extends BaseController
 
     public function save(Request $request)
     {
+        $feedbackList = array();
+        $created = date("Y-m-d");
+        $feedbacksData = json_decode($request->getContent(), true);
+        foreach ($feedbacksData as $feedback) {
+            if ($feedback['text'] && $feedback['dish_id']) {
+                $feedbackList[] = array(
+                    'text' => $feedback['text'],
+                    'created' => $created,
+                    'user_id' => $this->getUser()->id,
+                    'dish_id' => $feedback['dish_id']
+                );
+            }
+        }
+
         return new JsonResponse(
-            $this->feedbackService->save($request->request->all())
+            $this->feedbackService->saveFeedback($feedbackList)
         );
     }
 

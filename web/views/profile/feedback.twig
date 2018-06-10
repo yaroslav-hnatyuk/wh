@@ -54,56 +54,45 @@
             <div class="col-md-9 text-left" style="padding: 30px 30px 0 30px; min-height: 450px; border-left: 1px solid #ddd; background-color: #fbfbfb">
               <div class="row">
 
-              <div class="col-md-7">
-                <ul class="menus">
-                  <li>
-                    <figure class="image"><img src="{{ asset('assets/img/img_square_3.jpg') }}"></figure>
-                    <div class="text">
-                      <h3>Відбивна з курячого філе</h3>
-                      <p class="rating" style="font-size: 18px; cursor: pointer">
-                          <span>&#9734;</span>
-                          <span>&#9734;</span>
-                          <span>&#9734;</span>
-                          <span style="color: #FFA33E;">&#9733;</span>
-                          <span style="color: #FFA33E;">&#9733;</span>
-                      </p>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div class="col-md-5">
-                <textarea class="form-control" rows="3" class="dish-feedback" style="resize: none;" placeholder="Введіть ваш відгук"></textarea>
-              </div>
-              <hr/>
-
-              <div class="col-md-7">
-                <ul class="menus">
-                  <li>
-                    <figure class="image"><img src="{{ asset('assets/img/img_square_3.jpg') }}"></figure>
-                    <div class="text">
-                      <h3>Бульйон курячий</h3>
-                      <p class="rating" style="font-size: 18px; cursor: pointer">
-                          <span>&#9734;</span>
-                          <span>&#9734;</span>
-                          <span style="color: #FFA33E;">&#9733;</span>
-                          <span style="color: #FFA33E;">&#9733;</span>
-                          <span style="color: #FFA33E;">&#9733;</span>
-                      </p>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div class="col-md-5">
-                <textarea class="form-control" rows="3" class="dish-feedback" style="resize: none;" placeholder="Введіть ваш відгук"></textarea>
-              </div>
-
+              {% for dish in dishes %}
+                <div class="col-md-7">
+                  <ul class="menus">
+                    <li>
+                      <figure class="image"><img src="{{ asset('assets/img/img_square_3.jpg') }}"></figure>
+                      <div class="text">
+                        <h3>{{ dish.dish_name }}</h3>
+                        <p class="rating" style="font-size: 18px; cursor: pointer">
+                            <span data-mark="1" >&#9734;</span>
+                            <span data-mark="2" >&#9734;</span>
+                            <span data-mark="3" >&#9734;</span>
+                            <span data-mark="4" >&#9734;</span>
+                            <span data-mark="5" >&#9734;</span>
+                            {# <span style="color: #FFA33E;">&#9733;</span> #}
+                        </p>
+                      </div>
+                    </li>
+                  </ul>
                 </div>
-                <div class="col-md-4" style="margin-top: 30px">
+                <div class="col-md-5">
+                  <textarea class="form-control dish-feedback-text" rows="3" data-feedback-dish-id="{{ dish.dish_id }}" style="resize: none;" placeholder="Введіть ваш відгук"></textarea>
+                </div>
+              {% endfor %}
+
+              {% if dishes|length > 0 %}
+                </div>
+                <div class="col-md-4" style="margin: 30px 0 30px 0">
                   <input value="Відправити" class="btn btn-lg btn-primary btn-block" id="save-feedbacks" type="button">
                 </div>
                 <div class="col-md-8">
                 &nbsp
                 </div>
+              {% else %}
+                <div class="col-md-12">
+                  <div class="alert alert-warning">
+                    На даний момент активних відгуків немає! Дякуємо що ви з нами! :)
+                  </div>
+                </div>
+              {% endif %}
             </div>
         </div>
       </div>

@@ -312,6 +312,33 @@ $(document).ready(function (){
                     });
                 }
             });
+        },
+
+        saveFeedback: function (feedback) {
+            $.ajax({
+                url: "/api/v1/feedback",
+                method: "POST",
+                data: JSON.stringify(feedback),
+                dataType: "json",
+                contentType:'application/json',
+                success: function (resp) {
+                    console.log(resp);
+                    spop({
+                        template: "Ваші відгуки успішно відправлені, ми обов'язково приймемо їх до уваги! Дякуємо за співпрацю! :)",
+                        position  : 'bottom-right',
+                        style: 'success',
+                        autoclose: 3000
+                    });
+                },
+                error: function (error) {
+                    spop({
+                        template: 'Сталася помилка при відправленні Ваших відгуків :( Перепрошуємо за тимчасові незручності.',
+                        position  : 'bottom-right',
+                        style: 'error',
+                        autoclose: 3000
+                    });
+                }
+            });
         }
     }
 
@@ -562,6 +589,18 @@ $(document).ready(function (){
             email: $("#user-email").val()
         });
         return false;
+    });
+
+    $("#save-feedbacks").click(function () {
+        var feedback = [];
+        $( ".dish-feedback-text" ).each(function() {
+            feedback.push({
+                dish_id: $(this).attr('data-feedback-dish-id'),
+                text: $(this).val()
+            });
+        });
+
+        API.saveFeedback(feedback);
     });
 
 });   
