@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Walnut House</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    
+    <link rel="stylesheet" href={{ asset('assets/css/styles-merged.css') }}>
+    <link rel="stylesheet" href={{ asset('assets/css/style.css') }}>    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src={{ asset('assets/js/jquery.fn.js') }}></script>
+
+    <!--[if lt IE 9]>
+      <script src={{ asset('assets/js/vendor/html5shiv.min.js') }}></script>
+      <script src={{ asset('assets/js/vendor/respond.min.js') }}></script>
+    <![endif]-->
+
+  </head>
+  <body>
+
+    <!-- Fixed navbar -->
+    
+    <nav class="navbar navbar-default navbar-fixed-top probootstrap-navbar">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html" title="uiCookies:FineOak">FineOak</a>
+        </div>
+
+        {% include 'parts/menu/' ~ userRole ~ '.twig' %}
+      </div>
+    </nav>
+
+    
+    <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 1080px">
+      <div class="container" style="padding-top: 70px;">
+        <div class="row">
+            <div class="col-md-3 text-left" style="padding-left: 0">
+              {% include 'parts/profile/menu.twig' with {'active': active} %}
+            </div>
+            <div class="col-md-9 text-left" style="padding: 30px 30px 0 30px; min-height: 450px; border-left: 1px solid #ddd; background-color: #fbfbfb">
+                
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <script src={{ asset('assets/js/scripts.min.js') }}></script>
+    <script src={{ asset('assets/js/custom.min.js') }}></script>
+
+  </body>
+</html>

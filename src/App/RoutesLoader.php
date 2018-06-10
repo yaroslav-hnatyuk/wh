@@ -56,13 +56,17 @@ class RoutesLoader
         $web->post("/login", "auth.web.controller:login");
         
         $web->get("/order", "orders.web.controller:index");
-        $web->get("/profile", "profile.web.controller:index");
         $web->get("/users", "users.web.controller:index");
         $web->get("/reports", "reports.web.controller:index");
         $web->get("/menu", "menu.web.controller:index");
         $web->get("/companies", "companies.web.controller:index");
         $web->get("/dishes", "dishes.web.controller:index");
         $web->get("/filters", "filters.web.controller:index");
+
+        $web->get("/profile", "profile.web.controller:index");
+        $web->get("/profile/feedback", "profile.web.controller:feedback");
+        $web->get("/profile/reminders", "profile.web.controller:reminders");
+        $web->get("/profile/promo", "profile.web.controller:promo");
     }
 
     private function instantiateWebControllers()

@@ -15,7 +15,32 @@ class ProfileController extends BaseController
 
     public function index()
     {
-        return $this->app['twig']->render("profile/user.twig", array(
+        return $this->app['twig']->render("profile/index.twig", array(
+            'active' => 'index',
+            'userRole' => $this->getUser()->role
+        ));
+    }
+
+    public function feedback()
+    {
+        return $this->app['twig']->render("profile/feedback.twig", array(
+            'active' => 'feedback',
+            'userRole' => $this->getUser()->role
+        ));
+    }
+
+    public function reminders()
+    {
+        return $this->app['twig']->render("profile/reminders.twig", array(
+            'active' => 'reminders',
+            'userRole' => $this->getUser()->role
+        ));
+    }
+
+    public function promo()
+    {
+        return $this->app['twig']->render("profile/promo.twig", array(
+            'active' => 'promo',
             'userRole' => $this->getUser()->role
         ));
     }
