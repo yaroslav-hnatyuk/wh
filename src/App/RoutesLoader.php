@@ -48,6 +48,8 @@ class RoutesLoader
             $api->put("/{$resource}/{id}", "{$resource}.controller:update");
             $api->delete("/{$resource}/{id}", "{$resource}.controller:delete");
         }
+
+        $api->post("/users/current", "users.controller:saveCurrent");
     }
 
     private function bindWebRoutes($web) 

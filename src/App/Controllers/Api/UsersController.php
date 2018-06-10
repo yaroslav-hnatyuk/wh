@@ -35,6 +35,20 @@ class UsersController extends BaseController
         );
     }
 
+    public function saveCurrent(Request $request)
+    {
+        $userData = array(
+            'id' => $this->getUser()->id,
+            'first_name' => $request->request->get('first_name'),
+            'last_name' => $request->request->get('last_name'),
+            'email' => $request->request->get('email')
+        );
+        
+        return new JsonResponse(
+            $this->usersService->updatePersonalData($userData)
+        );
+    }
+
     public function update($id, Request $request)
     {
         $data = $request->request->all();

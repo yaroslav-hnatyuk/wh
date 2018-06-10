@@ -285,6 +285,33 @@ $(document).ready(function (){
                     });
                 }
             });
+        },
+
+        saveUserPersonalData: function (userData) {
+            $.ajax({
+                url: "/api/v1/users/current",
+                method: "POST",
+                data: JSON.stringify(userData),
+                dataType: "json",
+                contentType:'application/json',
+                success: function (user) {
+                    console.log(user);
+                    spop({
+                        template: 'Ваші персональні дані успішно збережені!',
+                        position  : 'bottom-right',
+                        style: 'success',
+                        autoclose: 3000
+                    });
+                },
+                error: function (error) {
+                    spop({
+                        template: 'Сталася помилка при збереженні :( Перевірте будь-ласка правильність введених даних.',
+                        position  : 'bottom-right',
+                        style: 'error',
+                        autoclose: 3000
+                    });
+                }
+            });
         }
     }
 
@@ -507,6 +534,7 @@ $(document).ready(function (){
     });      
 
     $("#save-companies").click(function(){
+        // TODO fixme
         spop({
             template: 'Компанії успішно збережені!',
             position  : 'bottom-right',
@@ -517,11 +545,21 @@ $(document).ready(function (){
     });
 
     $("#save-users").click(function(){
+        // TODO fixme
         spop({
             template: 'Користувачі успішно збережені!',
             position  : 'bottom-right',
             style: 'success',
             autoclose: 3000
+        });
+        return false;
+    });
+
+    $("#save-user-personal-data").click(function () {
+        API.saveUserPersonalData({
+            first_name: $("#user-first-name").val(),
+            last_name: $("#user-last-name").val(),
+            email: $("#user-email").val()
         });
         return false;
     });

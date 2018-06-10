@@ -73,6 +73,11 @@ class UsersService extends BaseService
         return $user->getArray();
     }
 
+    function updatePersonalData($data = array())
+    {
+        return $this->db->update('user', $data, ['id' => $data['id']]);
+    }
+
     function delete($id)
     {
         return $this->db->delete("user", array("id" => $id));
