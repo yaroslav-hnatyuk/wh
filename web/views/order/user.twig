@@ -56,11 +56,11 @@
                             
                         </p>
                     </div>
-                    <div class="col-md-12" style="padding-bottom: 15px; margin-top: 5px">
+                    <div class="col-md-12" style="padding-bottom: 15px; margin-top: 5px; overflow-x: auto;">
                         <table class="table order-table" style="margin: 0">
                             <tr style="background-color:#efefef;">
                                 {% for date, weekday in period.items %}
-                                    <th>
+                                    <th class="wh-display-cell">
                                         <span class="day-name">{{ weekday.day }}</span><br/>
                                         <span class="day-date">{{ weekday.number }}</span>
                                     </th>
@@ -68,7 +68,7 @@
                             </tr>
                             <tr>
                                 {% for date, weekday in period.items %}
-                                    <th><input class="modal-order-cell" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value=""/></th>
+                                    <th class="wh-display-cell"><input class="modal-order-cell" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value=""/></th>
                                 {% endfor %}
                             </tr>
                         </table>

@@ -2624,3 +2624,11 @@ hr.bottom-table-border {
   width: 50px;
   border-right: 1px solid #ddd;
 }
+
+.wh-display-cell {
+  /* display: table-cell; */
+}
+
+.wh-display-none {
+  /* display: none; */
+}
