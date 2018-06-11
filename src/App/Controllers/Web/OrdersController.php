@@ -34,14 +34,16 @@ class OrdersController extends BaseController
         $menu = $this->menuService->getForPeriodForOrders($period);
 
         $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
-        $menu = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
+        list($menu, $totalByDays, $totalPrice) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
         $menu = $this->menuService->groupMenuDishes($menu, true);
 
         return $this->app['twig']->render("order/user.twig", array(
             'period' => $period,
             'filterPeriod' => $filterPeriod,
             'userRole' => $this->getUser()->role,
-            'menu' => $menu
+            'menu' => $menu,
+            'totalByDays' => $totalByDays,
+            'totalPrice' => $totalPrice
         ));
     }
 
@@ -65,7 +67,7 @@ class OrdersController extends BaseController
             'end_date' => $period['end']['date']
         ));
 
-        $menu = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
+        list($menu, $totalCountByDays) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
         $menu = $this->menuService->groupMenuDishes($menu, true);
 
         return $this->app['twig']->render("order/manager.twig", array(

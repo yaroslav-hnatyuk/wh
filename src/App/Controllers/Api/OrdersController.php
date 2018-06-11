@@ -33,9 +33,7 @@ class OrdersController extends BaseController
     {
         $orders = json_decode($request->getContent(), true);
         $this->ordersService->saveUserOrders($this->getUser()->id, $orders);
-        return new JsonResponse(
-            // $this->ordersService->save($orders)
-        );
+        return new JsonResponse();
     }
 
     public function update($id, Request $request)

@@ -126,26 +126,53 @@ class OrdersService extends BaseService
             $groupedOrders[$order['menu_dish_id'] . '__' . $order['day']] += $order['count'];
         }
 
+        $totalByDays = array();
+
         foreach ($menu as $dish) {
             if (!isset($result[$dish['dish_id']])) {
                 $result[$dish['dish_id']] = $dish;
+                $result[$dish['dish_id']]['total_count'] = 0;
             }
             foreach ($userOrders as $date => $orderData) {
                 $time = strtotime($date);
                 if (!isset($result[$dish['dish_id']]['orders'][$date])) {
                     $result[$dish['dish_id']]['orders'][$date] = $orderData;
                 }
+                if (!isset($totalByDays[$date])) {
+                    $totalByDays[$date] = array(
+                        'items' => array(), 
+                        'total_count' => 0,
+                        'total_price' => 0
+                    );
+                }
+                if (!isset($totalByDays[$date]['items'][$dish['dish_id']])) {
+                    $totalByDays[$date]['items'][$dish['dish_id']] = array('count' => 0, 'price' => 0);
+                }
                 if ($time >= strtotime($dish['start']) && $time <= strtotime($dish['end'])) {
                     $result[$dish['dish_id']]['orders'][$date]['menu_id'] = $dish['menu_id'];
                     $result[$dish['dish_id']]['orders'][$date]['available'] = true;
                     if (isset($groupedOrders[$dish['menu_id'] . '__' . $date])) {
+                        $totalByDays[$date]['items'][$dish['dish_id']]['count'] += $groupedOrders[$dish['menu_id'] . '__' . $date];
+                        $totalByDays[$date]['items'][$dish['dish_id']]['price'] += $groupedOrders[$dish['menu_id'] . '__' . $date] * $dish['price'];
+                        $totalByDays[$date]['total_count'] += $groupedOrders[$dish['menu_id'] . '__' . $date];
+                        $totalByDays[$date]['total_price'] += $groupedOrders[$dish['menu_id'] . '__' . $date] * $dish['price'];
                         $result[$dish['dish_id']]['orders'][$date]['count'] = $groupedOrders[$dish['menu_id'] . '__' . $date];
+                        $result[$dish['dish_id']]['total_count'] += $groupedOrders[$dish['menu_id'] . '__' . $date];
                     }
                 }
             }
         }
 
-        return $result;
+        $totalPrice = array_reduce($totalByDays, function ($carry, $item){
+            $carry += $item['total_price'];
+            return $carry;
+        }, 0);
+
+        return array(
+            $result,
+            $totalByDays,
+            $totalPrice
+        );
     }
 
     function getPeriodForYearAndWeek($year = null, $weekNumber = null, $period = 'week')

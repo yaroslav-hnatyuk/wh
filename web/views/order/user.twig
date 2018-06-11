@@ -141,18 +141,18 @@
                             <span class="day-date">{{ weekday.number }}</span>
                         </th>
                     {% endfor %}
+                    <th>
+                        <span class="day-name"></span><br/>
+                        <span class="day-date">&Sigma;</span>
+                    </th>
                 </tr>
-                {# <tr>
-                    <th style="text-align: right; padding-right: 20px">Всього: <b>265 грн</b></th>
-                    <th style="background-color: #eee"></th> MANAGER
-                    <th style="color: #aaa">53</th>
-                    <th style="color: #aaa">50</th>
-                    <th style="color: #aaa">56</th>
-                    <th style="color: #aaa">43</th>
-                    <th style="color: #aaa">63</th>
-                    <th style="color: #aaa">0</th>
-                    <th style="color: #aaa">0</th>
-                </tr> #}
+                <tr>
+                    <th style="text-align: right; padding-right: 20px">Всього: <b>{{ totalPrice }} грн</b></th>
+                    {% for date, total in totalByDays %}
+                        <th style="color: #aaa">{{ total.total_price }}</th>
+                    {% endfor %}
+                    <th style="color: #aaa"></th>
+                </tr>
             </table>
 
             {% for group in menu %}
@@ -160,6 +160,7 @@
                     <tr>
                         <th><b style="text-transform: uppercase;">{{ group.group_name}}</b></th>
                         {# <th style="background-color: #eee"></th> MANAGER #}
+                        <th><div>&nbsp;</div></th>
                         <th><div>&nbsp;</div></th>
                         <th><div>&nbsp;</div></th>
                         <th><div>&nbsp;</div></th>
@@ -181,6 +182,7 @@
                             <th style="background-color: #efefef; color: #ccc">-</th>
                             {% endif %}
                         {% endfor %}
+                        <th><b>{{dish.total_count}}</b></th>
                     </tr>
                     {% endfor %}
                 </table>
