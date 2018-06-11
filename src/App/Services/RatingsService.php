@@ -13,7 +13,15 @@ class RatingsService extends BaseService
 
         return $rating->getArray();
     }
-    
+
+    public function getOneByDishIdAndUserId($dishId, $userId) 
+    {
+        return $this->db->fetchAssoc(
+            "SELECT * FROM `rating` WHERE dish_id=? AND user_id=?", 
+            array($dishId, $userId)
+        );
+    }
+
     public function getAverageByDishId($dishId) 
     {
         $average = $this->db->fetchColumn("SELECT AVG(mark) FROM `rating` WHERE dish_id=?", [(int) $dishId]);
@@ -32,19 +40,22 @@ class RatingsService extends BaseService
 
     function save($data = array())
     {
-        $rating = new Rating($data);
-        $this->db->insert("`rating`", $rating->getArray());
-        $rating->id = $this->db->lastInsertId();
+        $rating = $this->getOneByDishIdAndUserId($data['dish_id'], $data['user_id']);
+        if ($rating) {
+            $this->update($rating['id'], $data);
+            $rating['id'] = $rating['id'];
+        } else {
+            $rating = new Rating($data);
+            $this->db->insert("`rating`", $rating->getArray());
+            $rating->id = $this->db->lastInsertId();    
+        }
 
-        return $rating->getArray();
+        return is_array($rating) ? $rating : $rating->getArray();
     }
 
-    function update($data = array())
+    function update($id, $data = array())
     {
-        $rating = new Rating($data);
-        $this->db->update('`rating`', $rating->getArray(), ['id' => $rating->id]);
-
-        return $rating->getArray();
+        return $this->db->update('`rating`', $data, ['id' => $id]);
     }
 
     function delete($id)

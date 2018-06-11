@@ -30,8 +30,14 @@ class RatingsController extends BaseController
 
     public function save(Request $request)
     {
+        $rating = array(
+            'user_id' => $this->getUser()->id,
+            'dish_id' => $request->request->get('dish_id'),
+            'mark' => $request->request->get('mark')
+        );
+        
         return new JsonResponse(
-            $this->ratingsService->save($request->request->all())
+            $this->ratingsService->save($rating)
         );
     }
 

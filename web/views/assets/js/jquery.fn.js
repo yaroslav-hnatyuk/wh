@@ -339,6 +339,33 @@ $(document).ready(function (){
                     });
                 }
             });
+        },
+
+        saveRating: function (rating) {
+            $.ajax({
+                url: "/api/v1/ratings",
+                method: "POST",
+                data: JSON.stringify(rating),
+                dataType: "json",
+                contentType:'application/json',
+                success: function (resp) {
+                    console.log(resp);
+                    spop({
+                        template: "Ваша очінка страви збережена! Дякуємо за співпрацю! :)",
+                        position  : 'bottom-right',
+                        style: 'success',
+                        autoclose: 3000
+                    });
+                },
+                error: function (error) {
+                    spop({
+                        template: 'Сталася помилка при збереженні оцінки страви :( Перепрошуємо за тимчасові незручності.',
+                        position  : 'bottom-right',
+                        style: 'error',
+                        autoclose: 3000
+                    });
+                }
+            });
         }
     }
 
@@ -601,6 +628,33 @@ $(document).ready(function (){
         });
 
         API.saveFeedback(feedback);
+    });
+
+    $(".rating-feedback").click(function () {
+        var currentMark, 
+            parent = $(this).parent(),
+            ratingMark = parseInt($(this).attr('data-rating-mark')),
+            defer = jQuery.Deferred();
+
+        defer.then(function(){
+            API.saveRating({
+                mark: ratingMark,
+                dish_id: parent.attr('data-rating-dish-id')
+            });
+        }).then(function() {
+            parent.find(".rating-feedback").each(function () {
+                currentMark = parseInt($(this).attr('data-rating-mark'));
+                if (currentMark > ratingMark) {
+                    $(this).html('&#9734;');
+                    $(this).css('color', '#8b8e94');
+                } else {
+                    $(this).html('&#9733;');
+                    $(this).css('color', '#FFA33E');
+                }
+            });
+        });
+        
+        defer.resolve();
     });
 
 });   
