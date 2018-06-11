@@ -53,9 +53,8 @@
 
             <div class="col-md-9 text-left" style="padding: 30px 30px 0 30px; min-height: 450px; border-left: 1px solid #ddd; background-color: #fbfbfb">
               <div class="row">
-
               {% for dish in dishes %}
-                <div class="col-md-7">
+                <div class="col-md-6">
                   <ul class="menus">
                     <li>
                       <figure class="image"><img src="{{ asset('assets/img/img_square_3.jpg') }}"></figure>
@@ -72,19 +71,23 @@
                       </div>
                     </li>
                   </ul>
+                  <textarea class="form-control dish-feedback-text" rows="2" data-feedback-dish-id="{{ dish.dish_id }}" style="resize: none;" placeholder="Введіть ваш відгук"></textarea>
                 </div>
-                <div class="col-md-5">
-                  <textarea class="form-control dish-feedback-text" rows="3" data-feedback-dish-id="{{ dish.dish_id }}" style="resize: none;" placeholder="Введіть ваш відгук"></textarea>
-                </div>
+                {% if loop.index is not odd %}
+                  <div class="col-md-12"><hr/></div>
+                {% endif %}
+                
               {% endfor %}
+              </div>
 
-              {% if dishes|length > 0 %}
-                </div>
-                <div class="col-md-4" style="margin: 30px 0 30px 0">
-                  <input value="Відправити" class="btn btn-lg btn-primary btn-block" id="save-feedbacks" type="button">
-                </div>
-                <div class="col-md-8">
-                &nbsp
+              {% if dishes|length > 0 %}  
+                <div class="col-md-12">
+                  <div class="col-md-4" style="margin: 30px 0 30px 0">
+                    <input value="Відправити" class="btn btn-lg btn-primary btn-block" id="save-feedbacks" type="button">
+                  </div>
+                  <div class="col-md-8">
+                  &nbsp
+                  </div>
                 </div>
               {% else %}
                 <div class="col-md-12">
