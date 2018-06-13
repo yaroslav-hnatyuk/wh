@@ -12,7 +12,7 @@ use App\ServicesLoader;
 use App\RoutesLoader;
 use Carbon\Carbon;
 
-date_default_timezone_set('Europe/London');
+date_default_timezone_set('Europe/Kiev');
 
 //accepting JSON
 $app->before(function (Request $request) {

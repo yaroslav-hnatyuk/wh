@@ -59,4 +59,17 @@ class DishesController extends BaseController
     {
         return new JsonResponse($this->dishesService->delete($id));
     }
+
+    public function upload($id, Request $request)
+    {
+        $file = $request->files->get('cropped_image');                                                                    
+        if ($file == NULL) {
+            $send = json_encode(array("status" => "Fail"));
+            return new JsonResponse($send, 500);
+        } else {
+            $file->move(realpath(ROOT_PATH) . '/web/views/assets/dishes', $id . ".jpg");
+            $send = json_encode(array("status" => "Ok"));
+            return new JsonResponse($send, 200);
+        }
+    }
 }

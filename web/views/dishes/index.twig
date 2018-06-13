@@ -10,9 +10,11 @@
     <link rel="stylesheet" href={{ asset('assets/css/styles-merged.css') }}>
     <link rel="stylesheet" href={{ asset('assets/css/style.css') }}>   
     <link rel="stylesheet" href={{ asset('assets/css/spop.css') }}>  
+    <link rel="stylesheet" type="text/css" href="http://jcrop-cdn.tapmodo.com/v0.9.12/css/jquery.Jcrop.min.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="http://jcrop-cdn.tapmodo.com/v0.9.12/js/jquery.Jcrop.min.js"></script>
     <script src={{ asset('assets/js/jquery.fn.js') }}></script>
     <script src={{ asset('assets/js/spop.js') }}></script>
 
@@ -24,6 +26,55 @@
   </head>
   <body>
 
+    <div class="modal fade" id="cropModal" role="dialog">
+    <div class="modal-dialog" style="width: 765px; margin: 5% auto">
+    
+        <!-- Modal content-->
+        <div class="modal-content">
+            <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+            <div class="modal-body" style="float: left; padding: 35px 10px 0px 20px; margin: 0;">
+                <div class="col-md-6">
+                   <form id="form">
+                        <input id="file" type="file" />
+                        <button id="cropbutton" type="button">Crop</button>
+                        <br>
+                        <div id="views"></div>
+                        <h2>Submit form</h2>
+                        <input type="submit" value="Upload form data and image" />
+                      </form>
+                </div> 
+                <div class="col-md-6 col-sm-6 text-left" style="font-size: 13px; font-weight: normal">
+                    <div class="col-md-12 text-left">
+                        <h3 style="padding: 0; margin: 0;" id="modal-dish-name"></h3>
+                    </div>
+                    <div class="col-md-12 text-left">
+                        <div class="modal-rating" id="modal-dish-rating">
+                        </div>
+                        <div style="margin-left: 10px; float: left; color: #aaa">
+                            {# <span style="padding: 15px">Відгуків: <span id="modal-dish-reviews-count"></span></span> #}
+                            <span> | </span>
+                            <span style="padding: 15px"><a href="#">Написати відгук</a></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-left" style="height: 126px; padding-top: 10px;">
+                        <b>Опис</b>
+                        <p id="modal-dish-description" style="font-size: 11px">
+                            
+                        </p>
+                    </div>
+                    <div class="col-md-12 text-left">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" style="border: 1px solid #ccc">Закрити</button>
+                        <button type="button" id="save-order-popup" class="btn btn-primary" style="margin-right: 10px" data-dismiss="modal">Зберегти</button>
+                    </div>
+                </div>            
+            </div>
+            <div class="modal-footer" style="margin: 0; visibility: hidden;">
+                <!--  -->
+            </div>
+        </div>
+        
+    </div>
+    </div>
     <!-- Fixed navbar -->
     
     <nav class="navbar navbar-default navbar-fixed-top probootstrap-navbar">
@@ -68,6 +119,7 @@
             {% for group in dishes %}
                 <tr>
                   <th colspan="6" class="wh-group-name">
+                  <img src="" class="dish-thumbnail" style="width: 20px; height: 20px"/>
                   <input type="text" value="{{ group.name}}" style="float: left; width: 50%"/>
                   <input data-group-id="{{ group.id }}" value="Додати" class="btn btn-info add-new-item add-dish" type="button">
                 </th>
@@ -90,9 +142,5 @@
         </div>
       </div>
     </section>
-
-    <script src={{ asset('assets/js/scripts.min.js') }}></script>
-    <script src={{ asset('assets/js/custom.min.js') }}></script>
-
   </body>
 </html>

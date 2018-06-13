@@ -50,6 +50,7 @@ class RoutesLoader
         }
 
         $api->post("/users/current", "users.controller:saveCurrent");
+        $api->post("/dishes/upload/{id}", "dishes.controller:upload");
     }
 
     private function bindWebRoutes($web) 
