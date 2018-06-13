@@ -662,8 +662,8 @@ $(document).ready(function (){
     });
 
     /*===== CROP START =====*/
-    var crop_max_width = 400;
-    var crop_max_height = 400;
+    var crop_max_width = 500;
+    var crop_max_height = 500;
     var jcrop_api;
     var canvas;
     var context;

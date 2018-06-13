@@ -495,8 +495,8 @@ input[type=number] {
 .probootstrap-navbar.scrolled .parent-nav-link-padding, .probootstrap-navbar.scrolled .navbar-brand {
   padding-top: 20px;
   padding-bottom: 20px;
-  width: 0px;
-  height: 0px;
+  width: 40px;
+  height: 40px;
 }
 
 .probootstrap-navbar.scrolled .navbar-brand {
@@ -2631,4 +2631,15 @@ hr.bottom-table-border {
 
 .wh-display-none {
   /* display: none; */
+}
+
+.crop-step-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  font-size: 18px;
+  color: #fff;
+  line-height: 70px;
+  text-align: center;
+  background: #FFA33E
 }
