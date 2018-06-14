@@ -53,8 +53,8 @@
                         <div class="col-sm-6 col-sm-offset-3 form-box">
                         	<div class="form-top">
                         		<div class="form-top-left">
-                        			<h3>Реєстрація в системі замовлень обідів</h3>
-                            		<p>Введіть ваші дані для того щоб увійти в систему:</p>
+                        			<h3>Реєстрація</h3>
+                            		<p>Введіть ваші дані для того щоб зареєструватись:</p>
                         		</div>
                         		<div class="form-top-right">
                                     <img src={{ asset('login/assets/img/logo.svg') }} alt="Walnut House" style="width: 75px">
@@ -72,10 +72,16 @@
 			                        	<input type="password" name="password" placeholder="Пароль..." class="form-password form-control" id="form-password">
 			                        </div>
                                     <div class="form-group">
+			                        	<input style="width: 49%; float: left; margin-right: 5px" type="text" name="first_name" placeholder="Ім'я..." class="form-first-name form-control" id="form-first-name">
+                                        <input style="width: 49%; float: right; margin-left: 5px" type="text" name="last_name" placeholder="Прізвище..." class="form-first-name form-control" id="form-last-name">
+			                        </div>
+                                    <br/><br/>
+                                    <div class="form-group" style="margin-top:5px">
 			                    		<label class="sr-only" for="ipn">ІПН</label>
 			                        	<input type="text" name="ipn" placeholder="ІПН..." class="form-ipn form-control" id="form-ipn">
 			                        </div>
-			                        <button type="submit" class="btn" id="login-btn">Реєстрація</button>
+                                    <input type="hidden" name="cid" id="form-cid" value="{{cid}}">
+			                        <button type="submit" class="btn" id="register-btn">Реєстрація</button>
 			                    </form>
 		                    </div>
                             <br/><br/>

@@ -18,7 +18,7 @@ class CompaniesController extends BaseController
         $this->officesService = $officesService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $companies = $this->companiesService->getAllGroupedById();
         $offices = $this->officesService->getAll();
@@ -28,7 +28,8 @@ class CompaniesController extends BaseController
 
         return $this->app['twig']->render("companies/index.twig", array(
             'userRole' => $this->getUser()->role,
-            'companies' => $companies
+            'companies' => $companies,
+            'host' => $request->getSchemeAndHttpHost()
         ));
     }
 }

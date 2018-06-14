@@ -32,6 +32,47 @@ $(document).ready(function (){
             });
         },
 
+                
+        register: function(data) {
+            $.ajax({
+                url: "/register",
+                method: "POST",
+                data: data,
+                dataType: "json",
+                success: function (result) {
+                    if (result.status === 'OK') {
+                        localStorage.setItem('token', result.token);
+                        setCookie('X-AUTH-TOKEN', result.token, 365 * 5);
+                        $(location).attr('href', '/order');
+                    } else {
+                        spop({
+                            template: 'Сталася помилка :( Перевірте будь-ласка введені дані.',
+                            position  : 'bottom-right',
+                            style: 'error',
+                            autoclose: 3000
+                        });
+                    }
+                },
+                error: function (error) {
+                    if (error.responseJSON && error.responseJSON.status === 'ERROR' && error.responseJSON.message) {
+                        spop({
+                            template: error.responseJSON.message,
+                            position  : 'bottom-right',
+                            style: 'error',
+                            autoclose: 3000
+                        });
+                    } else {
+                        spop({
+                            template: 'Помилка :( Перевірте будь-ласка введені дані.',
+                            position  : 'bottom-right',
+                            style: 'error',
+                            autoclose: 3000
+                        });
+                    }
+                }
+            });
+        },
+
         saveUserOrder: function() {
             var defer = jQuery.Deferred();
 
@@ -486,11 +527,59 @@ $(document).ready(function (){
 
     
     //LOGIN
+
+    $('.login-form input[type="text"], .login-form input[type="password"], .login-form input[type="first_name"], .login-form input[type="last_name"]').on('focus', function() {
+        $(this).removeClass('input-error');
+    });
+
     $("#login-btn").click(function(){
-        API.login({
-            email: $("#form-username").val(),
-            password: $("#form-password").val()
+
+        var isError = false;
+        $('.login-form').find('input[type="text"], input[type="password"]').each(function(){
+            if ( $(this).val() == "" ) {
+                isError = true;
+                $(this).addClass('input-error');
+            }
+            else {
+                $(this).removeClass('input-error');
+            }
         });
+
+        if (!isError) {
+            API.login({
+                email: $("#form-username").val(),
+                password: $("#form-password").val()
+            });
+        }
+
+        return false;
+    });
+    
+    // REGISTER
+    $("#register-btn").click(function(){
+        
+        var isError = false;
+        $('.login-form').find('input[type="text"], input[type="password"], input[type="first_name"], input[type="last_name"]').each(function(){
+            if ( $(this).val() == "" ) {
+                isError = true;
+                $(this).addClass('input-error');
+            }
+            else {
+                $(this).removeClass('input-error');
+            }
+        });
+
+        if (!isError) {
+            API.register({
+                email: $("#form-username").val(),
+                password: $("#form-password").val(),
+                first_name: $("#form-first-name").val(),
+                last_name: $("#form-last-name").val(),
+                cid: $("#form-cid").val(),
+                ipn: $("#form-ipn").val()
+            });
+        }
+
         return false;
     });
 

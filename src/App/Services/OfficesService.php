@@ -14,6 +14,14 @@ class OfficesService extends BaseService
         return $office->getArray();
     }
 
+    public function getOneByUid($uid)
+    {
+        $data = $this->db->fetchAssoc("SELECT * FROM office WHERE `uid`=?", [$uid]);
+        if (!$data) return null;
+
+        return new Office($data);
+    }
+    
     public function getAll()
     {
         return $this->db->fetchAll("SELECT * FROM office");

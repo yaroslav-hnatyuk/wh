@@ -97,7 +97,10 @@ $routesLoader->bindRoutesToControllers();
 $app->error(function (\Exception $e, $code) use ($app) {
     $app['monolog']->addError($e->getMessage());
     $app['monolog']->addError($e->getTraceAsString());
-    return new JsonResponse(array("statusCode" => $code, "message" => $e->getMessage(), "stacktrace" => $e->getTraceAsString()));
+    if ($e instanceof App\Exception\ApiException) {
+        return new JsonResponse(array("status" => "ERROR", "statusCode" => $code, "message" => $e->getMessage()));    
+    }
+    return new JsonResponse(array("statusCode" => $code, "message" => "Сталася помилка про обробці запиту, вибачте за тимчасові незручності."));
 });
 
 return $app;

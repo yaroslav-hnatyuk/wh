@@ -71,7 +71,7 @@
                 {% for office in company.offices %}
                   <tr data-office-id={{ office.id }}>
                     <th class="wh-name"><input type="text" value="{{ office.address }}" /></th>
-                    <th>http://localhost:9001/registration?c=ksaldhkasjdash23298sajdhasff7s1d2d3</th>
+                    <th>{{ host ~ '/registration/' ~ office.uid}}</th>
                   </tr>
                 {% endfor %}
             {% endfor %}

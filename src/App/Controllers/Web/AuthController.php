@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Cookie;
 use App\Services\UsersService;
+use App\Entities\User;
 
 
 class AuthController
@@ -56,6 +57,30 @@ class AuthController
     }
 
     public function register(Request $request) {
-        
+        $data = $request->request->all();
+        $user = new User($data);
+
+        $office = null;
+        if (isset($data['cid']) && !empty($data['cid'])) {
+            $office = $this->app['offices.service']->getOneByUid($data['cid']);
+        }
+
+        if (!$office) {
+            throw new \App\Exception\ApiException("При перевірці даних виникла помилка. Перевірте будь-ласка введені дані та посилання ");
+        }
+
+        $user->role = 'user';
+        $user->phone = 'n/a';
+        $user->office_id = $office->id;
+        $this->usersService->save($user->getArray());
+
+        return new JsonResponse(
+            array(
+                'status' => 'OK',
+                'message' => 'Login successful!',
+                'token' =>  "{$user->email}:secret",
+                'user' => $user->getArray()
+            )
+        );
     }
 }
