@@ -263,6 +263,7 @@ $(document).ready(function (){
                 contentType:'application/json',
                 success: function (dish) {
                     $("#modal-dish-name").html(dish.name);
+                    $("#modal-dish-image").attr('src', '/views/assets/dishes/' + dishId + '.jpg');
                     $("#modal-dish-description").html(dish.description);
                     $("#modal-dish-reviews-count").html(dish.reviews_count);
                     let rating = "";
@@ -658,6 +659,11 @@ $(document).ready(function (){
     });
 
     $(".dish-thumbnail").click(function () {
+        var dishId = $(this).attr('data-dish-image');
+        $("#dish-image-crop-header").attr('data-crop-popup-dish-id', dishId);
+        $("#dish-image-crop-header").html($(this).attr('data-dish-image-name'));
+        $("#views").css("display", "none");
+        $(".crop-image-placeholder").css("display", "block");
         $("#cropModal").modal();
     });
 
@@ -672,7 +678,13 @@ $(document).ready(function (){
     var prefsize;
 
     $("#file").change(function() {
+      $("#views").css("display", "block");
       loadImage(this);
+    });
+
+    $("#choose-file").click(function() {
+      $("#file").click();
+      $(".crop-image-placeholder").hide(0);
     });
 
     function loadImage(input) {
@@ -775,27 +787,47 @@ $(document).ready(function (){
       applyCrop();
     });
 
-    $("#form").submit(function(e) {
+    $("#crop-dish-image-form").submit(function(e) {
       e.preventDefault();
       formData = new FormData($(this)[0]);
       var blob = dataURLtoBlob(canvas.toDataURL('image/jpg'));
+      var dishId = $("#dish-image-crop-header").attr('data-crop-popup-dish-id');
       //---Add file blob to the form data
       formData.append("cropped_image", blob);
       $.ajax({
-        url: "/api/v1/dishes/upload/1",
+        url: "/api/v1/dishes/upload/" + dishId,
         type: "POST",
         data: formData,
         contentType: false,
         cache: false,
         processData: false,
         success: function(data) {
-          alert("Success");
+            var dishImage = $('img[data-dish-image="' + dishId + '"]');
+            var imageSrc = dishImage.attr('src');
+            var d = new Date();
+            dishImage.removeAttr('src').attr('src', imageSrc + '?' + d.getTime());
+            
+            spop({
+                template: 'Зображення страви успішно оновлене!',
+                position  : 'bottom-right',
+                style: 'success',
+                autoclose: 3000
+            });
         },
         error: function(data) {
-          alert("Error");
+            spop({
+                template: 'Не вдалося оновити зображення страви :( Перевірте будь-ласка формат зображення.',
+                position  : 'bottom-right',
+                style: 'error',
+                autoclose: 3000
+            });
         },
         complete: function(data) {}
       });
+    });
+
+    $("#save-cropped-image").click(function() {
+        $("#crop-dish-image-form").submit();
     });
 
     /*===== CROP END =====*/

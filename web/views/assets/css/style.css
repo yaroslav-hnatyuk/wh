@@ -2499,6 +2499,7 @@ hr.bottom-table-border {
 
 .wh-table .wh-name{
   padding-left: 40px;
+  position: relative;
 }
 
 .wh-table .wh-group-name input{
@@ -2633,6 +2634,47 @@ hr.bottom-table-border {
   /* display: none; */
 }
 
+.crop-step {
+  padding: 20px 10px 15px 0;
+}
+
+.crop-step p {
+  margin: 0;
+  line-height: 15px;
+  font-size: 11px;
+  padding: 3px;
+  width: 200px;
+  color: #8b8e94;
+  text-align: right;
+  margin-top: 3px;
+}
+
+.crop-step-1 {
+  float: left;
+  border-top: 1px dashed #ddd;
+  border-right: 1px dashed #ddd;
+  border-bottom: 1px dashed #ddd;
+}
+
+.crop-step-2 {
+  border-left: 1px dashed #ddd;
+  border-bottom: 1px dashed #ddd;
+}
+
+.crop-step-2 p{
+  text-align: left;
+}
+
+.crop-step-2 input{
+  margin-bottom: 5px;
+  float: left;
+}
+
+.crop-step-3 {
+  border-right: 1px dashed #ddd;
+  border-bottom: 1px dashed #ddd;
+}
+
 .crop-step-circle {
   width: 70px;
   height: 70px;
@@ -2642,4 +2684,21 @@ hr.bottom-table-border {
   line-height: 70px;
   text-align: center;
   background: #FFA33E
+}
+
+.jcrop-holder {
+  margin: 0 auto;
+  vertical-align: middle;
+}
+
+#views {
+  width: 100%; 
+  margin: 0 auto;
+}
+
+.dish-thumbnail {
+  width: 20px; 
+  height: 20px; 
+  position: absolute;
+  left: 10px;
 }

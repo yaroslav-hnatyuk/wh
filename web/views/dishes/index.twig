@@ -34,59 +34,52 @@
             <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
             <div class="modal-body" style="float: left; padding: 35px 10px 0px 20px; margin: 0;">
                 <div class="col-md-7">
-                   <form id="form">
-                        <input id="file" type="file" />
-                        <button id="cropbutton" type="button">Crop</button>
-                        <br>
-                        <div id="views"></div>
-                        <h2>Submit form</h2>
-                        <input type="submit" value="Upload form data and image" />
-                      </form>
+                  <div class="crop-image-placeholder">
+                    Будь-ласка виберіть зображення для обробки
+                  </div>
+                  <div id="views"></div>
+                  <form id="crop-dish-image-form" style="display: none">
+                    <input id="file" type="file" />
+                  </form>
                 </div> 
                 <div class="col-md-5 col-sm-4 text-left" style="font-size: 13px; font-weight: normal">
                     <div class="col-md-12 text-left">
-                        <h3 style="padding: 0; margin: 0;" id="modal-dish-name">Гуляш по-угорськи</h3>
+                        <h3 id="dish-image-crop-header" style="padding: 0; margin: 0;" id="modal-dish-name" data-crop-popup-dish-id="">Гуляш по-угорськи</h3>
                     </div>
-                    <div class="col-md-12 text-left">
+                    <div class="col-md-12 text-left crop-step crop-step-1">
                         <div class="col-md-8 text-left">
-                          <h5>
-                            <input value="Вибрати зображення" class="btn btn-info btn-sm" type="button">
-                          </h5>
+                          <input id="choose-file" value="Вибрати зображення" class="btn btn-info btn-sm" type="button">
                           <p>
-                            kjhtv bgecev rjyctrnec [ kjhtv bgecev rjyctrnec [e'rceh
+                            Натисніть вище кнопку "<b>Вибрати зображення</b>" і виберіть зображення формату <b>.jpg</b> або <b>.png</b>
                           </p>
                         </div>
                         <div class="col-md-4 text-right">
                           <div class="crop-step-circle">Крок 1</div>
                         </div>
                     </div>
-                    <div class="col-md-12 text-left">
+                    <div class="col-md-12 text-left crop-step crop-step-2">
                         <div class="col-md-3 text-left">
                           <div class="crop-step-circle">Крок 2</div>
                         </div>
                         <div class="col-md-9 text-right">
-                          <h5>
-                            <input value="Обрізати зображення" class="btn btn-info btn-sm" type="button">
-                          </h5>
+                          <input id="cropbutton" value="Обрізати зображення" class="btn btn-info btn-sm" type="button">
                           <p>
-                            kjhtv bgecev rjyctrnec [ kjhtv bgecev rjyctrnec [e'rceh
+                            Виберіть потрібну частину зображення, і натисніть вище кнопку "<b>Обрізати зображення</b>"
                           </p>
                         </div>
                     </div>
-                    <div class="col-md-12 text-left">
+                    <div class="col-md-12 text-left crop-step crop-step-3">
                         <div class="col-md-8 text-left">
-                          <h5>
-                            <input value="Зберегти зображення" class="btn btn-info btn-sm" type="button">
-                          </h5>
+                          <input id="save-cropped-image" value="Зберегти зображення" class="btn btn-info btn-sm" type="button">
                           <p>
-                            kjhtv bgecev rjyctrnec [ kjhtv bgecev rjyctrnec [e'rceh
+                            Натисніть кнопку "<b>Зберегти зображення</b>", щоб оновити його для обраної страви
                           </p>
                         </div>
                         <div class="col-md-4 text-right">
                           <div class="crop-step-circle">Крок 3</div>
                         </div>
                     </div>
-                    <div class="col-md-12 text-left">
+                    <div class="col-md-12 text-right" style="padding-top: 20px">
                         <button type="button" class="btn btn-default" data-dismiss="modal" style="border: 1px solid #ccc">Закрити</button>
                     </div>
                 </div>            
@@ -100,7 +93,7 @@
     </div>
     <!-- Fixed navbar -->
     
-    <nav class="navbar navbar-default navbar-fixed-top probootstrap-navbar">
+    <nav class="navbar navbar-default navbar-fixed-top probootstrap-navbar scrolled">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false" aria-controls="navbar">
@@ -142,14 +135,16 @@
             {% for group in dishes %}
                 <tr>
                   <th colspan="6" class="wh-group-name">
-                  <img src="" class="dish-thumbnail" style="width: 20px; height: 20px"/>
                   <input type="text" value="{{ group.name}}" style="float: left; width: 50%"/>
                   <input data-group-id="{{ group.id }}" value="Додати" class="btn btn-info add-new-item add-dish" type="button">
                 </th>
                 </tr>
                 {% for dish in group.dishes %}
                   <tr class="group-{{ group.id }}" data-dish-id={{ dish.id }} data-group-id={{ group.id }}>
-                    <th class="wh-name"><input name="name" type="text" value="{{ dish.name }}" /></th>
+                    <th class="wh-name">
+                      <img data-dish-image="{{dish.id}}" data-dish-image-name="{{ dish.name }}" src="{{ asset('assets/dishes/' ~ dish.id ~ '.jpg') }}" class="dish-thumbnail"/>
+                      <input name="name" type="text" value="{{ dish.name }}" />
+                    </th>
                     <th><input name="description" type="text" value="{{ dish.description }}" /></th>
                     <th><input name="ingredients" type="text" value="{{ dish.ingredients }}" /></th>
                     <th width="5%"><input name="weight" type="number" value="{{ dish.weight }}" /></th>
