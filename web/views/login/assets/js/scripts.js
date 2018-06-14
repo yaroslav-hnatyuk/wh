@@ -5,7 +5,7 @@ jQuery(document).ready(function() {
         Fullscreen background
     */
     $.backstretch([
-		"views/login/assets/img/backgrounds/2.jpg"
+		"/views/login/assets/img/backgrounds/2.jpg"
 	], {duration: 3000, fade: 750});
     
     $('.login-form input[type="text"], .login-form input[type="password"], .login-form textarea').on('focus', function() {

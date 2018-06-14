@@ -9,6 +9,7 @@ class User extends BaseEntity
     public $role;
     public $first_name;
     public $last_name;
+    public $ipn;
     public $phone;
     public $office_id;
 
@@ -16,6 +17,5 @@ class User extends BaseEntity
     {
         $this->setProperties($data);
     }
-
-
+    
 }

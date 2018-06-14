@@ -22,15 +22,11 @@ class AuthController
         $this->usersService = $usersService;
     }
 
-    public function index()
-    {
-        return $this->app['twig']->render('login/index.twig', array(
-            'name' => $name,
-        ));
+    public function index() {
+        return $this->app['twig']->render('login/index.twig');
     }
 
-    public function login(Request $request)
-    {
+    public function login(Request $request) {
         $email = $request->request->get('email');
         $user = $this->usersService->getByEmail($email);
 
@@ -51,5 +47,15 @@ class AuthController
                 'user' => $user->getArray()
             )
         );
+    }
+
+    public function registration($cid) {
+        return $this->app['twig']->render('login/register.twig', array(
+            'cid' => $cid,
+        ));
+    }
+
+    public function register(Request $request) {
+        
     }
 }

@@ -57,6 +57,8 @@ class RoutesLoader
     {
         $web->get("/login", "auth.web.controller:index");
         $web->post("/login", "auth.web.controller:login");
+        $web->get("/registration/{cid}", "auth.web.controller:registration");
+        $web->post("/register", "auth.web.controller:register");
         
         $web->get("/order", "orders.web.controller:index");
         $web->get("/users", "users.web.controller:index");
