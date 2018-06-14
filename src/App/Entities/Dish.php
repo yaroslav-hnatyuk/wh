@@ -8,6 +8,7 @@ class Dish extends BaseEntity
     public $name;
     public $price;
     public $weight;
+    public $calories;
     public $description;
     public $ingredients;
     public $dish_group_id;

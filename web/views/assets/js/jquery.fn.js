@@ -133,6 +133,7 @@ $(document).ready(function (){
                         price = parseFloat($(this).children( "th" ).children("input[name='price']").val()),
                         description = $(this).children( "th" ).children("input[name='description']").val(),
                         ingredients = $(this).children( "th" ).children("input[name='ingredients']").val(),
+                        calories = $(this).children( "th" ).children("input[name='calories']").val(),
                         weight = parseFloat($(this).children( "th" ).children("input[name='weight']").val()),
                         groupId = $(this).data('group-id'),
                         tmpId = $(this).data('tmp-id'),
@@ -144,6 +145,7 @@ $(document).ready(function (){
                         price: isNaN(price) ? 0 : price,
                         description: description,
                         ingredients: ingredients,
+                        calories: calories,
                         weight: isNaN(weight) ? 0 : weight,
                         dish_group_id: groupId,
                         tmp_id: tmpId || null
@@ -511,6 +513,7 @@ $(document).ready(function (){
                 '<th class="wh-name"><input type="text" name="name" value="" placeholder="Введіть ім\'я" /></th>' +
                 '<th><input name="description" type="text" value="" placeholder="Опис.."/></th>' +
                 '<th><input name="ingredients" type="text" value="" placeholder="Інгредієнти.."/></th>' +
+                '<th width="5%"><input name="calories" type="number" value="" placeholder="Калорійність.."/></th>' +
                 '<th width="5%"><input name="weight" type="number" value="" placeholder="Вага.."/></th>' +
                 '<th width="5%"><input name="price" type="number" value="" placeholder="Ціна.."/></th>' +
                 '<th width="3%">' +
