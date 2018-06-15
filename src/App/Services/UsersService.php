@@ -45,6 +45,39 @@ class UsersService extends BaseService
         );
     }
 
+    public function getUsersByFilters($filters)
+    {
+        $sql = "SELECT u.* FROM `user` u, `office` o WHERE u.office_id = o.id";
+        
+        if (empty($filters['company']) && empty($filters['office']) && empty($filters['user'])) {
+            return array();
+        }
+
+        if (!empty($filters['company'])) {
+            $sql .= " AND o.company_id = ?";
+            $params[] = $filters['company'];
+        }
+
+        if (!empty($filters['office'])) {
+            $sql .= " AND u.office_id = ?";
+            $params[] = $filters['office'];
+        }
+
+        if (!empty($filters['user'])) {
+            $sql .= " AND u.user_id = ?";
+            $params[] = $filters['user'];
+        }
+
+        if (!empty($filters['start_date']) && !empty($filters['end_date'])) {
+            $sql .= " AND u.id IN (SELECT user_id FROM `order` WHERE `order`.user_id = u.id AND `order`.day BETWEEN ? AND ?)";
+            $params[] = $filters['start_date'];
+            $params[] = $filters['end_date'];
+        } 
+
+        return $this->db->fetchAll($sql, $params);
+    }
+    
+
     public function getAllByOffice($office)
     {
         if (empty($office)) {

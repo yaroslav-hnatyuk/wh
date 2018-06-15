@@ -8,9 +8,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class ExportService extends BaseService
 {
-    private $columns = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
-
-    public function createReport($menu, $users)
+    public function createXlsReport($menu, $users)
     {
         $spreadsheet = new Spreadsheet();
         $spreadsheet->getProperties()->setCreator('Walnut House')
@@ -29,16 +27,22 @@ class ExportService extends BaseService
             $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}1", $item['dish_name']);
             $columnNumber++;
         }
+        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}1", 'Сума');
 
         $usersCount = 2;
         foreach ($users as $user) {
             $columnNumber = 2;
             $spreadsheet->getActiveSheet()->setCellValue("A{$usersCount}", $user['first_name'] . " " . $user['last_name']);
+            
+            $totalPrice = 0;
             foreach ($menu as $dish) {
                 $ordersCount = isset($dish['users'][$user['id']]) ? $dish['users'][$user['id']] : 0;
                 $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$usersCount}", $ordersCount);
+                $totalPrice += $ordersCount * $dish['price'];
                 $columnNumber++;
             }
+
+            $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$usersCount}", $totalPrice);
             $usersCount++;
         }
 
@@ -66,7 +70,6 @@ class ExportService extends BaseService
         if ($c <= 0) return '';
     
         $letter = '';
-                 
         while($c != 0){
            $p = ($c - 1) % 26;
            $c = intval(($c - $p) / 26);
@@ -74,7 +77,6 @@ class ExportService extends BaseService
         }
         
         return $letter;
-            
     }
 
 }
