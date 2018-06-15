@@ -61,6 +61,8 @@ class RoutesLoader
         $web->post("/register", "auth.web.controller:register");
         
         $web->get("/order", "orders.web.controller:index");
+        $web->get("/export", "orders.web.controller:export");
+
         $web->get("/users", "users.web.controller:index");
         $web->get("/reports", "reports.web.controller:index");
         $web->get("/menu", "menu.web.controller:index");
