@@ -46,7 +46,7 @@ class OrdersController extends BaseController
         $menu = $this->menuService->getForPeriodForOrders($period);
         $orders = $this->ordersService->getOrdersByFilters($filters);
 
-        list($menu, $totalCountByDays, $totalPrice) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
+        list($menu, $totalCountByDays, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
         $users = $this->app['users.service']->getUsersByFilters($filters);
 
         $this->app['export.service']->createXlsReport($menu, $users);
@@ -62,7 +62,7 @@ class OrdersController extends BaseController
         $menu = $this->menuService->getForPeriodForOrders($period);
 
         $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
-        list($menu, $totalByDays, $totalPrice) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
+        list($menu, $totalByDays, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
         $menu = $this->menuService->groupMenuDishes($menu, true);
 
         return $this->app['twig']->render("order/user.twig", array(
@@ -71,7 +71,7 @@ class OrdersController extends BaseController
             'userRole' => $this->getUser()->role,
             'menu' => $menu,
             'totalByDays' => $totalByDays,
-            'totalPrice' => $totalPrice
+            'totalPriceInfo' => $totalPriceInfo
         ));
     }
 
@@ -95,7 +95,7 @@ class OrdersController extends BaseController
             'end_date' => $period['end']['date']
         ));
 
-        list($menu, $totalCountByDays, $totalPrice) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
+        list($menu, $totalCountByDays, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
         $menu = $this->menuService->groupMenuDishes($menu, true);
 
         return $this->app['twig']->render("order/manager.twig", array(

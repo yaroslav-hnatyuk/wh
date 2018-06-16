@@ -94,12 +94,13 @@ $(document).ready(function (){
                     data: JSON.stringify(ordersData),
                     dataType: "json",
                     success: function (result) {
-                        spop({
-                            template: 'Замовлення збережене! Дякуємо :)',
-                            position  : 'bottom-right',
-                            style: 'success',
-                            autoclose: 3000
-                        });
+                        $(location).attr('href', '/order');
+                        // spop({
+                        //     template: 'Замовлення збережене! Дякуємо :)',
+                        //     position  : 'bottom-right',
+                        //     style: 'success',
+                        //     autoclose: 3000
+                        // });
                     },
                     error: function (error) {
                         spop({
@@ -144,12 +145,16 @@ $(document).ready(function (){
                             }
                         }
                         $("#myModal").modal('hide');
-                        spop({
-                            template: 'Замовлення збережене! Дякуємо :)',
-                            position  : 'bottom-right',
-                            style: 'success',
-                            autoclose: 3000
-                        });
+                        $(location).attr('href', '/order'); 
+                        // setTimeout(function() { 
+                        //     $(location).attr('href', '/order'); 
+                        // }, 100);
+                        // spop({
+                        //     template: 'Замовлення збережене! Дякуємо :)',
+                        //     position  : 'bottom-right',
+                        //     style: 'success',
+                        //     autoclose: 3000
+                        // });
                     },
                     error: function (error) {
                         spop({
@@ -933,5 +938,23 @@ $(document).ready(function (){
     });
 
     /*===== CROP END =====*/
+
+    $(".infolink").hover(
+        function () {
+            $(this).parent().parent().find(".infolink-description").css('display', 'block');
+        },
+        function () {
+            $(this).parent().parent().find(".infolink-description").css('display', 'none');
+        }
+    );
+
+    $(".infolink-total-price").hover(
+        function () {
+            $(this).parent().parent().find(".total-price-infolink-description").css('display', 'block');
+        },
+        function () {
+            $(this).parent().parent().find(".total-price-infolink-description").css('display', 'none');
+        }
+    );
 
 });   

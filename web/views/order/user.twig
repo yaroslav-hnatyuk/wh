@@ -144,18 +144,6 @@
                         <span class="day-date">&Sigma;</span>
                     </th>
                 </tr>
-                <tr>
-                    <th style="text-align: right; padding-right: 20px">Всього: <b>{{ totalPrice }} грн</b></th>
-                    {% for date, total in totalByDays %}
-                        <th style="color: #aaa">
-                            {{ total.total_price }}
-                        {% if total.lunch|length >= 4 %}
-                            {{'(к)'}}
-                        {% endif %}
-                        </th>
-                    {% endfor %}
-                    <th style="color: #aaa"></th>
-                </tr>
             </table>
 
             {% for group in menu %}
@@ -190,8 +178,48 @@
                     {% endfor %}
                 </table>
             {% endfor %}
-            
             <hr class="bottom-table-border"/>
+            <table class="dish-list table order-table" id="salads-list"  style="margin: 0px; border: 0;">
+            <tr style=" border: 0;">
+                <th style="text-align: right; padding-right: 20px; border: 0; position: relative">
+                    Всього: <b>{{ totalPriceInfo.total_price_with_discount }} грн</b>
+                    {% if totalPriceInfo.total_price > totalPriceInfo.total_price_with_discount %}
+                        <span class="discount-price" style="text-align: right; padding-right: 15px;">{{totalPriceInfo.total_price}}<i class="infolink infolink-total-price"></i></span>
+                    {% endif %}
+                    <i class="total-price-infolink-description" style="right: 0">
+                        Знижки: <br/>
+                        {% if totalPriceInfo.total_price_discount > 0 %}
+                            <b>{{totalPriceInfo.total_price_discount}}</b> грн за комплексні обіди
+                            <br>
+                        {% endif %}
+                        {% if totalPriceInfo.total_weekly_discount > 0 %}
+                            <b>{{totalPriceInfo.total_weekly_discount}}</b> грн за тижневі замовлення
+                            <br>
+                        {% endif %}
+                    <i>
+                </th>
+                    {% for date, total in totalByDays %}
+                        <th style="position: relative; border-left: 1px solid #ddd; border-bottom: 1px solid #ddd">
+                            <b>{{ total.total_price_with_discount }}</b>
+                            {% if total.total_price_with_discount < total.total_price %}
+                                <span class="discount-price">{{ total.total_price }}
+                                    <i class="infolink"></i>
+                                </span>
+                                <i class="infolink-description">
+                                    Знижки: <br/>
+                                    {% if total.total_price_discount > 0 %}
+                                        <b>{{total.total_price_discount}}</b> грн за <b>{{total.lunch.min_order}}</b> комплекс{% if total.lunch.min_order > 1 and total.lunch.min_order < 5%}и{% endif %}{% if total.lunch.min_order >= 5%}ів{% endif %}
+                                        <br>
+                                    {% endif %}
+                                <i>
+                            {% endif %}
+                        </th>
+                    {% endfor %}
+                    
+                <th style="color: #aaa; border: 0"></th>
+            </tr>
+            </table>
+        
       </div>
     </section>
 
