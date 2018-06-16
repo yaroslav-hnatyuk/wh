@@ -12,4 +12,5 @@ $app['db.options'] = array(
     "password" => "wh",
     "dbname" => "wh",
     "host" => "127.0.0.1",
+    "charset" => "utf8"
 );

@@ -176,9 +176,9 @@ $(document).ready(function (){
                         ingredients = $(this).children( "th" ).children("input[name='ingredients']").val(),
                         calories = $(this).children( "th" ).children("input[name='calories']").val(),
                         weight = parseFloat($(this).children( "th" ).children("input[name='weight']").val()),
-                        groupId = $(this).data('group-id'),
-                        tmpId = $(this).data('tmp-id'),
-                        dishId = $(this).data('dish-id');
+                        groupId = $(this).attr('data-group-id'),
+                        tmpId = $(this).attr('data-tmp-id'),
+                        dishId = $(this).attr('data-dish-id');
 
                     dishesData.push({
                         id: dishId || null,
@@ -207,6 +207,7 @@ $(document).ready(function (){
                                 var dishTableRow = $('tr[data-tmp-id="' + dish.tmp_id + '"]');
                                 dishTableRow.removeAttr('data-tmp-id');
                                 dishTableRow. attr('data-dish-id', dish.id);
+                                dishTableRow.find('.dish-thumbnail').attr('data-dish-image', dish.id);
                             }
                         }
                     }
@@ -597,9 +598,11 @@ $(document).ready(function (){
     //ADD dish
     $(".add-dish").click(function() {
         var groupId = $(this).attr('data-group-id');
-        $(".group-" + groupId).last().after( 
-            '<tr class="group-' + groupId + '" data-dish-id="" data-group-id="' + groupId + '" data-tmp-id="' + Math.floor(Math.random() * 1000001) +'">' +
-                '<th class="wh-name"><input type="text" name="name" value="" placeholder="Введіть ім\'я" /></th>' +
+        var newGroupHtml = '<tr class="group-' + groupId + '" data-dish-id="" data-group-id="' + groupId + '" data-tmp-id="' + Math.floor(Math.random() * 1000001) +'">' +
+                '<th class="wh-name">' + 
+                  '<img data-dish-image="" data-dish-image-name="sdasdas" src="" class="dish-thumbnail">' +
+                  '<input type="text" name="name" value="" placeholder="Введіть ім\'я" />' + 
+                '</th>' +
                 '<th><input name="description" type="text" value="" placeholder="Опис.."/></th>' +
                 '<th><input name="ingredients" type="text" value="" placeholder="Інгредієнти.."/></th>' +
                 '<th width="5%"><input name="calories" type="number" value="" placeholder="Калорійність.."/></th>' +
@@ -608,8 +611,15 @@ $(document).ready(function (){
                 '<th width="3%">' +
                 '<a href="#" class="btn btn-danger btn-xs remove-dish" style="padding: 3px 10px 3px 10px; text-transform: lowercase">x</a>' +
                 '</th>' +
-            '</tr>' 
-        );
+            '</tr>';
+
+        
+        if ($(".group-" + groupId).length) {
+            $(".group-" + groupId).last().after(newGroupHtml);
+        } else {
+            $(this).parent().parent().after(newGroupHtml);
+        }
+
         return false;
     });
 
@@ -654,8 +664,8 @@ $(document).ready(function (){
             }
         } else {
             var dishData = {
-                start: $(".date-range").data('start'),
-                end: $(".date-range").data('end'),
+                start: $(".date-range").attr('data-start'),
+                end: $(".date-range").attr('data-end'),
                 dish_id: $(this).parent().parent().attr('data-dish-id')
             };
             API.addDishToMenu(dishData, function(){
@@ -750,7 +760,7 @@ $(document).ready(function (){
         defer.resolve();
     });
 
-    $(".dish-thumbnail").click(function () {
+    $("body").on("click", ".dish-thumbnail", function(){
         var dishId = $(this).attr('data-dish-image');
         $("#dish-image-crop-header").attr('data-crop-popup-dish-id', dishId);
         $("#dish-image-crop-header").html($(this).attr('data-dish-image-name'));
