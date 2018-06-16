@@ -37,6 +37,7 @@ class MenudishesService extends BaseService
             d.price as price,
             g.id as group_id,
             g.name as group_name,
+            g.is_lunch as is_lunch,
             m.id as menu_id,
             m.start as start,
             m.end as end

@@ -149,7 +149,8 @@ class OrdersService extends BaseService
                 }
                 if (!isset($totalByDays[$date])) {
                     $totalByDays[$date] = array(
-                        'items' => array(), 
+                        'items' => array(),
+                        'lunch' => array(),
                         'total_count' => 0,
                         'total_price' => 0
                     );
@@ -161,6 +162,9 @@ class OrdersService extends BaseService
                     $result[$dish['dish_id']]['orders'][$date]['menu_id'] = $dish['menu_id'];
                     $result[$dish['dish_id']]['orders'][$date]['available'] = true;
                     if (isset($groupedOrders[$dish['menu_id'] . '_day_' . $date])) {
+                        if ($dish['is_lunch'] && $groupedOrders[$dish['menu_id'] . '_day_' . $date] > 0) {
+                            $totalByDays[$date]['lunch'][$dish['group_id']] += $groupedOrders[$dish['menu_id'] . '_day_' . $date];
+                        }
                         $totalByDays[$date]['items'][$dish['dish_id']]['count'] += $groupedOrders[$dish['menu_id'] . '_day_' . $date];
                         $totalByDays[$date]['items'][$dish['dish_id']]['price'] += $groupedOrders[$dish['menu_id'] . '_day_' . $date] * $dish['price'];
                         $totalByDays[$date]['total_count'] += $groupedOrders[$dish['menu_id'] . '_day_' . $date];
