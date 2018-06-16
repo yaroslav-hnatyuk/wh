@@ -33,6 +33,7 @@ class MenudishesService extends BaseService
             d.name as dish_name,
             d.description as description,
             d.ingredients as ingredients,
+            d.calories as calories,
             d.weight as weight,
             d.price as price,
             g.id as group_id,

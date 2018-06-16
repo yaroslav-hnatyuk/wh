@@ -2402,6 +2402,7 @@ section[data-section="menu"] {
 .order-table .dish-link {
   cursor: pointer;
   font-size: 14px;
+  position: relative;
 }
 
 hr.bottom-table-border {
@@ -2461,9 +2462,10 @@ hr.bottom-table-border {
 .order-table .dish-hint {
   display: none;
   position: absolute;
+  z-index: 999999;
   width: 300px;
   left: 105%;
-  top: -150px;
+  top: -312px;
   padding: 5px;
   background-color: #fff;
   box-shadow: 0px 0px 1px 1px #CCC;
@@ -2624,14 +2626,6 @@ hr.bottom-table-border {
 .wh-table .wh-actions {
   width: 50px;
   border-right: 1px solid #ddd;
-}
-
-.wh-display-cell {
-  /* display: table-cell; */
-}
-
-.wh-display-none {
-  /* display: none; */
 }
 
 .crop-step {

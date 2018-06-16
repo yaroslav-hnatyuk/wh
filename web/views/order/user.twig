@@ -13,8 +13,8 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src={{ asset('assets/js/jquery.fn.js') }}></script>
-    <script src={{ asset('assets/js/spop.js') }}></script>
+    <script src="{{ asset('assets/js/jquery.fn.js') }}"></script>
+    <script src="{{ asset('assets/js/spop.js') }}"></script>
 
     <!--[if lt IE 9]>
       <script src={{ asset('assets/js/vendor/html5shiv.min.js') }}></script>
@@ -30,7 +30,6 @@
     
         <!-- Modal content-->
         <div class="modal-content">
-            <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
             <div class="modal-body" style="float: left; padding: 35px 10px 0px 20px; margin: 0;">
                 <div class="col-md-6">
                     <img style="width: 338px" id="modal-dish-image" src=""/>
@@ -164,8 +163,28 @@
                 <table class="dish-list table order-table" id="salads-list"  style="margin: 0px">
                     {% for dish in group.dishes %}
                     <tr>
-                        <th style="padding-left: 40px;"><div><a data-link-menu-id="{{ dish.menu_id }}" data-link-dish-id="{{ dish.dish_id }}" class="dish-link" >{{ dish.dish_name }}</a></div></th>
-                        {# <th style="background-color: #eee">{{ dish.orders_count }}</th> MANAGER #}
+                        <th style="padding-left: 40px;">
+                        <div>
+                            <a data-link-menu-id="{{ dish.menu_id }}" data-link-dish-id="{{ dish.dish_id }}" class="dish-link" >
+                            {{ dish.dish_name }}
+                            <div class="dish-hint" style="display: none;">
+                                <div class="col-md-12 probootstrap-animate fadeInUp probootstrap-animated">
+                                    <div class="probootstrap-block-image" style="margin-bottom: 5px">
+                                        <figure><img width="338px" src="{{ asset('assets/dishes/' ~ dish.dish_id ~ '.jpg') }}"/></figure>
+                                    </div>
+                                    <div style="width: 50%; float: left; padding-top: 4px">
+                                        <b>Калорії: <span style="font-weight: normal">{{dish.calories}}</span></b><br/>
+                                    </div>
+                                    <div style="width: 50%; float: left; text-align: right;">
+                                        <span style="color: #FFA33E; font-size: 18px; font-weight: normal">{{dish.price}} грн</span>
+                                    </div>
+                                    <b>Інгредієнти</b>
+                                    <p style="font-size: 12px; margin: 0 0 10px 0;">{{dish.ingredients}}</p>
+                                </div> 
+                            </div>
+                            </a>
+                        </div>
+                        </th>
                         {% for date, order in dish.orders %}
                             {% if order.available %}
                             <th><input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/></th>

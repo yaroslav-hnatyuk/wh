@@ -521,9 +521,9 @@ $(document).ready(function (){
 
     $( ".dish-link" ).hover(
         function() {
-            $(".dish-hint").css("display", "block");
+            $(this).find(".dish-hint").css("display", "block");
         }, function() {
-            $(".dish-hint").css("display", "none")
+            $(this).find(".dish-hint").css("display", "none");
         }
     );
 
