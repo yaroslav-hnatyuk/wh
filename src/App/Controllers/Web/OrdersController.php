@@ -33,6 +33,7 @@ class OrdersController extends BaseController
         $office = $this->app['session']->get('filter_office');
         $user = $this->app['session']->get('filter_user');
         $filterPeriod = $this->app['session']->get('filter_period') ?: FiltersController::FILTER_PERIOD_WEEK;
+        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week, $filterPeriod);
 
         $filters = array(
             'company' => $company,
@@ -42,14 +43,13 @@ class OrdersController extends BaseController
             'end_date' => $period['end']['date']
         );
 
-        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week);
         $menu = $this->menuService->getForPeriodForOrders($period);
         $orders = $this->ordersService->getOrdersByFilters($filters);
 
-        list($menu, $totalCountByDays, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
+        list($menu, $totalByUsers, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period, true);
         $users = $this->app['users.service']->getUsersByFilters($filters);
 
-        $this->app['export.service']->createXlsReport($menu, $users);
+        $this->app['export.service']->createXlsReport($menu, $users, $totalByUsers, $totalPriceInfo);
     }
 
     private function userOrder(Request $request)

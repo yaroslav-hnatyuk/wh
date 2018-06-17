@@ -8,7 +8,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class ExportService extends BaseService
 {
-    public function createXlsReport($menu, $users)
+    public function createXlsReport($menu, $users, $totalByUsers, $totalPriceInfo)
     {
         $spreadsheet = new Spreadsheet();
         $spreadsheet->getProperties()->setCreator('Walnut House')
@@ -27,7 +27,10 @@ class ExportService extends BaseService
             $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}1", $item['dish_name']);
             $columnNumber++;
         }
-        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}1", 'Сума');
+        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}1", 'Сума без знижок');
+        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 1)}1", 'Знажка за комплексні');
+        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 2)}1", 'Знижка за тижневі замовлення');
+        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 3)}1", 'Кінцева сума');
 
         $usersCount = 2;
         foreach ($users as $user) {
@@ -42,7 +45,10 @@ class ExportService extends BaseService
                 $columnNumber++;
             }
 
-            $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$usersCount}", $totalPrice);
+            $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$usersCount}", $totalByUsers[$user['id']]['total_price']);
+            $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 1)}{$usersCount}", $totalByUsers[$user['id']]['total_price_discount']);
+            $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 2)}{$usersCount}", $totalPriceInfo['total_user_weekly_discount'][$user['id']]);
+            $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 3)}{$usersCount}", $totalByUsers[$user['id']]['total_price_with_discount'] - $totalPriceInfo['total_user_weekly_discount'][$user['id']]);
             $usersCount++;
         }
 
