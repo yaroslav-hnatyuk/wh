@@ -13,6 +13,11 @@ class CompaniesService extends BaseService
 
         return $company->getArray();
     }
+    
+    public function findOne($id)
+    {
+        return $this->db->fetchAssoc("SELECT * FROM company WHERE id=?", [(int) $id]);
+    }
 
     public function getAll()
     {

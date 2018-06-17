@@ -239,11 +239,6 @@ class OrdersService extends BaseService
                 }
             }
             unset($totalPriceInfo['total_weekly']);
-    
-            // if ($totalPriceInfo['total_weekly_discount'] > 0) {
-            //     $totalPriceInfo['total_price_with_discount'] -= $totalPriceInfo['total_weekly_discount'];
-            // }
-
         } else {
             foreach ($totalByDaysAndUsers as $day => $users) {
                 $totalByDays[$day] = array(

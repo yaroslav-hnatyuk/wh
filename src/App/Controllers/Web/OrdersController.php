@@ -49,7 +49,12 @@ class OrdersController extends BaseController
         list($menu, $totalByUsers, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period, true);
         $users = $this->app['users.service']->getUsersByFilters($filters);
 
-        $this->app['export.service']->createXlsReport($menu, $users, $totalByUsers, $totalPriceInfo);
+        $this->app['export.service']->createXlsReport($menu, $users, $totalByUsers, $totalPriceInfo, array(
+            'company' => $this->app['companies.service']->findOne($company),
+            'office' => $this->app['offices.service']->findOne($office),
+            'start_date' => $period['start']['date'],
+            'end_date' => $period['end']['date']
+        ));
     }
 
     private function userOrder(Request $request)

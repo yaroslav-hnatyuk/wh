@@ -8,7 +8,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class ExportService extends BaseService
 {
-    public function createXlsReport($menu, $users, $totalByUsers, $totalPriceInfo)
+    public function createXlsReport($menu, $users, $totalByUsers, $totalPriceInfo, $filters)
     {
         $spreadsheet = new Spreadsheet();
         $spreadsheet->getProperties()->setCreator('Walnut House')
@@ -19,20 +19,41 @@ class ExportService extends BaseService
             ->setKeywords('office 2007 openxml php')
             ->setCategory('Test result file');
 
+
         $spreadsheet->setActiveSheetIndex(0)
-            ->setCellValue('A1', 'Користувач');
+            ->setCellValue('B2', 'Компанія');
+        $spreadsheet->getActiveSheet()->setCellValue("B3", $filters['company']['name']);
+
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('D2', 'Офіс');
+        if ($filters['office']) {
+            $spreadsheet->getActiveSheet()->setCellValue("D3", $filters['office']['address']);
+        } else {
+            $spreadsheet->getActiveSheet()->setCellValue("D3", 'Всі');
+        }
+        
+
+        $spreadsheet->setActiveSheetIndex(0)
+            ->mergeCells('F2:G2')
+            ->setCellValue('F2', 'Період');
+        $spreadsheet->getActiveSheet()->setCellValue("F3", $filters['start_date']);
+        $spreadsheet->getActiveSheet()->setCellValue("G3", $filters['end_date']);
+
+
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A5', 'Користувач');
 
         $columnNumber = 2;
         foreach ($menu as $item) {
-            $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}1", $item['dish_name']);
+            $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}5", $item['dish_name']);
             $columnNumber++;
         }
-        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}1", 'Сума без знижок');
-        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 1)}1", 'Знажка за комплексні');
-        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 2)}1", 'Знижка за тижневі замовлення');
-        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 3)}1", 'Кінцева сума');
+        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}5", 'Сума без знижок');
+        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 1)}5", 'Знажка за комплексні');
+        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 2)}5", 'Знижка за тижневі замовлення');
+        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 3)}5", 'Кінцева сума');
 
-        $usersCount = 2;
+        $usersCount = 6;
         foreach ($users as $user) {
             $columnNumber = 2;
             $spreadsheet->getActiveSheet()->setCellValue("A{$usersCount}", $user['first_name'] . " " . $user['last_name']);
@@ -56,7 +77,7 @@ class ExportService extends BaseService
         $spreadsheet->setActiveSheetIndex(0);
         
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="01simple.xls"');
+        header("Content-Disposition: attachment;filename=\"walnut-house-report-{$filters['start_date']}-{$filters['end_date']}.xls\"");
         header('Cache-Control: max-age=0');
         
         header('Cache-Control: max-age=1');
