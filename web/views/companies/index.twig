@@ -35,7 +35,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.html" title="uiCookies:FineOak">FineOak</a>
+          <a class="navbar-brand" href="/orders" title="uiCookies:FineOak">FineOak</a>
         </div>
 
         {% include 'parts/menu/' ~ userRole ~ '.twig' %}
@@ -47,7 +47,16 @@
         <div class="row">
             
             <div class="col-md-9 text-left" style="padding-left: 0">
-                <input id="add-company" name="add_company" value="Додати нову компанію" class="btn btn-primary" type="button">
+                <input id="add-new-company" name="add_company" value="Додати нову компанію" class="btn btn-primary show-add-new-company" type="button">
+                <div class="add-new-group-popup new-company-popup">
+                  <div class="col-md-12 text-center" style="margin-bottom: 10px">
+                    <input class="new-group-popup-input" name="name" type="text" placeholder="Назва компанії.."/>
+                  </div>
+                  <div class="col-md-12 text-center">
+                    <input class="close-new-group-popup btn btn-xs" type="button" value="Закрити"/>
+                    <input id="save-new-company" name="save_new_company" value="Додати" class="create-new-group-popup-button btn btn-xs btn-primary" type="button">
+                  </div>
+                </div>
             </div>
             <div class="col-md-3 text-right" style="padding-right: 0">
                 <a href="/companies" id="cancel-changes" class="btn" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Відмінити</a>
@@ -64,13 +73,13 @@
             {% for company in companies %}
                 <tr>
                   <th colspan="2" class="wh-group-name">
-                    <input type="text" value="{{ company.name}}" style="float: left; width: 50%"/>
-                    <input data-company-id="{{ company.id }}" value="Додати" class="btn btn-info add-new-item add-office" type="button">
+                    <input type="text" class="company-group-name" data-company-group-name-id="{{company.id}}" value="{{ company.name}}" style="float: left; width: 50%"/>
+                    <input data-company-id="{{ company.id }}" value="Додати офіс" class="btn btn-info add-new-item add-office" type="button">
                   </th>
                 </tr>
                 {% for office in company.offices %}
-                  <tr data-office-id={{ office.id }}>
-                    <th class="wh-name"><input type="text" value="{{ office.address }}" /></th>
+                  <tr class="company-{{ company.id }}" data-office-id={{ office.id }} data-office-company-id="{{ company.id }}">
+                    <th class="wh-name"><input class="office-address" type="text" value="{{ office.address }}" /></th>
                     <th>{{ host ~ '/registration/' ~ office.uid}}</th>
                   </tr>
                 {% endfor %}

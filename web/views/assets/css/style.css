@@ -2796,3 +2796,7 @@ hr.bottom-table-border {
 .add-new-group-popup .create-new-group-popup-button {
   width: 47%;
 }
+
+.new-company-popup {
+  left: 250px;
+}

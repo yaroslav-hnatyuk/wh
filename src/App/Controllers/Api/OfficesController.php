@@ -30,9 +30,9 @@ class OfficesController extends BaseController
 
     public function save(Request $request)
     {
-        // hash('ripemd160', 'Наукова, 7d, Львів' . uniqid())
+        $offices = json_decode($request->getContent(), true);
         return new JsonResponse(
-            $this->officesService->save($request->request->all())
+            $this->officesService->saveOffices($offices)
         );
     }
 

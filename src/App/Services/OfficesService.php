@@ -44,10 +44,35 @@ class OfficesService extends BaseService
     function save($data = array())
     {
         $office = new Office($data);
-        $this->db->insert("office", $office->getArray());
+        $office->uid = hash('ripemd160', $office->address . uniqid());
+        $officeData = $office->getArray();
+        unset($officeData['id']);
+
+        $this->db->insert("office", $officeData);
         $office->id = $this->db->lastInsertId();
 
         return $office->getArray();
+    }
+
+    public function saveOffices($offices)
+    {
+        $this->db->beginTransaction();
+        try {
+            foreach ($offices as &$office) {
+                if ($office['id'] && $this->findOne($office['id'])) {
+                    $this->db->update('office', array('address' => $office['address']), ['id' => $office['id']]);
+                } else {
+                    $office = $this->save($office);
+                }
+            }
+            unset($office);
+            $this->db->commit();
+        } catch (\Exception $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
+        
+        return $offices;
     }
 
     function update($data = array())

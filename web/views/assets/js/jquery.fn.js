@@ -479,7 +479,47 @@ $(document).ready(function (){
                     });
                 }
             });
-        }
+        },
+
+        updateCompany: function (company) {
+            $.ajax({
+                url: "/api/v1/companies/" + company.id,
+                method: "PUT",
+                data: JSON.stringify({name: company.name}),
+                dataType: "json",
+                contentType:'application/json',
+                success: function (resp) {},
+                error: function (error) {
+                    spop({
+                        template: 'Помилка :( Превірте будь-ласка введені дані.',
+                        position  : 'bottom-right',
+                        style: 'error',
+                        autoclose: 3000
+                    });
+                }
+            });
+        },
+
+        updateOffices: function (offices) {
+            $.ajax({
+                url: "/api/v1/offices",
+                method: "POST",
+                data: JSON.stringify(offices),
+                dataType: "json",
+                contentType:'application/json',
+                success: function (resp) {
+                    $(location).attr('href', '/companies');
+                },
+                error: function (error) {
+                    spop({
+                        template: 'Помилка :( Превірте будь-ласка введені дані.',
+                        position  : 'bottom-right',
+                        style: 'error',
+                        autoclose: 3000
+                    });
+                }
+            });
+        },
     }
 
     function setCookie(cname,cvalue,exdays) {
@@ -691,6 +731,22 @@ $(document).ready(function (){
         return false;
     });
 
+    $(".add-office").click(function () {
+        var companyId = $(this).attr('data-company-id');
+        var newOfficeHtml = '<tr data-office-id="" data-office-company-id="' + companyId + '">' +
+            '<th class="wh-name"><input class="office-address" value="" placeholder="Введіть адресу офісу.." type="text"></th>' +
+            '<th style="opacity: 0.45">Посилання на реєстрацію буде згенероване автоматично після збереження змін</th>' +
+        '</tr>';
+
+        if ($(".company-" + companyId).length) {
+            $(".company-" + companyId).last().after(newOfficeHtml);
+        } else {
+            $(this).parent().parent().after(newOfficeHtml);
+        }
+
+        return false;
+    });
+
     //SAVE DISHES
     $("#save-dishes").click(function(){
         API.saveDishes();
@@ -759,13 +815,16 @@ $(document).ready(function (){
     });      
 
     $("#save-companies").click(function(){
-        // TODO fixme
-        spop({
-            template: 'Компанії успішно збережені!',
-            position  : 'bottom-right',
-            style: 'success',
-            autoclose: 3000
+        var offices = [];
+        $(".office-address").each(function () {
+            offices.push({
+                id: $(this).parent().parent().attr('data-office-id'),
+                address: $(this).val(),
+                company_id: $(this).parent().parent().attr('data-office-company-id')
+            });
         });
+
+        API.updateOffices(offices);
         return false;
     });
 
@@ -1051,4 +1110,17 @@ $(document).ready(function (){
         });
    }).change();
 
+
+   $(document).on('change','.company-group-name', function() {
+        var companyId = $(this).attr('data-company-group-name-id');
+        var companyName = $(this).val();
+        API.updateCompany({
+            id: companyId,
+            name: companyName
+        });
+    }).change();
+
+    $(".show-add-new-company").click(function () {
+        $(".add-new-group-popup").css('display', 'block');
+    });
 });   
