@@ -416,6 +416,69 @@ $(document).ready(function (){
                     });
                 }
             });
+        },
+
+        saveDishGroup: function (dishGroup) {
+            $.ajax({
+                url: "/api/v1/dishgroups",
+                method: "POST",
+                data: JSON.stringify(dishGroup),
+                dataType: "json",
+                contentType:'application/json',
+                success: function (resp) {
+                    console.log(resp);
+                    $(location).attr('href', '/dishes');
+                },
+                error: function (error) {
+                    spop({
+                        template: 'Помилка :( Превірте будь-ласка введені дані.',
+                        position  : 'bottom-right',
+                        style: 'error',
+                        autoclose: 3000
+                    });
+                }
+            });
+        },
+
+        updateDishGroup: function (dishGroup) {
+            $.ajax({
+                url: "/api/v1/dishgroups/" + dishGroup.id,
+                method: "PUT",
+                data: JSON.stringify(dishGroup),
+                dataType: "json",
+                contentType:'application/json',
+                success: function (resp) {},
+                error: function (error) {
+                    spop({
+                        template: 'Помилка :( Превірте будь-ласка введені дані.',
+                        position  : 'bottom-right',
+                        style: 'error',
+                        autoclose: 3000
+                    });
+                }
+            });
+        },
+
+        saveCompany: function (company) {
+            $.ajax({
+                url: "/api/v1/companies",
+                method: "POST",
+                data: JSON.stringify(company),
+                dataType: "json",
+                contentType:'application/json',
+                success: function (resp) {
+                    console.log(resp);
+                    $(location).attr('href', '/companies');
+                },
+                error: function (error) {
+                    spop({
+                        template: 'Помилка :( Превірте будь-ласка введені дані.',
+                        position  : 'bottom-right',
+                        style: 'error',
+                        autoclose: 3000
+                    });
+                }
+            });
         }
     }
 
@@ -956,5 +1019,36 @@ $(document).ready(function (){
             $(this).parent().parent().find(".total-price-infolink-description").css('display', 'none');
         }
     );
+
+    $(".show-add-dish-group").click(function () {
+        $(".add-new-group-popup").css('display', 'block');
+    });
+
+    $(".close-new-group-popup").click(function () {
+        $(".add-new-group-popup").css('display', 'none');
+    });
+
+    $("#save-new-dish-group").click(function () {
+        var dishGroup = $(".new-group-popup-input").val();
+        API.saveDishGroup({
+            name: dishGroup
+        });
+    });
+
+    $("#save-new-company").click(function () {
+        var company = $(".new-group-popup-input").val();
+        API.saveCompany({
+            name: company
+        });
+    });
+
+    $(document).on('change','.dish-group-name', function() {
+        var groupId = $(this).attr('data-dish-group-name-id');
+        var groupName = $(this).val();
+        API.updateDishGroup({
+            id: groupId,
+            name: groupName
+        });
+   }).change();
 
 });   

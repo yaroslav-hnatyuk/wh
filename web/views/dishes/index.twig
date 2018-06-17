@@ -114,9 +114,18 @@
         <div class="row">
             
             <div class="col-md-9 text-left" style="padding-left: 0">
-                <input id="save-order" name="save_order" value="Додати нову групу" class="btn btn-primary" type="button">
+                <input id="add-dish-group" name="add_dish_group" value="Додати нову групу" class="show-add-dish-group btn btn-primary" type="button">
+                <div class="add-new-group-popup">
+                  <div class="col-md-12 text-center" style="margin-bottom: 10px">
+                    <input class="new-group-popup-input" name="name" type="text" placeholder="Назва групи страв.."/>
+                  </div>
+                  <div class="col-md-12 text-center">
+                    <input class="close-new-group-popup btn btn-xs" type="button" value="Закрити"/>
+                    <input id="save-new-dish-group" name="save_new_dish_group" value="Додати" class="create-new-group-popup-button btn btn-xs btn-primary" type="button">
+                  </div>
+                </div>
             </div>
-            <div class="col-md-3 text-right" style="padding-right: 0">
+            <div class="col-md-3 text-right" style="padding-right: 0; position: relative">
                 <a id="cancel-changes" href="/dishes" class="btn" type="button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Відмінити</a>
                 <input id="save-dishes" name="save_dishes" value="Зберегти" class="btn btn-primary" type="button">
             </div>
@@ -136,7 +145,7 @@
             {% for group in dishes %}
                 <tr>
                   <th colspan="6" class="wh-group-name">
-                  <input type="text" value="{{ group.name}}" style="float: left; width: 50%"/>
+                  <input type="text" class="dish-group-name" data-dish-group-name-id="{{ group.id }}" value="{{ group.name}}" style="float: left; width: 50%"/>
                   <input data-group-id="{{ group.id }}" value="Додати" class="btn btn-info add-new-item add-dish" type="button">
                 </th>
                 </tr>

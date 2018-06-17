@@ -2773,3 +2773,26 @@ hr.bottom-table-border {
   padding: 5px;
   display: none;
 }
+
+.add-new-group-popup {
+  width: 300px;
+  background-color: #fff;
+  top: -64px;
+  left: 215px;
+  border: 1px solid #ddd;
+  position: absolute;
+  padding: 15px 0 15px 0;
+  display: none;
+}
+
+.add-new-group-popup .new-group-popup-input {
+  width: 100%;
+}
+
+.add-new-group-popup .close-new-group-popup {
+  width: 47%;
+}
+
+.add-new-group-popup .create-new-group-popup-button {
+  width: 47%;
+}

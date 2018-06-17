@@ -30,15 +30,18 @@ class DishgroupsController extends BaseController
 
     public function save(Request $request)
     {
+        $group = $request->request->all();
+        $group['is_lunch'] = 0;
+        $group['order'] = $this->dishGroupService->getMaxOrder() + 1;
+        
         return new JsonResponse(
-            $this->dishGroupService->save($request->request->all())
+            $this->dishGroupService->save($group)
         );
     }
 
     public function update($id, Request $request)
     {
         $data = $request->request->all();
-        $data['id'] = $id;
         return new JsonResponse(
             $this->dishGroupService->update($data)
         );
