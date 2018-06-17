@@ -28,15 +28,20 @@ class MenuController extends BaseController
         $this->groupsService = $groupsService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $period = $this->ordersService->getPeriodForYearAndWeek();
+        $week = $request->query->get('week');
+        $year = $request->query->get('year');
+
+        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week);
         $dishes = $this->dishesService->getAll();
         $menu = $this->menuService->getForPeriod($period, true);
         foreach ($dishes as &$dish) {
             if (isset($menu[$dish['id']])) {
                 $dish['menu'] = $menu[$dish['id']];
             }
+            $dish['rating'] = $this->app['ratings.service']->getAverageByDishId($dish['id']);
+            $dish['feedback_count'] = $this->app['feedback.service']->getCountByDishId($dish['id']);
         }
         unset($dish);
         unset($menu);

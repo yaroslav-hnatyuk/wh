@@ -58,9 +58,9 @@
                 <tr class="wh-head">
                     <th>  
                         <ul class="pager">
-                            <li><a href="#" class="btn"><</a></li>
+                            <li><a href="/menu?year={{period.prev.year}}&week={{period.prev.week}}" class="btn"><</a></li>
                             <li class="date-range" data-start="{{ period.start.date }}" data-end="{{ period.end.date }}">{{ period.start.day }} - {{ period.end.day }}</li>
-                            <li><a href="#" class="btn">></a></li>
+                            <li><a href="/menu?year={{period.next.year}}&week={{period.next.week}}" class="btn">></a></li>
                         </ul>
                     </th>
                     <th class="wh-rating" style="padding-top: 20px">Рейтинг</th>
@@ -79,14 +79,16 @@
                     <th class="wh-name">{{ dish.name }}</th>
                     <th class="wh-rating">
                       <div>
-                        <span style="color: #FFA33E;">★</span>
-                        <span style="color: #FFA33E;">★</span>
-                        <span style="color: #FFA33E;">★</span>
-                        <span>☆</span>
-                        <span>☆</span>
+                        {% for i in 1..5 %}
+                          {% if dish.rating >= i %}
+                            <span style="color: #FFA33E;">★</span>
+                          {% else %}
+                            <span>☆</span>
+                          {% endif %}
+                        {% endfor %}
                       </div>
                     </th>
-                    <th class="wh-reviews"><a>відгуків: 122</a></th>
+                    <th class="wh-reviews"><a>відгуків: {{dish.feedback_count}}</a></th>
                     <th class="wh-actions" style="display: none">
                       <label class="switch">
                         <input type="checkbox" {% if dish.menu is defined %} {{'checked=true'}} {% endif %}>
