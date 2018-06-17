@@ -187,10 +187,12 @@
                 </form>
             </div>
             <div class="col-md-3 text-right" style="padding-right: 0">
-                <div class="btn-group">
-                    <button type="button" class="btn order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Тиждень</button>
-                    <button type="button" class="btn btn-default order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Місяць</button>
-                </div>
+                <form action="/filters">
+                    <div class="btn-group">
+                        <button type="submit" name="filter_period_week" class="btn {% if filterPeriod == '2weeks' %} btn-default {% endif %} order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Тиждень</button>
+                        <button type="submit" name="filter_period_2weeks" class="btn {% if filterPeriod == 'week' %} btn-default {% endif %} order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">2 тижні</button>
+                    </div> 
+                </form>
             </div>
             
             <br/><br/><br/>
@@ -212,25 +214,18 @@
                             <span class="day-date">{{ weekday.number }}</span>
                         </th>
                     {% endfor %}
+                    <th>
+                        <span class="day-name"></span><br/>
+                        <span class="day-date">&Sigma;</span>
+                    </th>
                 </tr>
-                {# <tr>
-                    <th style="text-align: right; padding-right: 20px">Всього: <b>265 грн</b></th>
-                    <th style="background-color: #eee"></th> MANAGER
-                    <th style="color: #aaa">53</th>
-                    <th style="color: #aaa">50</th>
-                    <th style="color: #aaa">56</th>
-                    <th style="color: #aaa">43</th>
-                    <th style="color: #aaa">63</th>
-                    <th style="color: #aaa">0</th>
-                    <th style="color: #aaa">0</th>
-                </tr> #}
             </table>
 
             {% for group in menu %}
                 <table class="table order-table" id="salads-header" style="cursor: pointer; width: 100%; margin: 0px">
                     <tr>
                         <th><b style="text-transform: uppercase;">{{ group.group_name}}</b></th>
-                        {# <th style="background-color: #eee"></th> MANAGER #}
+                        <th><div>&nbsp;</div></th>
                         <th><div>&nbsp;</div></th>
                         <th><div>&nbsp;</div></th>
                         <th><div>&nbsp;</div></th>
@@ -242,9 +237,29 @@
                 </table>
                 <table class="dish-list table order-table" id="salads-list"  style="margin: 0px">
                     {% for dish in group.dishes %}
-                    <tr data-menu-id={{ dish.menu_id }}>
-                        <th style="padding-left: 40px;"><div><a class="dish-link" >{{ dish.dish_name }}</a></div></th>
-                        {# <th style="background-color: #eee">{{ dish.orders_count }}</th> MANAGER #}
+                    <tr>
+                        <th style="padding-left: 40px;">
+                        <div>
+                            <a data-link-menu-id="{{ dish.menu_id }}" data-link-dish-id="{{ dish.dish_id }}" class="dish-link" >
+                            {{ dish.dish_name }}
+                            <div class="dish-hint" style="display: none;">
+                                <div class="col-md-12 probootstrap-animate fadeInUp probootstrap-animated">
+                                    <div class="probootstrap-block-image" style="margin-bottom: 5px">
+                                        <figure><img width="338px" src="{{ asset('assets/dishes/' ~ dish.dish_id ~ '.jpg') }}"/></figure>
+                                    </div>
+                                    <div style="width: 50%; float: left; padding-top: 4px">
+                                        <b>Калорії: <span style="font-weight: normal">{{dish.calories}}</span></b><br/>
+                                    </div>
+                                    <div style="width: 50%; float: left; text-align: right;">
+                                        <span style="color: #FFA33E; font-size: 18px; font-weight: normal">{{dish.price}} грн</span>
+                                    </div>
+                                    <b>Інгредієнти</b>
+                                    <p style="font-size: 12px; margin: 0 0 10px 0;">{{dish.ingredients}}</p>
+                                </div> 
+                            </div>
+                            </a>
+                        </div>
+                        </th>
                         {% for date, order in dish.orders %}
                             {% if order.available %}
                             <th>{{ order.count }}</th>
@@ -252,12 +267,53 @@
                             <th style="background-color: #efefef; color: #ccc">-</th>
                             {% endif %}
                         {% endfor %}
+                        <th><b>{{dish.total_count}}</b></th>
                     </tr>
                     {% endfor %}
                 </table>
             {% endfor %}
-            
             <hr class="bottom-table-border"/>
+
+            <table class="dish-list table order-table" id="salads-list"  style="margin: 0px; border: 0;">
+            <tr style=" border: 0;">
+                <th style="text-align: right; padding-right: 20px; border: 0; position: relative">
+                    Всього: <b>{{ totalPriceInfo.total_price_with_discount }} грн</b>
+                    {% if totalPriceInfo.total_price > totalPriceInfo.total_price_with_discount %}
+                        <span class="discount-price" style="text-align: right; padding-right: 15px;">{{totalPriceInfo.total_price}}<i class="infolink infolink-total-price"></i></span>
+                    {% endif %}
+                    <i class="total-price-infolink-description" style="right: 0">
+                        Знижки: <br/>
+                        {% if totalPriceInfo.total_price_discount > 0 %}
+                            <b>{{totalPriceInfo.total_price_discount}}</b> грн за комплексні обіди
+                            <br>
+                        {% endif %}
+                        {% if totalPriceInfo.total_weekly_discount > 0 %}
+                            <b>{{totalPriceInfo.total_weekly_discount}}</b> грн за тижневі замовлення
+                            <br>
+                        {% endif %}
+                    <i>
+                </th>
+                    {% for date, total in totalByDays %}
+                        <th style="position: relative; border-left: 1px solid #ddd; border-bottom: 1px solid #ddd">
+                            <b>{{ total.total_price_with_discount }}</b>
+                            {% if total.total_price_with_discount < total.total_price %}
+                                <span class="discount-price">{{ total.total_price }}
+                                    <i class="infolink"></i>
+                                </span>
+                                <i class="infolink-description">
+                                    Знижки: <br/>
+                                    {% if total.total_price_discount > 0 %}
+                                        <b>{{total.total_price_discount}}</b> грн за <b>{{total.lunch_count}}</b> комплекс{% if total.lunch_count > 1 and total.lunch_count < 5%}и{% endif %}{% if total.lunch_count >= 5%}ів{% endif %}
+                                        <br>
+                                    {% endif %}
+                                <i>
+                            {% endif %}
+                        </th>
+                    {% endfor %}
+                    
+                <th style="color: #aaa; border: 0"></th>
+            </tr>
+            </table>
       </div>
     </section>
 

@@ -85,7 +85,7 @@ class OrdersController extends BaseController
         $user = $this->app['session']->get('filter_user');
         $filterPeriod = $this->app['session']->get('filter_period') ?: FiltersController::FILTER_PERIOD_WEEK;
 
-        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week);
+        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week, $filterPeriod);
         $menu = $this->menuService->getForPeriodForOrders($period);
         $orders = $this->ordersService->getOrdersByFilters(array(
             'company' => $company,
@@ -95,7 +95,7 @@ class OrdersController extends BaseController
             'end_date' => $period['end']['date']
         ));
 
-        list($menu, $totalCountByDays, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
+        list($menu, $totalByDays, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
         $menu = $this->menuService->groupMenuDishes($menu, true);
 
         return $this->app['twig']->render("order/manager.twig", array(
@@ -110,7 +110,9 @@ class OrdersController extends BaseController
             'filterPeriod' => $filterPeriod,
             'companies' => $this->app['companies.service']->getAll(),
             'offices' => $this->app['offices.service']->getAllByCompany($company),
-            'users' => $this->app['users.service']->getAllByOffice($office)
+            'users' => $this->app['users.service']->getAllByOffice($office),
+            'totalByDays' => $totalByDays,
+            'totalPriceInfo' => $totalPriceInfo
         ));
     }
 

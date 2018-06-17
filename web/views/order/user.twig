@@ -227,7 +227,7 @@
                                 <i class="infolink-description">
                                     Знижки: <br/>
                                     {% if total.total_price_discount > 0 %}
-                                        <b>{{total.total_price_discount}}</b> грн за <b>{{total.lunch.min_order}}</b> комплекс{% if total.lunch.min_order > 1 and total.lunch.min_order < 5%}и{% endif %}{% if total.lunch.min_order >= 5%}ів{% endif %}
+                                        <b>{{total.total_price_discount}}</b> грн за <b>{{total.lunch_count}}</b> комплекс{% if total.lunch_count > 1 and total.lunch_count < 5%}и{% endif %}{% if total.lunch_count >= 5%}ів{% endif %}
                                         <br>
                                     {% endif %}
                                 <i>
