@@ -57,7 +57,7 @@
                 <div class="col-md-6">
                   <ul class="menus">
                     <li>
-                      <figure class="image"><img src="{{ asset('assets/img/img_square_3.jpg') }}"></figure>
+                      <figure class="image"><img src="{{ asset('assets/dishes/'~ dish.dish_id ~'.jpg') }}"></figure>
                       <div class="text">
                         <h3>{{ dish.dish_name }}</h3>
                         <p class="rating" data-rating-dish-id="{{dish.dish_id}}"style="font-size: 18px; cursor: pointer">
