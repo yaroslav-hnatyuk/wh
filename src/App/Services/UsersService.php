@@ -27,9 +27,9 @@ class UsersService extends BaseService
         return $this->db->fetchAll("SELECT * FROM user");
     }
 
-    public function getAllWithCompaniesAndOffices()
+    public function getAllWithCompaniesAndOffices($stuffOnly = false, $usersOnly = false)
     {
-        return $this->db->fetchAll("SELECT
+        $sql = "SELECT
             user.id as user_id,
             CONCAT(user.first_name, \" \", user.last_name) as user_name,
             user.email as email,
@@ -41,8 +41,15 @@ class UsersService extends BaseService
             office.address as office_addr
             FROM user
             LEFT JOIN office ON user.office_id = office.id
-            LEFT JOIN company ON office.company_id = company.id"
-        );
+            LEFT JOIN company ON office.company_id = company.id";
+
+        if ($stuffOnly) {
+            $sql .= " WHERE user.role != 'user'";
+        } else if ($usersOnly) {
+            $sql .= " WHERE user.role = 'user'";
+        }
+
+        return $this->db->fetchAll($sql);
     }
 
     public function getUsersByFilters($filters)

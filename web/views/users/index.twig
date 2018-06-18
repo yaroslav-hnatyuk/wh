@@ -46,36 +46,85 @@
       <div class="container" style="padding-top: 70px;">
         <div class="row">
             
-            <div class="col-md-9 text-left" style="padding-left: 0">
-                <input id="add-user" name="add_user" value="Додати користувача" class="btn btn-primary" type="button">
+              <div class="col-md-7 text-left" style="padding-left: 0">
+                <form id="order-filters" class="probootstrap-form" style="margin: 0" methos="GET" action="/filters">
+                    <input type="hidden" name="selected_year" value="{{ year }}" />
+                    <input type="hidden" name="selected_week" value="{{ week }}" />
+                    <input type="hidden" name="redirect_page" value="users" />
+                    <div class="form-group" style="width: 160px; float: left; margin-right: 5px">
+                        <div class="form-field">
+                            <i class="icon icon-chevron-down"></i>
+                            <select name="company" class="form-control order-filter" style="height: 35px;">
+                            <option value="none">Компанія</option>
+                            {% for companyItem in companies %}
+                                <option {% if companyItem.id == company %} {{'selected="selected"'}} {% endif %} value="{{ companyItem.id }}">{{ companyItem.name }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" style="width: 160px; float: left; margin-right: 5px">
+                        <div class="form-field">
+                            <i class="icon icon-chevron-down"></i>
+                            <select name="office" class="form-control order-filter"  style="height: 35px;">
+                            <option value="none">Офіс</option>
+                            {% for officeItem in offices %}
+                                <option {% if officeItem.id == office %} {{'selected="selected"'}} {% endif %} value="{{ officeItem.id }}">{{ officeItem.address }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="col-md-3 text-right" style="padding-right: 0">
-                <a href="/users" id="cancel-changes" class="btn" type="button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Відмінити</a>
-                <input id="save-users" name="save_users" value="Зберегти" class="btn btn-primary" type="button">
+            <div class="col-md-5 text-right" style="padding-right: 0">
+                <input id="add-new user" name="add_new user" value="Створити менеджера або адміна" class="btn btn-primary" type="button">
             </div>
             
             <br/><br/><br/>
 
-            <table class="table wh-table" style="cursor: pointer; width: 100%; margin: 0px">
+            <ul class="nav nav-tabs users-tabs" style="border-bottom: 0">
+              <li data-tab="users" class="active"><a data-tab="users" href="#">Користувачі</a></li>
+              <li data-tab="stuff"><a class="users-tab" data-tab="stuff" href="#">Менеджери і Адміністратори</a></li>
+            </ul>
+
+            <table id="users" class="table wh-table" style="cursor: pointer; width: 100%; margin: 0px">
               <tr class="wh-head">
                 <th>Імя</th>
-                <th>Роль</th>
                 <th>Email</th>
-                <th>Телефон</th>
                 <th>Компанія</th>
                 <th>Офіс</th>
+                <th></th>
               </tr>
             {% for user in users %}
               <tr data-user-id={{ user.user_id }}>
                 <th>{{ user.user_name }}</th>
-                <th>{{ user.role }}</th>
                 <th><input type="text" value="{{ user.email }}" /></th>
-                <th>{{ user.phone }}</th>
                 <th>{{ user.company_name ?? ' - ' }}</th>
                 <th>{{ user.office_addr ?? ' - ' }}</th>
+                <th>
+                  <label class="switch">
+                    <input type="checkbox" checked=true/>
+                    <span class="slider round"></span>
+                  </label>
+                </th>
               </tr>
             {% endfor %}
             </table>
+
+            <table id="stuff" class="table wh-table" style="cursor: pointer; width: 100%; margin: 0px; display: none">
+              <tr class="wh-head">
+                <th>Імя</th>
+                <th>Email</th>
+                <th>Роль</th>
+              </tr>
+            {% for member in stuff %}
+              <tr data-user-id={{ member.user_id }}>
+                <th>{{ member.user_name }}</th>
+                <th><input type="text" value="{{ member.email }}" /></th>
+                <th>{{ member.role }}</th>
+              </tr>
+            {% endfor %}
+            </table>
+
             <hr class="bottom-table-border"/>
         </div>
       </div>

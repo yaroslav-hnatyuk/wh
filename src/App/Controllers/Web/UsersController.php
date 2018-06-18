@@ -18,11 +18,13 @@ class UsersController extends BaseController
 
     public function index()
     {
-        $users = $this->usersService->getAllWithCompaniesAndOffices();
+        $stuff = $this->usersService->getAllWithCompaniesAndOffices(true);
+        $users = $this->usersService->getAllWithCompaniesAndOffices(false, true);
 
         return $this->app['twig']->render("users/index.twig", array(
             'userRole' => $this->getUser()->role,
-            'users' => $users
+            'users' => $users,
+            'stuff' => $stuff
         ));
     }
 }
