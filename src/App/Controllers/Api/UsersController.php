@@ -59,6 +59,6 @@ class UsersController extends BaseController
 
     public function delete($id)
     {
-        return new JsonResponse($this->usersService->delete($id));
+        return new JsonResponse($this->usersService->changeActive($id));
     }
 }

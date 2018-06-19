@@ -106,9 +106,9 @@
                 </th>
                 <th>{{ user.company_name ?? ' - ' }}</th>
                 <th>{{ user.office_addr ?? ' - ' }}</th>
-                <th>
-                  <label class="switch">
-                    <input type="checkbox" checked=true/>
+                <th class="users-action-switch">
+                  <label data-deactivate-user-id="{{ user.user_id }}" class="switch">
+                    <input type="checkbox" {% if user.is_active == 1 %} {{'checked=true'}} {% endif %}/>
                     <span class="slider round"></span>
                   </label>
                 </th>

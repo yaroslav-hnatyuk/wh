@@ -548,7 +548,17 @@ $(document).ready(function (){
                     });
                 }
             });
-        }
+        },
+
+        deactivateUser: function(id) {
+            $.ajax({
+                url: "/api/v1/users/" + id,
+                method: "DELETE",
+                contentType:'application/json',
+                success: function (dish) {},
+                error: function (error) {}
+            });
+        },
     }
 
     function setCookie(cname,cvalue,exdays) {
@@ -1182,5 +1192,20 @@ $(document).ready(function (){
     $(".user-email-actions-confirm").click(function () {
         var input = $(this).parent().parent().find(".user-name-input");
         API.updateUserEmail($(this).attr('data-confirm-user-id'), input.val());
+    });
+
+    $(".users-action-switch .switch").click(function(event) {
+        var checkbox = $(this).children('input');
+        var userId = $(this).attr('data-deactivate-user-id');
+        
+        if (checkbox.is(':checked')) {
+            checkbox.prop('checked', false);
+        } else {
+            checkbox.prop('checked', true);
+        }
+
+        API.deactivateUser(userId);
+
+        return false;
     });
 });   

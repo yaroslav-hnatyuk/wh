@@ -8,7 +8,7 @@ class UsersService extends BaseService
 
     public function getOne($id)
     {
-        $data =$this->db->fetchAssoc("SELECT * FROM user WHERE id=?", [(int) $id]);
+        $data = $this->db->fetchAssoc("SELECT * FROM user WHERE id=?", [(int) $id]);
         $user = new User($data);
 
         return $user->getArray();
@@ -36,6 +36,7 @@ class UsersService extends BaseService
             user.email as email,
             user.role as role,
             user.phone as phone,
+            user.is_active as is_active,
             company.id as company_id,
             company.name as company_name,
             office.id as office_id,
@@ -132,6 +133,15 @@ class UsersService extends BaseService
     function delete($id)
     {
         return $this->db->delete("user", array("id" => $id));
+    }
+
+    function changeActive($id)
+    {
+        $user = $this->db->fetchAssoc("SELECT * FROM user WHERE id=?", array((int) $id));
+        if ($user) {
+            return $this->db->update('user', array('is_active' => (bool)$user['is_active'] ? 0 : 1), array('id' => $id));
+        }
+        return false;
     }
 
 }
