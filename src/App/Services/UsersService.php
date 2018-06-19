@@ -27,8 +27,9 @@ class UsersService extends BaseService
         return $this->db->fetchAll("SELECT * FROM user");
     }
 
-    public function getAllWithCompaniesAndOffices($stuffOnly = false, $usersOnly = false)
+    public function getAllWithCompaniesAndOffices($filters, $stuffOnly = false, $usersOnly = false)
     {
+        $params = array();
         $sql = "SELECT
             user.id as user_id,
             CONCAT(user.first_name, \" \", user.last_name) as user_name,
@@ -43,13 +44,26 @@ class UsersService extends BaseService
             LEFT JOIN office ON user.office_id = office.id
             LEFT JOIN company ON office.company_id = company.id";
 
+        if ($usersOnly && empty($filters['company']) && empty($filters['office'])) {
+            return array();
+        }
+
         if ($stuffOnly) {
             $sql .= " WHERE user.role != 'user'";
         } else if ($usersOnly) {
             $sql .= " WHERE user.role = 'user'";
+            if (!empty($filters['company'])) {
+                $sql .= " AND office.company_id = ?";
+                $params[] = $filters['company'];
+            }
+    
+            if (!empty($filters['office'])) {
+                $sql .= " AND user.office_id = ?";
+                $params[] = $filters['office'];
+            }
         }
 
-        return $this->db->fetchAll($sql);
+        return $this->db->fetchAll($sql, $params);
     }
 
     public function getUsersByFilters($filters)
@@ -105,12 +119,9 @@ class UsersService extends BaseService
         return $user->getArray();
     }
 
-    function update($data = array())
+    function update($id, $email)
     {
-        $user = new User($data);
-        $this->db->update('user', $user->getArray(), ['id' => $user->id]);
-
-        return $user->getArray();
+        return $this->db->update('user', array('email' => $email), ['id' => $id]);
     }
 
     function updatePersonalData($data = array())

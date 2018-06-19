@@ -520,6 +520,35 @@ $(document).ready(function (){
                 }
             });
         },
+
+        updateUserEmail: function (id, email) {
+            $.ajax({
+                url: "/api/v1/users/" + id,
+                method: "PUT",
+                data: JSON.stringify({email: email}),
+                dataType: "json",
+                contentType:'application/json',
+                success: function (resp) {
+                    var actions = $(".user-actions-" + id);
+                    actions.css('display', 'none');
+                    actions.find(".user-email-actions-confirm").attr('value', email);
+                    spop({
+                        template: 'Email користувача успішно оновлений!',
+                        position  : 'bottom-right',
+                        style: 'success',
+                        autoclose: 3000
+                    });
+                },
+                error: function (error) {
+                    spop({
+                        template: 'Помилка :( Превірте будь-ласка введені дані.',
+                        position  : 'bottom-right',
+                        style: 'error',
+                        autoclose: 3000
+                    });
+                }
+            });
+        }
     }
 
     function setCookie(cname,cvalue,exdays) {
@@ -1138,6 +1167,20 @@ $(document).ready(function (){
             $('#users').css('display', 'none');
             $('#stuff').css('display', 'table');
         }
-        
+    });
+
+    $(".user-name-input").change(function () {
+        $(this).parent().find(".user-email-actions").css('display', 'block');
+    });
+
+    $(".user-email-actions-cancel").click(function () {
+        var input = $(this).parent().parent().find(".user-name-input");
+        input.val(input.attr('value'));
+        $(this).parent().parent().find(".user-email-actions").css('display', 'none');
+    });
+
+    $(".user-email-actions-confirm").click(function () {
+        var input = $(this).parent().parent().find(".user-name-input");
+        API.updateUserEmail($(this).attr('data-confirm-user-id'), input.val());
     });
 });   

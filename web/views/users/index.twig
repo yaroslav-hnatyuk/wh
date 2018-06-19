@@ -12,7 +12,7 @@
     <link rel="stylesheet" href={{ asset('assets/css/spop.css') }}>  
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src={{ asset('assets/js/jquery.fn.js') }}></script>
     <script src={{ asset('assets/js/spop.js') }}></script>
 
@@ -86,7 +86,7 @@
               <li data-tab="stuff"><a class="users-tab" data-tab="stuff" href="#">Менеджери і Адміністратори</a></li>
             </ul>
 
-            <table id="users" class="table wh-table" style="cursor: pointer; width: 100%; margin: 0px">
+            <table id="users" class="table wh-table" style="width: 100%; margin: 0px">
               <tr class="wh-head">
                 <th>Імя</th>
                 <th>Email</th>
@@ -95,9 +95,15 @@
                 <th></th>
               </tr>
             {% for user in users %}
-              <tr data-user-id={{ user.user_id }}>
+              <tr data-user-id="{{ user.user_id }}">
                 <th>{{ user.user_name }}</th>
-                <th><input type="text" value="{{ user.email }}" /></th>
+                <th style="position: relative">
+                  <input type="text" class="user-name-input" value="{{ user.email }}" />
+                  <div class="user-email-actions user-actions-{{ user.user_id }}">
+                    <input class="user-email-actions-cancel" type="button" value="x"/>
+                    <input class="user-email-actions-confirm" data-confirm-user-id="{{ user.user_id }}" type="button" value="&#10003;"/>
+                  </div>
+                </th>
                 <th>{{ user.company_name ?? ' - ' }}</th>
                 <th>{{ user.office_addr ?? ' - ' }}</th>
                 <th>
@@ -110,7 +116,7 @@
             {% endfor %}
             </table>
 
-            <table id="stuff" class="table wh-table" style="cursor: pointer; width: 100%; margin: 0px; display: none">
+            <table id="stuff" class="table wh-table" style="width: 100%; margin: 0px; display: none">
               <tr class="wh-head">
                 <th>Імя</th>
                 <th>Email</th>
@@ -119,7 +125,7 @@
             {% for member in stuff %}
               <tr data-user-id={{ member.user_id }}>
                 <th>{{ member.user_name }}</th>
-                <th><input type="text" value="{{ member.email }}" /></th>
+                <th>{{ member.email }}</th>
                 <th>{{ member.role }}</th>
               </tr>
             {% endfor %}

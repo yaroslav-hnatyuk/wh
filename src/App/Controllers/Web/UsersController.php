@@ -18,13 +18,26 @@ class UsersController extends BaseController
 
     public function index()
     {
-        $stuff = $this->usersService->getAllWithCompaniesAndOffices(true);
-        $users = $this->usersService->getAllWithCompaniesAndOffices(false, true);
+        $company = $this->app['session']->get('filter_company');
+        $office = $this->app['session']->get('filter_office');
+
+        $stuff = $this->usersService->getAllWithCompaniesAndOffices(array(
+            'company' => $company,
+            'office' => $office
+        ), true);
+        $users = $this->usersService->getAllWithCompaniesAndOffices(array(
+            'company' => $company,
+            'office' => $office
+        ), false, true);
 
         return $this->app['twig']->render("users/index.twig", array(
             'userRole' => $this->getUser()->role,
             'users' => $users,
-            'stuff' => $stuff
+            'stuff' => $stuff,
+            'company' => $company,
+            'office' => $office,
+            'companies' => $this->app['companies.service']->getAll(),
+            'offices' => $this->app['offices.service']->getAllByCompany($company)
         ));
     }
 }

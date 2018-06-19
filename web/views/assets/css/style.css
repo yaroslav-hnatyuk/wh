@@ -2800,3 +2800,29 @@ hr.bottom-table-border {
 .new-company-popup {
   left: 250px;
 }
+
+.user-email-actions {
+  position: absolute;
+  height: 25px;
+  width: 25px;
+  right: 7px;
+  top: 7px;
+  background-color: #fff;
+  display: none;
+}
+.user-email-actions-confirm, .user-email-actions-cancel {
+  position: absolute;
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+}
+.user-email-actions-cancel {
+  right: 30px;
+}
+
+.user-email-actions-confirm {
+  background-color: #4CAF50;
+  color: #fff;
+  height: 25px;
+  width: 25px;
+}

@@ -51,10 +51,9 @@ class UsersController extends BaseController
 
     public function update($id, Request $request)
     {
-        $data = $request->request->all();
-        $data['id'] = $id;
+        $data = json_decode($request->getContent(), true);
         return new JsonResponse(
-            $this->usersService->update($data)
+            $this->usersService->update($id, $data['email'])
         );
     }
 
