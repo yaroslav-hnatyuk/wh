@@ -14,6 +14,7 @@ use App\Entities\User;
 class AuthController
 {
     const ONE_YEAR = 31556926;
+    const salt = "GF2!M4K1dDGFizXNoG9Ar7fghjI3bGAna$65e";
     protected $app;
     protected $usersService;
 
@@ -71,6 +72,8 @@ class AuthController
 
         $user->role = 'user';
         $user->phone = 'n/a';
+        $user->pass = 'n/a';
+        $user->salt = 'n/a';
         $user->office_id = $office->id;
         $this->usersService->save($user->getArray());
 

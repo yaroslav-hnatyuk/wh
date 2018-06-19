@@ -10,6 +10,8 @@ class User extends BaseEntity
     public $first_name;
     public $last_name;
     public $ipn;
+    public $pass;
+    public $salt;
     public $phone;
     public $office_id;
 

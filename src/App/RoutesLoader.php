@@ -74,6 +74,9 @@ class RoutesLoader
         $web->get("/profile/feedback", "profile.web.controller:feedback");
         $web->get("/profile/reminders", "profile.web.controller:reminders");
         $web->get("/profile/promo", "profile.web.controller:promo");
+
+        $web->get("/errors/40x", "errors.web.controller:error40x");
+        $web->get("/errors/50x", "errors.web.controller:error50x");
     }
 
     private function instantiateWebControllers()
@@ -120,6 +123,7 @@ class RoutesLoader
         };
 
         $this->app['filters.web.controller'] = function() { return new Controllers\Web\FiltersController($this->app); };
+        $this->app['errors.web.controller'] = function() { return new Controllers\Web\ErrorsController(); };
     }
 
 }
