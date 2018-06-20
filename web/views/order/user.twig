@@ -30,7 +30,7 @@
     
         <!-- Modal content-->
         <div class="modal-content">
-            <div class="modal-body" style="float: left; padding: 35px 10px 0px 20px; margin: 0;">
+            <div class="modal-body" style="float: left; padding: 35px 10px 20px 20px; margin: 0;">
                 <div class="col-md-6">
                     <img style="width: 338px" id="modal-dish-image" src=""/>
                 </div> 
@@ -133,15 +133,23 @@
                     </th>
                     {# <th style="background-color: #eee;"></th> MANAGER #}
                     {% for date, weekday in period.items %}
-                        <th>
-                            <span class="day-name">{{ weekday.day }}</span><br/>
-                            <span class="day-date">{{ weekday.number }}</span>
-                        </th>
+                        {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
+                            <th style="background-color: #e5feefcc;">
+                                <span class="day-name">{{ weekday.day }}</span><br/>
+                                <span class="day-date">{{ weekday.number }}</span>
+                            </th>
+                        {% elseif weekday.is_working_day %}
+                            <th>
+                                <span class="day-name">{{ weekday.day }}</span><br/>
+                                <span class="day-date">{{ weekday.number }}</span>
+                            </th>
+                        {% else %}
+                            <th style="background-color: #fff0e3cc;">
+                                <span class="day-name">{{ weekday.day }}</span><br/>
+                                <span class="day-date">{{ weekday.number }}</span>
+                            </th>
+                        {% endif %}
                     {% endfor %}
-                    <th>
-                        <span class="day-name"></span><br/>
-                        <span class="day-date">&Sigma;</span>
-                    </th>
                 </tr>
             </table>
 
@@ -149,18 +157,18 @@
                 <table class="table order-table" id="salads-header" style="cursor: pointer; width: 100%; margin: 0px">
                     <tr>
                         <th><b style="text-transform: uppercase;">{{ group.group_name}}</b></th>
-                        {# <th style="background-color: #eee"></th> MANAGER #}
-                        <th><div>&nbsp;</div></th>
-                        <th><div>&nbsp;</div></th>
-                        <th><div>&nbsp;</div></th>
-                        <th><div>&nbsp;</div></th>
-                        <th><div>&nbsp;</div></th>
-                        <th><div>&nbsp;</div></th>
-                        <th><div>&nbsp;</div></th>
-                        <th><div>&nbsp;</div></th>
+                        {% for date, weekday in period.items %}
+                            {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
+                                <th style="background-color: #e5feef4d;"><div>&nbsp;</div></th>
+                            {% elseif weekday.is_working_day %}
+                                <th><div>&nbsp;</div></th>
+                            {% else %}
+                                <th style="background-color: #f9d1ae1a;"><div>&nbsp;</div></th>
+                            {% endif %}
+                        {% endfor %}
                     </tr>
                 </table>
-                <table class="dish-list table order-table" id="salads-list"  style="margin: 0px">
+                <table class="dish-list table order-table user" id="salads-list"  style="margin: 0px">
                     {% for dish in group.dishes %}
                     <tr>
                         <th style="padding-left: 40px;">
@@ -186,13 +194,26 @@
                         </div>
                         </th>
                         {% for date, order in dish.orders %}
-                            {% if order.available %}
-                            <th><input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/></th>
+                            {% if order.available and order.is_working_day %}
+                                {% if "now"|date('Y-m-d') < date|date('Y-m-d') %}
+                                    <th><input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/></th>
+                                {% elseif "now"|date('Y-m-d') == date|date('Y-m-d') %}
+                                    {% if "now"|date('H') < orderHour %}
+                                        <th style="background-color: #e5feef4d;"><input style="background-color: #e5feef4d;" class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/></th>
+                                    {% else %}
+                                        <th style="background-color: #e5feef4d; cursor: not-allowed"><input style="background-color: #e5feef4d;" class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" disabled=true/></th>
+                                    {% endif %}
+                                {% else %}
+                                    <th style="cursor: not-allowed"><input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" disabled=true/></th>
+                                {% endif %}
                             {% else %}
-                            <th style="background-color: #efefef; color: #ccc">-</th>
+                                {% if order.is_working_day == false %}
+                                    <th style="background-color: #f9d1ae1a;"></th>
+                                {% elseif order.available == false %}
+                                    <th style="background-color: #efefef4d; color: #ccc">-</th>
+                                {% endif %}    
                             {% endif %}
                         {% endfor %}
-                        <th><b>{{dish.total_count}}</b></th>
                     </tr>
                     {% endfor %}
                 </table>
@@ -234,8 +255,6 @@
                             {% endif %}
                         </th>
                     {% endfor %}
-                    
-                <th style="color: #aaa; border: 0"></th>
             </tr>
             </table>
         

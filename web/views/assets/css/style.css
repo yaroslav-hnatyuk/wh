@@ -2826,3 +2826,8 @@ hr.bottom-table-border {
   height: 25px;
   width: 25px;
 }
+
+.order-cell:disabled {
+  cursor: not-allowed;
+  background: #fff;
+}

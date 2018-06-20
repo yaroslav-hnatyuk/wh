@@ -75,6 +75,7 @@ class OrdersController extends BaseController
             'filterPeriod' => $filterPeriod,
             'userRole' => $this->getUser()->role,
             'menu' => $menu,
+            'orderHour' => 2, // TODO get this value from system settings
             'totalByDays' => $totalByDays,
             'totalPriceInfo' => $totalPriceInfo
         ));

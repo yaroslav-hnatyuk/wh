@@ -117,7 +117,8 @@ class OrdersService extends BaseService
             array_fill(0, count($period['items']), array(
                 'menu_id' => null,
                 'count' => 0,
-                'available' => false
+                'available' => false,
+                'is_working_day' => true
             ))
         );
 
@@ -149,6 +150,7 @@ class OrdersService extends BaseService
                 if (!isset($totalByDaysAndUsers[$date])) {
                     $totalByDaysAndUsers[$date] = array();
                 }
+                $result[$dish['dish_id']]['orders'][$date]['is_working_day'] = $this->isWorkingDay($date, date('D', strtotime($date)));
                 if ($time >= strtotime($dish['start']) && $time <= strtotime($dish['end'])) {
                     $result[$dish['dish_id']]['orders'][$date]['menu_id'] = $dish['menu_id'];
                     $result[$dish['dish_id']]['orders'][$date]['available'] = true;
@@ -346,30 +348,31 @@ class OrdersService extends BaseService
         }
 
 
-        $weekNumber = str_pad($weekNumber, 2, '0', STR_PAD_LEFT);
         $monday = null;
         $sunday = null;
         
         $week = array();
         for($i = 1; $i <= 7; $i++) {
-            $day = strtotime($year."W".$weekNumber.$i);
+            $day = strtotime($year."W".str_pad($weekNumber, 2, '0', STR_PAD_LEFT).$i);
             if ($i == 1) $monday = $day;
             if ($i == 7) $sunday = $day;
 
             $week[date("Y-m-d", $day)] = array(
                 'day' => date("D", $day),
-                'number' => date("d", $day)
+                'number' => date("d", $day),
+                'is_working_day' => $this->isWorkingDay(date("Y-m-d", $day), date('D', $day))
             );
         }
 
         if ($period == '2weeks') {
             for($i = 1; $i <= 7; $i++) {
-                $day = strtotime($year."W".($weekNumber + 1).$i);
+                $day = strtotime($year."W".str_pad($weekNumber + 1, 2, '0', STR_PAD_LEFT).$i);
                 if ($i == 7) $sunday = $day;
     
                 $week[date("Y-m-d", $day)] = array(
                     'day' => date("D", $day),
-                    'number' => date("d", $day)
+                    'number' => date("d", $day),
+                    'is_working_day' => $this->isWorkingDay(date("Y-m-d", $day), date('D', $day))
                 );
             }
         }

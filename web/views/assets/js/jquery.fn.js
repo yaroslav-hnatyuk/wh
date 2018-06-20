@@ -602,7 +602,7 @@ $(document).ready(function (){
 
 
     // SHOW DISH
-    $(".dish-link").click(function(){
+    $(".user .dish-link").click(function(){
         var dishId = $(this).attr('data-link-dish-id');
 
         $(this).parent().parent().parent().find(".order-cell").each(function(  ) {

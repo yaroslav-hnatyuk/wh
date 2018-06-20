@@ -27,96 +27,6 @@
 
     <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog" style="width: 765px; margin: 5% auto">
-    
-        <!-- Modal content-->
-        <div class="modal-content">
-            <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-            <div class="modal-body" style="float: left; padding: 35px 10px 0px 20px; margin: 0;">
-                <div class="col-md-6 probootstrap-animate">
-                    <div class="probootstrap-block-image">
-                        <figure><img src={{ asset('assets/img/img_square_3.jpg') }} alt="Free Bootstrap Template by uicookies.com"></figure>
-                    </div>
-                </div> 
-                <div class="col-md-6 col-sm-6 text-left" style="font-size: 13px; font-weight: normal">
-                    <div class="col-md-12 text-left">
-                        <h3 style="padding: 0; margin: 0;">Гуляш по угорськи</h3>
-                    </div>
-                    <div class="col-md-12 text-left">
-                        <div class="rating">
-                            <span>☆</span>
-                            <span>☆</span>
-                            <span style="color: #FFA33E;">★</span>
-                            <span style="color: #FFA33E;">★</span>
-                            <span style="color: #FFA33E;">★</span>
-                        </div>
-                        <div style="margin-left: 10px; float: left; color: #aaa">
-                            <span style="padding: 15px">122 reviews</span>
-                            <span> | </span>
-                            <span style="padding: 15px"><a href="#">Write review</a></span>
-                        </div>
-                    </div>
-                    <div class="col-md-12 text-left" style="height: 126px; padding-top: 10px;">
-                        <b>Description</b>
-                        <p style="font-size: 11px">
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium 
-                            doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et 
-                            quasi.
-                        </p>
-                    </div>
-                    <div class="col-md-12" style="padding-bottom: 15px; margin-top: 5px">
-                        <table class="table order-table" style="margin: 0">
-                            <tr style="background-color:#efefef;">
-                                <th>
-                                    <span class="day-name">Mon</span><br/>
-                                    <span class="day-date">14</span>
-                                </th>
-                                <th>
-                                    <span class="day-name">Tue</span><br/>
-                                    <span class="day-date">15</span>
-                                </th>
-                                <th>
-                                    <span class="day-name">Wed</span><br/>
-                                    <span class="day-date">16</span>
-                                </th>
-                                <th>
-                                    <span class="day-name">Thu</span><br/>
-                                    <span class="day-date">17</span>
-                                </th>
-                                <th>
-                                    <span class="day-name">Fri</span><br/>
-                                    <span class="day-date">18</span>
-                                </th>
-                                <th>
-                                    <span class="day-name">Sat</span><br/>
-                                    <span class="day-date">19</span>
-                                </th>
-                                <th>
-                                    <span class="day-name">San</span><br/>
-                                    <span class="day-date">20</span>
-                                </th>
-                            </tr>
-                            <tr>
-                                <th><div><input type="number" value="1"/></div></th>
-                                <th><div><input type="number" value="2"/></div></th>
-                                <th><div><input type="number" value="0"/></div></th>
-                                <th><div><input type="number" value="0"/></div></th>
-                                <th><div><input type="number" value="1"/></div></th>
-                                <th><div><input type="number" value="0"/></div></th>
-                                <th><div><input type="number" value="0"/></div></th>
-                            </tr>
-                        </table>
-                        <hr class="bottom-table-border"/>
-                    </div>
-                    <div class="col-md-12 text-left">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" style="border: 1px solid #ccc">Close</button>
-                        <button type="button" class="btn btn-primary" style="margin-right: 10px" data-dismiss="modal">Save</button>
-                    </div>
-                </div>            
-            </div>
-            <div class="modal-footer" style="margin: 0; visibility: hidden;">
-                <!--  -->
-            </div>
-        </div>
         
     </div>
     </div>
@@ -235,12 +145,12 @@
                         <th><div>&nbsp;</div></th>
                     </tr>
                 </table>
-                <table class="dish-list table order-table" id="salads-list"  style="margin: 0px">
+                <table class="dish-list table order-table manager" id="salads-list"  style="margin: 0px">
                     {% for dish in group.dishes %}
                     <tr>
                         <th style="padding-left: 40px;">
                         <div>
-                            <a data-link-menu-id="{{ dish.menu_id }}" data-link-dish-id="{{ dish.dish_id }}" class="dish-link" >
+                            <a data-link-menu-id="{{ dish.menu_id }}" data-link-dish-id="{{ dish.dish_id }}" class="dish-link" style="cursor: auto">
                             {{ dish.dish_name }}
                             <div class="dish-hint" style="display: none;">
                                 <div class="col-md-12 probootstrap-animate fadeInUp probootstrap-animated">
