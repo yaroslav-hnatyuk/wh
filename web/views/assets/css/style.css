@@ -2831,3 +2831,23 @@ hr.bottom-table-border {
   cursor: not-allowed;
   background: #fff;
 }
+
+.disabled-cell:hover .orders-not-allowed-tooltip {
+  display: block;
+}
+
+.orders-not-allowed-tooltip {
+  margin-left: 28px;
+  font-size: 11px;
+  position: absolute;
+  width: 150px;
+  /* height: 100px; */
+  background-color: #fff;
+  color: #666;
+  border: 1px solid #ddd;
+  z-index: 99999;
+  font-style: normal;
+  text-align: left;
+  padding: 5px;
+  display: none;
+}

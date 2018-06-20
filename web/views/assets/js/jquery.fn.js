@@ -1208,4 +1208,12 @@ $(document).ready(function (){
 
         return false;
     });
+
+    $('.disabled-cell').on('mousemove', function (e) {
+        var tooltip = $(this).find('.orders-not-allowed-tooltip');
+        for (var i=tooltip.length; i--;) {
+            tooltip[i].style.left = e.pageX + 'px';
+            tooltip[i].style.top = e.pageY + 'px';
+        }
+    });
 });   

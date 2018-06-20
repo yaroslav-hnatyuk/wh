@@ -159,7 +159,7 @@
                         <th><b style="text-transform: uppercase;">{{ group.group_name}}</b></th>
                         {% for date, weekday in period.items %}
                             {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
-                                <th style="background-color: #e5feef4d;"><div>&nbsp;</div></th>
+                                <th style="background-color: #e5feef80;"><div>&nbsp;</div></th>
                             {% elseif weekday.is_working_day %}
                                 <th><div>&nbsp;</div></th>
                             {% else %}
@@ -199,18 +199,30 @@
                                     <th><input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/></th>
                                 {% elseif "now"|date('Y-m-d') == date|date('Y-m-d') %}
                                     {% if "now"|date('H') < orderHour %}
-                                        <th style="background-color: #e5feef4d;"><input style="background-color: #e5feef4d;" class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/></th>
+                                        <th style="background-color: #e5feef80;">
+                                            <input style="background-color: #e5feef4d;" class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/>
+                                        </th>
                                     {% else %}
-                                        <th style="background-color: #e5feef4d; cursor: not-allowed"><input style="background-color: #e5feef4d;" class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" disabled=true/></th>
+                                        <th class="disabled-cell" style="background-color: #e5feef80; cursor: not-allowed">
+                                            <input style="background-color: #e5feef4d;" class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" disabled=true/>
+                                            <span class="orders-not-allowed-tooltip">Замовлення можна здійснювати до <b>{{orderHour}}</b> години</span>
+                                        </th>
                                     {% endif %}
                                 {% else %}
-                                    <th style="cursor: not-allowed"><input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" disabled=true/></th>
+                                    <th class="disabled-cell" style="cursor: not-allowed">
+                                        <input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" disabled=true/>
+                                        <span class="orders-not-allowed-tooltip">Замовлення на цей період закриті</span>
+                                    </th>
                                 {% endif %}
                             {% else %}
                                 {% if order.is_working_day == false %}
-                                    <th style="background-color: #f9d1ae1a;"></th>
+                                    <th class="disabled-cell" style="background-color: #f9d1ae1a; cursor: not-allowed">
+                                        <span class="orders-not-allowed-tooltip">Вихідний день або державне свято</span>
+                                    </th>
                                 {% elseif order.available == false %}
-                                    <th style="background-color: #efefef4d; color: #ccc">-</th>
+                                    <th class="disabled-cell" style="background-color: #efefef4d; color: #ccc; cursor: not-allowed">
+                                        <span class="orders-not-allowed-tooltip">Страва недоступна для замовлень на цей період</span>
+                                    </th>
                                 {% endif %}    
                             {% endif %}
                         {% endfor %}
