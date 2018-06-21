@@ -8,8 +8,6 @@
     <meta name="keywords" content="">
     
     <link rel="stylesheet" href={{ asset('assets/css/styles-merged.css') }}>
-    <link rel="stylesheet" href={{ asset('assets/css/style.css') }}>  
-    <link rel="stylesheet" href={{ asset('assets/css/spop.css') }}>    
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -43,8 +41,8 @@
                         </div>
                         <div style="margin-left: 10px; float: left; color: #aaa">
                             {# <span style="padding: 15px">Відгуків: <span id="modal-dish-reviews-count"></span></span> #}
-                            <span> | </span>
-                            <span style="padding: 15px"><a href="#">Написати відгук</a></span>
+                            {# <span> | </span>
+                            <span style="padding: 15px"><a href="#">Написати відгук</a></span> #}
                         </div>
                     </div>
                     <div class="col-md-12 text-left" style="height: 126px; padding-top: 10px;">
@@ -96,7 +94,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.html" title="uiCookies:FineOak">FineOak</a>
+          <a class="navbar-brand" href="/order"></a>
         </div>
 
         {% include 'parts/menu/' ~ userRole ~ '.twig' %}

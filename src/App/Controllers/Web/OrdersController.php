@@ -18,6 +18,12 @@ class OrdersController extends BaseController
         $this->menuService = $menuService;
     }
 
+    public function main(Request $request)
+    {
+        $handler = $this->getUser()->role . "Order";
+        return $this->$handler($request);
+    }
+
     public function index(Request $request)
     {
         $handler = $this->getUser()->role . "Order";
