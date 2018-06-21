@@ -30,9 +30,19 @@ class AuthController
 
     public function login(Request $request) {
         $email = $request->request->get('email');
+        $password = $request->request->get('password');
         $user = $this->usersService->getByEmail($email);
 
         if ($user->id === null) {
+            return new JsonResponse(
+                array(
+                    'status' => 'ERROR',
+                    'message' => 'Login failed! Please check your email and password.'
+                )
+            );
+        }
+
+        if (!password_verify($password, $user->pass)) {
             return new JsonResponse(
                 array(
                     'status' => 'ERROR',
@@ -45,8 +55,12 @@ class AuthController
             array(
                 'status' => 'OK',
                 'message' => 'Login successful!',
-                'token' =>  "{$user->email}:secret",
-                'user' => $user->getArray()
+                'token' =>  base64_encode(hash('sha256', $user->email) . ':' . hash('sha256', $user->role) . ':' . hash('sha256', $user->salt)),
+                'user' => array(
+                    'email' => $user->email,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name
+                )
             )
         );
     }
@@ -72,17 +86,22 @@ class AuthController
 
         $user->role = 'user';
         $user->phone = 'n/a';
-        $user->pass = 'n/a';
-        $user->salt = 'n/a';
+        $user->pass = password_hash($data['password'], PASSWORD_BCRYPT);
+        $user->salt = hash('sha256', md5(uniqid(rand(), TRUE)));
         $user->office_id = $office->id;
+
         $this->usersService->save($user->getArray());
 
         return new JsonResponse(
             array(
                 'status' => 'OK',
                 'message' => 'Login successful!',
-                'token' =>  "{$user->email}:secret",
-                'user' => $user->getArray()
+                'token' =>    base64_encode(hash('sha256', $user->email) . ':' . hash('sha256', $user->role) . ':' . hash('sha256', $user->salt)),
+                'user' => array(
+                    'email' => $user->email,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name
+                )
             )
         );
     }

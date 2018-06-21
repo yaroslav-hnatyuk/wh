@@ -101,7 +101,7 @@ $app->error(function (\Exception $e, $code) use ($app) {
     if ($e instanceof App\Exception\ApiException) {
         return new JsonResponse(array("status" => "ERROR", "statusCode" => $code, "message" => $e->getMessage()));    
     }
-
+    
     if (!isMobile() && !isApiCall()) {
         if (in_array($e->getStatusCode(), array(404, 403, 405), true)) {
             return new RedirectResponse('/errors/40x');

@@ -10,6 +10,7 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
@@ -32,14 +33,17 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             return;
         }
 
+        $token = base64_decode($token);
+
         // Parse the header or ignore it if the format is incorrect.
         if (false === strpos($token, ':')) {
             return;
         }
-        list($username, $secret) = explode(':', $token, 2);
-
+        list($username, $role, $secret) = explode(':', $token, 3);
+        
         return array(
             'username' => $username,
+            'role' => $role,
             'secret' => $secret,
         );
     }
@@ -51,17 +55,22 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        // check credentials - e.g. make sure the password is valid
-        // return true to cause authentication success
-
         $encoder = $this->encoderFactory->getEncoder($user);
 
-        return true;
-        // return $encoder->isPasswordValid(
-        //     $user->getPassword(),
-        //     $credentials['secret'],
-        //     $user->getSalt()
-        // );
+        $passwordAndSalt = $user->getPassword();
+        if (false === strpos($passwordAndSalt, '___')) {
+            return false;
+        }
+
+        list($password, $salt) = explode('___', $passwordAndSalt);
+
+        if (!empty($user->getRoles()) && $password && $salt) {
+            return in_array($user->getRoles()[0], array('user', 'manager', 'admin'), true)
+                && hash('sha256', $salt) === $credentials['secret']
+                && hash('sha256', $user->getRoles()[0]) === $credentials['role'];
+        }
+
+        return false;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
@@ -87,6 +96,10 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
+        if (!isMobile()) {
+            return new RedirectResponse('/login');
+        }
+
         $data = array(
             // you might translate this message
             'message' => 'Authentication Required',
