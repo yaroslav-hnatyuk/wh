@@ -101,17 +101,20 @@ $app->error(function (\Exception $e, $code) use ($app) {
     if ($e instanceof App\Exception\ApiException) {
         return new JsonResponse(array("status" => "ERROR", "statusCode" => $code, "message" => $e->getMessage()));    
     }
-    
+
     if (!isMobile() && !isApiCall()) {
-        if (in_array($e->getStatusCode(), array(404, 403, 405), true)) {
-            return new RedirectResponse('/errors/40x');
-        } else {
-            return new RedirectResponse('/errors/50x');
+        if (method_exists($e, 'getStatusCode')) {
+            if (in_array($e->getStatusCode(), array(404, 403, 405), true)) {
+                return new RedirectResponse('/errors/40x');
+            } else {
+                return new RedirectResponse('/errors/50x');
+            }
         }
+    } else {
+        return new JsonResponse(array("statusCode" => $code, "message" => "Сталася помилка про обробці запиту, вибачте за тимчасові незручності."));
     }
-
-    return new JsonResponse(array("statusCode" => $code, "message" => "Сталася помилка про обробці запиту, вибачте за тимчасові незручності."));
-
+    
+    return false;
 });
 
 function isMobile()

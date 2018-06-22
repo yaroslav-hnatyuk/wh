@@ -55,7 +55,7 @@ class AuthController
             array(
                 'status' => 'OK',
                 'message' => 'Login successful!',
-                'token' =>  base64_encode(hash('sha256', $user->email) . ':' . hash('sha256', $user->role) . ':' . hash('sha256', $user->salt)),
+                'token' =>  hash('sha256', $user->email . 'bAziNgA' . $user->role . $user->salt),
                 'user' => array(
                     'email' => $user->email,
                     'first_name' => $user->first_name,
@@ -87,7 +87,7 @@ class AuthController
         $user->role = 'user';
         $user->phone = 'n/a';
         $user->pass = password_hash($data['password'], PASSWORD_BCRYPT);
-        $user->salt = hash('sha256', md5(uniqid(rand(), TRUE)));
+        $user->salt = hash('sha256', md5($data['email'] . uniqid(rand(), TRUE)));
         $user->office_id = $office->id;
 
         $this->usersService->save($user->getArray());
@@ -96,7 +96,7 @@ class AuthController
             array(
                 'status' => 'OK',
                 'message' => 'Login successful!',
-                'token' =>    base64_encode(hash('sha256', $user->email) . ':' . hash('sha256', $user->role) . ':' . hash('sha256', $user->salt)),
+                'token' => hash('sha256', $user->email . 'bAziNgA' . $user->role . $user->salt),
                 'user' => array(
                     'email' => $user->email,
                     'first_name' => $user->first_name,

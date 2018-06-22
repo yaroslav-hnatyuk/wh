@@ -33,18 +33,8 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             return;
         }
 
-        $token = base64_decode($token);
-
-        // Parse the header or ignore it if the format is incorrect.
-        if (false === strpos($token, ':')) {
-            return;
-        }
-        list($username, $role, $secret) = explode(':', $token, 3);
-        
         return array(
-            'username' => $username,
-            'role' => $role,
-            'secret' => $secret,
+            'username' => $token
         );
     }
 
@@ -65,9 +55,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         list($password, $salt) = explode('___', $passwordAndSalt);
 
         if (!empty($user->getRoles()) && $password && $salt) {
-            return in_array($user->getRoles()[0], array('user', 'manager', 'admin'), true)
-                && hash('sha256', $salt) === $credentials['secret']
-                && hash('sha256', $user->getRoles()[0]) === $credentials['role'];
+            return in_array($user->getRoles()[0], array('user', 'manager', 'admin'), true);
         }
 
         return false;
@@ -81,6 +69,10 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
+        if (!isMobile()) {
+            return new RedirectResponse('/login');
+        }
+        
         $data = array(
             'message' => strtr($exception->getMessageKey(), $exception->getMessageData()),
 
