@@ -97,8 +97,8 @@
             <div class="col-md-3 text-right" style="padding-right: 0">
                 <form action="/filters">
                     <div class="btn-group">
-                        <button type="submit" name="filter_period_week" class="btn {% if filterPeriod == '2weeks' %} btn-default {% endif %} order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Тиждень</button>
-                        <button type="submit" name="filter_period_2weeks" class="btn {% if filterPeriod == 'week' %} btn-default {% endif %} order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">2 тижні</button>
+                        <button type="submit" name="filter_period_week" class="btn {% if filterPeriod == '2weeks' %} btn-default {% else %} week-2weeks-toggle-active {% endif %} order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Тиждень</button>
+                        <button type="submit" name="filter_period_2weeks" class="btn {% if filterPeriod == 'week' %} btn-default {% else %} week-2weeks-toggle-active {% endif %} order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">2 тижні</button>
                     </div> 
                 </form>
             </div>
@@ -117,10 +117,22 @@
                     </th>
                     {# <th style="background-color: #eee;"></th> MANAGER #}
                     {% for date, weekday in period.items %}
-                        <th>
-                            <span class="day-name">{{ weekday.day }}</span><br/>
-                            <span class="day-date">{{ weekday.number }}</span>
-                        </th>
+                        {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
+                            <th style="background-color: #e5feefcc;">
+                                <span class="day-name">{{ weekday.day }}</span><br/>
+                                <span class="day-date">{{ weekday.number }}</span>
+                            </th>
+                        {% elseif weekday.is_working_day %}
+                            <th>
+                                <span class="day-name">{{ weekday.day }}</span><br/>
+                                <span class="day-date">{{ weekday.number }}</span>
+                            </th>
+                        {% else %}
+                            <th style="background-color: #fff0e3cc;">
+                                <span class="day-name">{{ weekday.day }}</span><br/>
+                                <span class="day-date">{{ weekday.number }}</span>
+                            </th>
+                        {% endif %}
                     {% endfor %}
                     <th>
                         <span class="day-name"></span><br/>
@@ -133,14 +145,16 @@
                 <table class="table order-table" id="salads-header" style="cursor: pointer; width: 100%; margin: 0px">
                     <tr>
                         <th><b style="text-transform: uppercase;">{{ group.group_name}}</b></th>
-                        <th><div>&nbsp;</div></th>
-                        <th><div>&nbsp;</div></th>
-                        <th><div>&nbsp;</div></th>
-                        <th><div>&nbsp;</div></th>
-                        <th><div>&nbsp;</div></th>
-                        <th><div>&nbsp;</div></th>
-                        <th><div>&nbsp;</div></th>
-                        <th><div>&nbsp;</div></th>
+                        {% for date, weekday in period.items %}
+                            {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
+                                <th style="background-color: #e5feef80;"><div>&nbsp;</div></th>
+                            {% elseif weekday.is_working_day %}
+                                <th><div>&nbsp;</div></th>
+                            {% else %}
+                                <th style="background-color: #f9d1ae1a;"><div>&nbsp;</div></th>
+                            {% endif %}
+                        {% endfor %}
+                        <th></th>
                     </tr>
                 </table>
                 <table class="dish-list table order-table manager" id="salads-list"  style="margin: 0px">
@@ -169,10 +183,34 @@
                         </div>
                         </th>
                         {% for date, order in dish.orders %}
-                            {% if order.available %}
-                            <th>{{ order.count }}</th>
+                            {% if order.available and order.is_working_day %}
+                                {% if "now"|date('Y-m-d') < date|date('Y-m-d') %}
+                                    <th>{{ order.count }}</th>
+                                {% elseif "now"|date('Y-m-d') == date|date('Y-m-d') %}
+                                    {% if "now"|date('H') < orderHour %}
+                                        <th style="background-color: #e5feef80;">{{ order.count }}</th>
+                                    {% else %}
+                                        <th class="disabled-cell" style="background-color: #e5feef80">{{ order.count }}</th>
+                                    {% endif %}
+                                {% else %}
+                                    <th class="disabled-cell">{{ order.count }}</th>
+                                {% endif %}
                             {% else %}
-                            <th style="background-color: #efefef; color: #ccc">-</th>
+                                {% if order.is_working_day == false %}
+                                    {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
+                                        <th class="disabled-cell" style="background-color: #e5feef80">
+                                            <span class="orders-not-allowed-tooltip">Вихідний день або державне свято</span>
+                                        </th>
+                                    {% else %}
+                                        <th class="disabled-cell" style="background-color: #f9d1ae1a">
+                                            <span class="orders-not-allowed-tooltip">Вихідний день або державне свято</span>
+                                        </th>
+                                    {% endif %}
+                                {% elseif order.available == false %}
+                                    <th class="disabled-cell" style="background-color: #efefef4d">
+                                        <span class="orders-not-allowed-tooltip">Страва недоступна для замовлень на цей період</span>
+                                    </th>
+                                {% endif %}    
                             {% endif %}
                         {% endfor %}
                         <th><b>{{dish.total_count}}</b></th>

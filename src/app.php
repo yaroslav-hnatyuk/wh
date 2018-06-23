@@ -55,6 +55,14 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
         'login' => array(
             'pattern' => '^/login$',
         ),
+        'register' => array(
+            'pattern' => '^/register$',
+            'security' => false
+        ),
+        'registration' => array(
+            'pattern' => '^/(registration)/',
+            'security' => false
+        ),
         'secured' => array(
             'pattern' => '^.*$',
             'guard' => array(

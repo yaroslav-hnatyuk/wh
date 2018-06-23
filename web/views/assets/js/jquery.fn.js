@@ -9,7 +9,6 @@ $(document).ready(function (){
                 dataType: "json",
                 success: function (result) {
                     if (result.status === 'OK') {
-                        localStorage.setItem('token', result.token);
                         setCookie('X-AUTH-TOKEN', result.token, 365 * 5);
                         $(location).attr('href', '/order');
                     } else {
@@ -41,7 +40,6 @@ $(document).ready(function (){
                 dataType: "json",
                 success: function (result) {
                     if (result.status === 'OK') {
-                        localStorage.setItem('token', result.token);
                         setCookie('X-AUTH-TOKEN', result.token, 365 * 5);
                         $(location).attr('href', '/order');
                     } else {
