@@ -224,7 +224,7 @@ $(document).ready(function (){
                 },
                 error: function (error) {
                     spop({
-                        template: 'Не вдалося зберегти зміни! Перевірте будь-ласка правильність введених даних!',
+                        template: 'Не вдалося зберегти зміни! Перевірте будь-ласка правильність даних в змінених і доданих стравах.',
                         position  : 'top-left',
                         style: 'error',
                         autoclose: 6000
@@ -449,7 +449,7 @@ $(document).ready(function (){
                 success: function (resp) {},
                 error: function (error) {
                     spop({
-                        template: 'Помилка :( Превірте будь-ласка введені дані.',
+                        template: 'Помилка при збереженні :( Превірте будь-ласка назву групи страв.',
                         position  : 'top-left',
                         style: 'error',
                         autoclose: 6000
@@ -471,7 +471,7 @@ $(document).ready(function (){
                 },
                 error: function (error) {
                     spop({
-                        template: 'Помилка :( Превірте будь-ласка введені дані.',
+                        template: 'Помилка при збереженні :( Превірте будь-ласка назву компанії.',
                         position  : 'top-left',
                         style: 'error',
                         autoclose: 6000
