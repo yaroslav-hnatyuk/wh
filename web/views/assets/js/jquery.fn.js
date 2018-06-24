@@ -14,18 +14,18 @@ $(document).ready(function (){
                     } else {
                         spop({
                             template: 'Помилка :( Перевірте будь-ласка ваш email та пароль.',
-                            position  : 'bottom-right',
+                            position  : 'top-left',
                             style: 'error',
-                            autoclose: 3000
+                            autoclose: 6000
                         });
                     }
                 },
                 error: function (error) {
                     spop({
                         template: 'Помилка :( Перевірте будь-ласка ваш email та пароль.',
-                        position  : 'bottom-right',
+                        position  : 'top-left',
                         style: 'error',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 }
             });
@@ -45,9 +45,9 @@ $(document).ready(function (){
                     } else {
                         spop({
                             template: 'Сталася помилка :( Перевірте будь-ласка введені дані.',
-                            position  : 'bottom-right',
+                            position  : 'top-left',
                             style: 'error',
-                            autoclose: 3000
+                            autoclose: 6000
                         });
                     }
                 },
@@ -55,16 +55,16 @@ $(document).ready(function (){
                     if (error.responseJSON && error.responseJSON.status === 'ERROR' && error.responseJSON.message) {
                         spop({
                             template: error.responseJSON.message,
-                            position  : 'bottom-right',
+                            position  : 'top-left',
                             style: 'error',
-                            autoclose: 3000
+                            autoclose: 6000
                         });
                     } else {
                         spop({
                             template: 'Помилка :( Перевірте будь-ласка введені дані.',
-                            position  : 'bottom-right',
+                            position  : 'top-left',
                             style: 'error',
-                            autoclose: 3000
+                            autoclose: 6000
                         });
                     }
                 }
@@ -95,17 +95,17 @@ $(document).ready(function (){
                         $(location).attr('href', '/order');
                         // spop({
                         //     template: 'Замовлення збережене! Дякуємо :)',
-                        //     position  : 'bottom-right',
+                        //     position  : 'top-left',
                         //     style: 'success',
-                        //     autoclose: 3000
+                        //     autoclose: 6000
                         // });
                     },
                     error: function (error) {
                         spop({
                             template: 'Помилка :( Перевірте будь-ласка ваше замовлення.',
-                            position  : 'bottom-right',
+                            position  : 'top-left',
                             style: 'error',
-                            autoclose: 3000
+                            autoclose: 6000
                         });
                     }
                 });
@@ -149,17 +149,17 @@ $(document).ready(function (){
                         // }, 100);
                         // spop({
                         //     template: 'Замовлення збережене! Дякуємо :)',
-                        //     position  : 'bottom-right',
+                        //     position  : 'top-left',
                         //     style: 'success',
-                        //     autoclose: 3000
+                        //     autoclose: 6000
                         // });
                     },
                     error: function (error) {
                         spop({
                             template: 'Помилка :( Перевірте будь-ласка ваше замовлення.',
-                            position  : 'bottom-right',
+                            position  : 'top-left',
                             style: 'error',
-                            autoclose: 3000
+                            autoclose: 6000
                         });
                     }
                 });
@@ -203,30 +203,31 @@ $(document).ready(function (){
                 data: JSON.stringify(dishesData),
                 dataType: "json",
                 success: function (dishes) {
-                    for (const index in dishes) {
-                        if (dishes.hasOwnProperty(index)) {
-                            var dish = dishes[index];
-                            if (dish.tmp_id) {
-                                var dishTableRow = $('tr[data-tmp-id="' + dish.tmp_id + '"]');
-                                dishTableRow.removeAttr('data-tmp-id');
-                                dishTableRow. attr('data-dish-id', dish.id);
-                                dishTableRow.find('.dish-thumbnail').attr('data-dish-image', dish.id);
-                            }
-                        }
-                    }
-                    spop({
-                        template: 'Зміни успішно збережені!',
-                        position  : 'bottom-right',
-                        style: 'success',
-                        autoclose: 3000
-                    });
+                    $(location).attr('href', '/dishes');
+                    // for (const index in dishes) {
+                    //     if (dishes.hasOwnProperty(index)) {
+                    //         var dish = dishes[index];
+                    //         if (dish.tmp_id) {
+                    //             var dishTableRow = $('tr[data-tmp-id="' + dish.tmp_id + '"]');
+                    //             dishTableRow.removeAttr('data-tmp-id');
+                    //             dishTableRow. attr('data-dish-id', dish.id);
+                    //             dishTableRow.find('.dish-thumbnail').attr('data-dish-image', dish.id);
+                    //         }
+                    //     }
+                    // }
+                    // spop({
+                    //     template: 'Зміни успішно збережені!',
+                    //     position  : 'top-left',
+                    //     style: 'success',
+                    //     autoclose: 6000
+                    // });
                 },
                 error: function (error) {
                     spop({
                         template: 'Не вдалося зберегти зміни! Перевірте будь-ласка правильність введених даних!',
-                        position  : 'bottom-right',
-                        style: 'success',
-                        autoclose: 3000
+                        position  : 'top-left',
+                        style: 'error',
+                        autoclose: 6000
                     });
                 }
             });
@@ -245,10 +246,10 @@ $(document).ready(function (){
                 },
                 error: function (error) {
                     spop({
-                        template: 'Не вдалося видалити страву з меню!',
-                        position  : 'bottom-right',
+                        template: 'Не вдалося видалити страву з меню, хтось вже замовив цю страву.',
+                        position  : 'top-left',
                         style: 'error',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 }
             });
@@ -270,9 +271,9 @@ $(document).ready(function (){
                 error: function (error) {
                     spop({
                         template: 'Не вдалося додати страву в меню!',
-                        position  : 'bottom-right',
+                        position  : 'top-left',
                         style: 'error',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 }
             });
@@ -287,17 +288,17 @@ $(document).ready(function (){
                     $('tr[data-dish-id="' + dishId + '"]').remove();
                     spop({
                         template: 'Страва успішно видалена!',
-                        position  : 'bottom-right',
+                        position  : 'top-left',
                         style: 'success',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 },
                 error: function (error) {
                     spop({
-                        template: 'Не вдалося видалити страву!',
-                        position  : 'bottom-right',
+                        template: 'Не вдалося видалити страву, тому що вона додана в меню.',
+                        position  : 'top-left',
                         style: 'error',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 }
             });
@@ -327,9 +328,9 @@ $(document).ready(function (){
                 error: function (error) {
                     spop({
                         template: 'Помилка :( Не вдалося знайти вибрану страву.',
-                        position  : 'bottom-right',
+                        position  : 'top-left',
                         style: 'error',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 }
             });
@@ -346,17 +347,17 @@ $(document).ready(function (){
                     console.log(user);
                     spop({
                         template: 'Ваші персональні дані успішно збережені!',
-                        position  : 'bottom-right',
+                        position  : 'top-left',
                         style: 'success',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 },
                 error: function (error) {
                     spop({
                         template: 'Сталася помилка при збереженні :( Перевірте будь-ласка правильність введених даних.',
-                        position  : 'bottom-right',
+                        position  : 'top-left',
                         style: 'error',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 }
             });
@@ -373,17 +374,17 @@ $(document).ready(function (){
                     console.log(resp);
                     spop({
                         template: "Ваші відгуки успішно відправлені, ми обов'язково приймемо їх до уваги! Дякуємо за співпрацю! :)",
-                        position  : 'bottom-right',
+                        position  : 'top-left',
                         style: 'success',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 },
                 error: function (error) {
                     spop({
                         template: 'Сталася помилка при відправленні Ваших відгуків :( Перепрошуємо за тимчасові незручності.',
-                        position  : 'bottom-right',
+                        position  : 'top-left',
                         style: 'error',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 }
             });
@@ -400,17 +401,17 @@ $(document).ready(function (){
                     console.log(resp);
                     spop({
                         template: "Ваша очінка страви збережена! Дякуємо за співпрацю! :)",
-                        position  : 'bottom-right',
+                        position  : 'top-left',
                         style: 'success',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 },
                 error: function (error) {
                     spop({
                         template: 'Сталася помилка при збереженні оцінки страви :( Перепрошуємо за тимчасові незручності.',
-                        position  : 'bottom-right',
+                        position  : 'top-left',
                         style: 'error',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 }
             });
@@ -429,10 +430,10 @@ $(document).ready(function (){
                 },
                 error: function (error) {
                     spop({
-                        template: 'Помилка :( Превірте будь-ласка введені дані.',
-                        position  : 'bottom-right',
+                        template: 'Помилка при збереженні :( Превірте будь-ласка назву групи.',
+                        position  : 'top-left',
                         style: 'error',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 }
             });
@@ -449,9 +450,9 @@ $(document).ready(function (){
                 error: function (error) {
                     spop({
                         template: 'Помилка :( Превірте будь-ласка введені дані.',
-                        position  : 'bottom-right',
+                        position  : 'top-left',
                         style: 'error',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 }
             });
@@ -471,9 +472,9 @@ $(document).ready(function (){
                 error: function (error) {
                     spop({
                         template: 'Помилка :( Превірте будь-ласка введені дані.',
-                        position  : 'bottom-right',
+                        position  : 'top-left',
                         style: 'error',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 }
             });
@@ -490,9 +491,9 @@ $(document).ready(function (){
                 error: function (error) {
                     spop({
                         template: 'Помилка :( Превірте будь-ласка введені дані.',
-                        position  : 'bottom-right',
+                        position  : 'top-left',
                         style: 'error',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 }
             });
@@ -511,9 +512,9 @@ $(document).ready(function (){
                 error: function (error) {
                     spop({
                         template: 'Помилка :( Превірте будь-ласка введені дані.',
-                        position  : 'bottom-right',
+                        position  : 'top-left',
                         style: 'error',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 }
             });
@@ -532,17 +533,17 @@ $(document).ready(function (){
                     actions.find(".user-email-actions-confirm").attr('value', email);
                     spop({
                         template: 'Email користувача успішно оновлений!',
-                        position  : 'bottom-right',
+                        position  : 'top-left',
                         style: 'success',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 },
                 error: function (error) {
                     spop({
                         template: 'Помилка :( Превірте будь-ласка введені дані.',
-                        position  : 'bottom-right',
+                        position  : 'top-left',
                         style: 'error',
-                        autoclose: 3000
+                        autoclose: 6000
                     });
                 }
             });
@@ -745,7 +746,7 @@ $(document).ready(function (){
         var groupId = $(this).attr('data-group-id');
         var newGroupHtml = '<tr class="group-' + groupId + '" data-dish-id="" data-group-id="' + groupId + '" data-tmp-id="' + Math.floor(Math.random() * 1000001) +'">' +
                 '<th class="wh-name">' + 
-                  '<img data-dish-image="" data-dish-image-name="sdasdas" src="" class="dish-thumbnail">' +
+                //   '<img data-dish-image="" data-dish-image-name="sdasdas" src="" class="dish-thumbnail">' +
                   '<input type="text" name="name" value="" placeholder="Введіть ім\'я" />' + 
                 '</th>' +
                 '<th><input name="description" type="text" value="" placeholder="Опис.."/></th>' +
@@ -869,9 +870,9 @@ $(document).ready(function (){
         // TODO fixme
         spop({
             template: 'Користувачі успішно збережені!',
-            position  : 'bottom-right',
+            position  : 'top-left',
             style: 'success',
-            autoclose: 3000
+            autoclose: 6000
         });
         return false;
     });
@@ -940,7 +941,6 @@ $(document).ready(function (){
     var canvas;
     var context;
     var image;
-
     var prefsize;
 
     $("#file").change(function() {
@@ -1015,11 +1015,12 @@ $(document).ready(function (){
         onRelease: clearcanvas,
         boxWidth: crop_max_width,
         boxHeight: crop_max_height,
-        allowResize: false,
-        allowSelect: false
+        aspectRatio: 1
+        // allowResize: false,
+        // allowSelect: false
       }, function() {
         jcrop_api = this;
-        jcrop_api.animateTo([0,0,338,338]);
+        // jcrop_api.animateTo([0,0,338,338]);
       });
       clearcanvas();
     }
@@ -1043,10 +1044,10 @@ $(document).ready(function (){
     }
 
     function applyCrop() {
-      canvas.width = prefsize.w;
-      canvas.height = prefsize.h;
-      context.drawImage(image, prefsize.x, prefsize.y, prefsize.w, prefsize.h, 0, 0, canvas.width, canvas.height);
-      validateImage();
+        canvas.width = prefsize.w;
+        canvas.height = prefsize.h;
+        context.drawImage(image, prefsize.x, prefsize.y, prefsize.w, prefsize.h, 0, 0, canvas.width, canvas.height);
+        validateImage();
     }
 
     $("#cropbutton").click(function(e) {
@@ -1075,17 +1076,17 @@ $(document).ready(function (){
             
             spop({
                 template: 'Зображення страви успішно оновлене!',
-                position  : 'bottom-right',
+                position  : 'top-left',
                 style: 'success',
-                autoclose: 3000
+                autoclose: 6000
             });
         },
         error: function(data) {
             spop({
                 template: 'Не вдалося оновити зображення страви :( Перевірте будь-ласка формат зображення.',
-                position  : 'bottom-right',
+                position  : 'top-left',
                 style: 'error',
-                autoclose: 3000
+                autoclose: 6000
             });
         },
         complete: function(data) {}
@@ -1214,4 +1215,5 @@ $(document).ready(function (){
             tooltip[i].style.top = e.pageY + 'px';
         }
     });
+
 });   

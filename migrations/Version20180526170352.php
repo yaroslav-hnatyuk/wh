@@ -16,26 +16,26 @@ class Version20180526170352 extends AbstractMigration
         $office = $this->createOffice($schema);
         $office->addForeignKeyConstraint(
             $company, array('company_id'), array('id'), 
-            array('onUpdate' => 'CASCADE', 'onDelete' => 'CASCADE')
+            array('onUpdate' => 'CASCADE', 'onDelete' => 'RESTRICT')
         );
 
         $user = $this->createUser($schema);
         $user->addForeignKeyConstraint(
             $office, array('office_id'), array('id'), 
-            array('onUpdate'=>'CASCADE', 'onDelete' => 'CASCADE')
+            array('onUpdate'=>'CASCADE', 'onDelete' => 'RESTRICT')
         );
 
         $dishGroup = $this->createDishGroup($schema);
         $dish = $this->createDish($schema);
         $dish->addForeignKeyConstraint(
             $dishGroup, array('dish_group_id'), array('id'),
-            array('onUpdate'=>'CASCADE', 'onDelete' => 'CASCADE')
+            array('onUpdate'=>'CASCADE', 'onDelete' => 'RESTRICT')
         );
 
         $menuDish = $this->createMenuDish($schema);
         $menuDish->addForeignKeyConstraint(
             $dish, array('dish_id'), array('id'),
-            array('onUpdate'=>'CASCADE', 'onDelete' => 'CASCADE')
+            array('onUpdate'=>'CASCADE', 'onDelete' => 'RESTRICT')
         );
 
         $order = $this->createOrder($schema);
@@ -45,7 +45,7 @@ class Version20180526170352 extends AbstractMigration
         );
         $order->addForeignKeyConstraint(
             $menuDish, array('menu_dish_id'), array('id'),
-            array('onUpdate'=>'CASCADE', 'onDelete' => 'CASCADE')
+            array('onUpdate'=>'CASCADE', 'onDelete' => 'RESTRICT')
         );
 
         $rating = $this->createRating($schema);
