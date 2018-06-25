@@ -80,10 +80,12 @@ $(document).ready(function (){
                     dayDate,
                     day;
 
+                currentDate.setDate(currentDate.getDate() - 1);
+
                 $( ".order-cell" ).each(function(  ) {
                     day = $(this).attr('data-day');
                     dayDate = new Date(day);
-                    if (+dayDate >= +currentDate) {
+                    if (dayDate.getTime() >= currentDate.getTime()) {
                         ordersData.push({
                             day: day,
                             menu_dish_id: $(this).attr('data-menu-id'),
@@ -123,13 +125,23 @@ $(document).ready(function (){
             var defer = jQuery.Deferred();
 
             defer.then(function(){
-                var ordersData = [];
+                var ordersData = [],
+                    popupDay,
+                    popupCurrentDate = new Date(),
+                    popupDayDate;
+
+                popupCurrentDate.setDate(popupCurrentDate.getDate() - 1);
+
                 $( ".modal-order-cell" ).each(function(  ) {
-                    ordersData.push({
-                        day: $(this).attr('data-modal-dish-day'),
-                        menu_dish_id: $(this).attr('data-modal-menu-id'),
-                        count: $(this).val()
-                    });
+                    popupDay = $(this).attr('data-modal-dish-day');
+                    popupDayDate = new Date(popupDay);
+                    if (popupDayDate.getTime() >= popupCurrentDate.getTime()) {
+                        ordersData.push({
+                            day: popupDay,
+                            menu_dish_id: $(this).attr('data-modal-menu-id'),
+                            count: $(this).val()
+                        });
+                    }
                 });
 
                 return ordersData;
@@ -140,23 +152,14 @@ $(document).ready(function (){
                     data: JSON.stringify(ordersData),
                     dataType: "json",
                     success: function (result) {
-                        for (const index in ordersData) {
-                            if (ordersData.hasOwnProperty(index)) {
-                                const order = ordersData[index];
-                                $('.order-cell[data-menu-id="' + order.menu_dish_id + '"][data-day="' + order.day + '"]').val(order.count);
-                            }
-                        }
+                        // for (const index in ordersData) {
+                        //     if (ordersData.hasOwnProperty(index)) {
+                        //         const order = ordersData[index];
+                        //         $('.order-cell[data-menu-id="' + order.menu_dish_id + '"][data-day="' + order.day + '"]').val(order.count);
+                        //     }
+                        // }
                         $("#myModal").modal('hide');
                         $(location).attr('href', '/order'); 
-                        // setTimeout(function() { 
-                        //     $(location).attr('href', '/order'); 
-                        // }, 100);
-                        // spop({
-                        //     template: 'Замовлення збережене! Дякуємо :)',
-                        //     position  : 'top-left',
-                        //     style: 'success',
-                        //     autoclose: 6000
-                        // });
                     },
                     error: function (error) {
                         spop({

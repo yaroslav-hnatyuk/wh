@@ -55,15 +55,53 @@
                         <table class="table order-table" style="margin: 0">
                             <tr style="background-color:#efefef;">
                                 {% for date, weekday in period.items %}
-                                    <th class="wh-display-cell">
-                                        <span class="day-name">{{ weekday.day }}</span><br/>
-                                        <span class="day-date">{{ weekday.number }}</span>
-                                    </th>
+                                    {% if loop.index <= 7 %}
+                                        {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
+                                            <th class="wh-display-cell" style="background-color: #e5feefcc;">
+                                                <span class="day-name">{{ weekday.day }}</span><br/>
+                                                <span class="day-date">{{ weekday.number }}</span>
+                                            </th>
+                                        {% elseif weekday.is_working_day %}
+                                            <th class="wh-display-cell">
+                                                <span class="day-name">{{ weekday.day }}</span><br/>
+                                                <span class="day-date">{{ weekday.number }}</span>
+                                            </th>
+                                        {% else %}
+                                            <th class="wh-display-cell" style="background-color: #fff0e3cc;">
+                                                <span class="day-name">{{ weekday.day }}</span><br/>
+                                                <span class="day-date">{{ weekday.number }}</span>
+                                            </th>
+                                        {% endif %}
+                                    {% endif %}
                                 {% endfor %}
                             </tr>
                             <tr>
                                 {% for date, weekday in period.items %}
-                                    <th class="wh-display-cell"><input class="modal-order-cell" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value=""/></th>
+                                    {% if loop.index <= 7 %}
+                                        {% if "now"|date('Y-m-d') > date|date('Y-m-d') %}
+                                            <th class="wh-display-cell" style="cursor: not-allowed">
+                                                <input class="modal-order-cell" style="background-color: #fff; cursor: not-allowed" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value="" disabled=true/>
+                                            </th>
+                                        {% elseif "now"|date('Y-m-d') == date|date('Y-m-d') %}
+                                            {% if "now"|date('H') < orderHour %}
+                                                <th class="wh-display-cell" style="background-color: #e5feefcc;">
+                                                    <input class="modal-order-cell" style="background-color: #e5feefcc;" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value=""/>
+                                                </th>
+                                            {% else %}
+                                                <th class="wh-display-cell" style="background-color: #e5feefcc; cursor: not-allowed">
+                                                    <input class="modal-order-cell" style="background-color: #e5feefcc;  cursor: not-allowed" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value="" disabled=true/>
+                                                </th>
+                                            {% endif %}
+                                        {% elseif weekday.is_working_day %}
+                                            <th class="wh-display-cell">
+                                                <input class="modal-order-cell" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value=""/>
+                                            </th>
+                                        {% else %}
+                                            <th class="wh-display-cell" style="background-color: #fff0e3cc;">
+                                                <input class="modal-order-cell" style="background-color: #fff0e3cc;" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value="" disabled=true/>
+                                            </th>
+                                        {% endif %}
+                                    {% endif %}
                                 {% endfor %}
                             </tr>
                         </table>
@@ -101,8 +139,8 @@
       </div>
     </nav>
 
-    <section class="probootstrap-section probootstrap-bg-white" data-section="welcome" style="min-height: 1080px">
-      <div class="container" style="padding-top: 70px;">
+    <section class="probootstrap-section probootstrap-bg-white" data-section="welcome">
+      <div class="container">
         <div class="row">
             <form action="/filters">
                 <div class="col-md-9 text-left" style="padding-left: 0">
