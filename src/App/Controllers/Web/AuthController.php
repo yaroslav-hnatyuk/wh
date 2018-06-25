@@ -104,4 +104,13 @@ class AuthController
             )
         );
     }
+
+    public function logout() {
+        if (isset($_COOKIE['X-AUTH-TOKEN'])) {
+            unset($_COOKIE['X-AUTH-TOKEN']);
+            setcookie('X-AUTH-TOKEN', '', time() - 3600, '/');
+        }
+        session_destroy();
+        return new RedirectResponse('/login');
+    }
 }

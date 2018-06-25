@@ -14,6 +14,8 @@ class User extends BaseEntity
     public $salt;
     public $phone;
     public $office_id;
+    public $is_feedback_active;
+    public $is_active;
 
     public function __construct($data)
     {

@@ -75,40 +75,44 @@ $(document).ready(function (){
             var defer = jQuery.Deferred();
 
             defer.then(function(){
-                var ordersData = [];
+                var ordersData = [],
+                    currentDate = new Date(),
+                    dayDate,
+                    day;
+
                 $( ".order-cell" ).each(function(  ) {
-                    ordersData.push({
-                        day: $(this).attr('data-day'),
-                        menu_dish_id: $(this).attr('data-menu-id'),
-                        count: $(this).val()
-                    });
+                    day = $(this).attr('data-day');
+                    dayDate = new Date(day);
+                    if (+dayDate >= +currentDate) {
+                        ordersData.push({
+                            day: day,
+                            menu_dish_id: $(this).attr('data-menu-id'),
+                            count: $(this).val()
+                        });
+                    }
                 });
 
                 return ordersData;
             }).then(function(ordersData) {
-                $.ajax({
-                    url: "/api/v1/orders",
-                    method: "POST",
-                    data: JSON.stringify(ordersData),
-                    dataType: "json",
-                    success: function (result) {
-                        $(location).attr('href', '/order');
-                        // spop({
-                        //     template: 'Замовлення збережене! Дякуємо :)',
-                        //     position  : 'top-left',
-                        //     style: 'success',
-                        //     autoclose: 6000
-                        // });
-                    },
-                    error: function (error) {
-                        spop({
-                            template: 'Помилка :( Перевірте будь-ласка ваше замовлення.',
-                            position  : 'top-left',
-                            style: 'error',
-                            autoclose: 6000
-                        });
-                    }
-                });
+                if (ordersData.length) {
+                    $.ajax({
+                        url: "/api/v1/orders",
+                        method: "POST",
+                        data: JSON.stringify(ordersData),
+                        dataType: "json",
+                        success: function (result) {
+                            $(location).attr('href', '/order');
+                        },
+                        error: function (error) {
+                            spop({
+                                template: 'Помилка :( Перевірте будь-ласка ваше замовлення.',
+                                position  : 'top-left',
+                                style: 'error',
+                                autoclose: 6000
+                            });
+                        }
+                    });
+                }
             });
 
             defer.resolve();
@@ -371,13 +375,7 @@ $(document).ready(function (){
                 dataType: "json",
                 contentType:'application/json',
                 success: function (resp) {
-                    console.log(resp);
-                    spop({
-                        template: "Ваші відгуки успішно відправлені, ми обов'язково приймемо їх до уваги! Дякуємо за співпрацю! :)",
-                        position  : 'top-left',
-                        style: 'success',
-                        autoclose: 6000
-                    });
+                    $(location).attr('href', '/profile/feedback');
                 },
                 error: function (error) {
                     spop({
@@ -397,15 +395,7 @@ $(document).ready(function (){
                 data: JSON.stringify(rating),
                 dataType: "json",
                 contentType:'application/json',
-                success: function (resp) {
-                    console.log(resp);
-                    spop({
-                        template: "Ваша очінка страви збережена! Дякуємо за співпрацю! :)",
-                        position  : 'top-left',
-                        style: 'success',
-                        autoclose: 6000
-                    });
-                },
+                success: function (resp) {},
                 error: function (error) {
                     spop({
                         template: 'Сталася помилка при збереженні оцінки страви :( Перепрошуємо за тимчасові незручності.',

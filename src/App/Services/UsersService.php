@@ -125,6 +125,11 @@ class UsersService extends BaseService
         return $this->db->update('user', array('email' => $email), ['id' => $id]);
     }
 
+    function setFeedbackInactive($id)
+    {
+        return $this->db->update('user', array('is_feedback_active' => 0), ['id' => $id]);
+    }
+
     function updatePersonalData($data = array())
     {
         return $this->db->update('user', $data, ['id' => $data['id']]);

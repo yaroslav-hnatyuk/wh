@@ -41,17 +41,39 @@ class OrdersService extends BaseService
 
     function saveUserOrders($userId, $orders)
     {
-        foreach ($orders as $orderData) {
-            $order = $this->getByMenuAndUserAndDay($userId, $orderData['menu_dish_id'], $orderData['day']);
-            if ($order->id !== null) {
-                $order->count = $orderData['count'];
-                $this->db->update('`order`', $order->getArray(), ['id' => $order->id]);
-            } else if ((int)$orderData['count'] > 0) {
-                $order = $orderData;
-                $order['user_id'] = $userId;
-                $this->save($order);
+        $this->db->beginTransaction();
+        try {
+            $today = strtotime(date('Y-m-d'));
+            $hour = date('H');
+            foreach ($orders as $orderData) {
+                $orderTime =  strtotime($orderData['day']);
+                if ($orderTime >= $today) {
+                    
+                    if ($orderTime === $today && $hour > 11) { // TODO take hour from config
+                        continue;
+                    }
+
+                    $order = $this->getByMenuAndUserAndDay($userId, $orderData['menu_dish_id'], $orderData['day']);
+                    if ($order->id !== null) {
+                        $order->count = $orderData['count'];
+                        $this->db->update('`order`', $order->getArray(), ['id' => $order->id]);
+                    } else if ((int)$orderData['count'] > 0) {
+                        $order = $orderData;
+                        $order['user_id'] = $userId;
+                        $this->save($order);
+                    }
+
+                } else {
+                    throw new \Exception("Incorect order day");
+                }
             }
+            $this->db->commit();
+        } catch (\Exception $e) {
+            $this->db->rollBack();
+            throw $e;
         }
+
+        return $orders;
     }
 
     function update($data = array())

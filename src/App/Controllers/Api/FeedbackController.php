@@ -44,6 +44,8 @@ class FeedbackController extends BaseController
             }
         }
 
+        $this->app['users.service']->setFeedbackInactive($this->getUser()->id);
+
         return new JsonResponse(
             $this->feedbackService->saveFeedback($feedbackList)
         );

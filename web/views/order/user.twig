@@ -107,8 +107,8 @@
             <form action="/filters">
                 <div class="col-md-9 text-left" style="padding-left: 0">
                     <div class="btn-group">
-                        <button type="submit" name="filter_period_week" class="btn {% if filterPeriod == '2weeks' %} btn-default {% endif %} order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Тиждень</button>
-                        <button type="submit" name="filter_period_2weeks" class="btn {% if filterPeriod == 'week' %} btn-default {% endif %} order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">2 тижні</button>
+                        <button type="submit" name="filter_period_week" class="btn {% if filterPeriod == '2weeks' %} btn-default {% else %} week-2weeks-toggle-active {% endif %} order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">Тиждень</button>
+                        <button type="submit" name="filter_period_2weeks" class="btn {% if filterPeriod == 'week' %} btn-default {% else %} week-2weeks-toggle-active {% endif %} order-top-button" style="border: 1px solid #ccc; color: rgba(0, 0, 0, 0.7)">2 тижні</button>
                     </div> 
                 </div>
             </form>
@@ -214,9 +214,15 @@
                                 {% endif %}
                             {% else %}
                                 {% if order.is_working_day == false %}
-                                    <th class="disabled-cell" style="background-color: #f9d1ae1a; cursor: not-allowed">
-                                        <span class="orders-not-allowed-tooltip">Вихідний день або державне свято</span>
-                                    </th>
+                                    {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
+                                        <th class="disabled-cell" style="background-color: #e5feef80">
+                                            <span class="orders-not-allowed-tooltip">Вихідний день або державне свято</span>
+                                        </th>
+                                    {% else %}
+                                        <th class="disabled-cell" style="background-color: #f9d1ae1a">
+                                            <span class="orders-not-allowed-tooltip">Вихідний день або державне свято</span>
+                                        </th>
+                                    {% endif %}
                                 {% elseif order.available == false %}
                                     <th class="disabled-cell" style="background-color: #efefef4d; color: #ccc; cursor: not-allowed">
                                         <span class="orders-not-allowed-tooltip">Страва недоступна для замовлень на цей період</span>

@@ -8,7 +8,7 @@ class DishgroupsService extends BaseService
 
     public function getOne($id)
     {
-        $data =$this->db->fetchAssoc("SELECT * FROM dish_group WHERE id=?", [(int) $id]);
+        $data = $this->db->fetchAssoc("SELECT * FROM dish_group WHERE id=?", [(int) $id]);
         $dishGroup = new DishGroup($data);
 
         return $dishGroup->getArray();
