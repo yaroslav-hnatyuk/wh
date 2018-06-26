@@ -87,6 +87,8 @@ class AuthController
         $user->phone = 'n/a';
         $user->pass = password_hash($data['password'], PASSWORD_BCRYPT);
         $user->salt = hash('sha256', md5($data['email'] . uniqid(rand(), TRUE)));
+        $user->is_feedback_active = 1;
+        $user->is_active = 1;
         $user->office_id = $office->id;
 
         $this->usersService->save($user->getArray());
