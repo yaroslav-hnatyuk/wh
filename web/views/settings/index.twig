@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Walnut House</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    
+    <link rel="stylesheet" href={{ asset('assets/css/styles-merged.css') }}> 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src={{ asset('assets/js/jquery.fn.js') }}></script>
+    <script src={{ asset('assets/js/spop.js') }}></script>
+
+    <!--[if lt IE 9]>
+      <script src={{ asset('assets/js/vendor/html5shiv.min.js') }}></script>
+      <script src={{ asset('assets/js/vendor/respond.min.js') }}></script>
+    <![endif]-->
+
+  </head>
+  <body>
+
+    <!-- Fixed navbar -->
+    
+    <nav class="navbar navbar-default navbar-fixed-top probootstrap-navbar scrolled">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/order"></a>
+        </div>
+
+        {% include 'parts/menu/' ~ userRole ~ '.twig' %}
+      </div>
+    </nav>
+
+    
+    <section class="probootstrap-section probootstrap-bg-white" data-section="welcome">
+      <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-left" style="padding: 30px 30px 0 30px; min-height: 450px; border: 1px solid #ddd">
+                <div method="post" class="probootstrap-form">
+                  <div class="row">
+                  {% for setting in settings %}
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        {% if setting.name == 'lunch_discount' %}
+                          <label for="name">Скидка на комплексні обіди (%)</label>
+                        {% elseif setting.name == 'weekly_discount' %}
+                          <label for="name">Скидка на тижневі замовлення (%)</label>
+                        {% elseif setting.name == 'order_hour' %}
+                          <label for="name">Година до котрої можна замовляти (0-24)</label>
+                        {% endif %}
+                        <div class="form-field">
+                          <i class="icon"></i>
+                          <input class="settings-input" name="{{ setting.name }}" class="form-control" type="text" value="{{ setting.value }}">
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <input id="save-system-settings" value="Зберегти" class="btn btn-lg btn-primary btn-block" type="button">
+                    </div>
+                    <div class="col-md-8">
+                    </div>
+                  </div>
+                  
+                </div>
+            </div>
+        </div>
+      </div>
+    </section>
+
+  </body>
+</html>

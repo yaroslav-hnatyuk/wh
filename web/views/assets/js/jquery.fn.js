@@ -551,6 +551,32 @@ $(document).ready(function (){
                 error: function (error) {}
             });
         },
+
+        saveSettings: function(settings) {
+            $.ajax({
+                url: "/api/v1/settings",
+                method: "POST",
+                data: JSON.stringify(settings),
+                dataType: "json",
+                contentType:'application/json',
+                success: function (resp) {
+                    spop({
+                        template: 'Налаштування успішно збережені!',
+                        position  : 'top-left',
+                        style: 'success',
+                        autoclose: 6000
+                    });
+                },
+                error: function (error) {
+                    spop({
+                        template: 'Помилка :( Превірте будь-ласка введені дані.',
+                        position  : 'top-left',
+                        style: 'error',
+                        autoclose: 6000
+                    });
+                }
+            });  
+        }
     }
 
     function setCookie(cname,cvalue,exdays) {
@@ -1207,6 +1233,15 @@ $(document).ready(function (){
             tooltip[i].style.left = e.pageX + 'px';
             tooltip[i].style.top = e.pageY + 'px';
         }
+    });
+
+    $('#save-system-settings').click(function () {
+        var settings = {};
+        $('.settings-input').each(function () {
+            var name = $(this).attr('name');
+            settings[name] = $(this).val();
+        });
+        API.saveSettings(settings);
     });
 
 });   

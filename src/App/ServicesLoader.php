@@ -28,6 +28,11 @@ class ServicesLoader
             $rc = new \ReflectionClass('App\\Services\\ExportService');
             return $rc->newInstanceArgs(array($this->app["db"]));
         }; 
+
+        $this->app["settings.service"] = function() {
+            $rc = new \ReflectionClass('App\\Services\\SettingsService');
+            return $rc->newInstanceArgs(array($this->app["db"]));
+        }; 
     }
 }
 

@@ -41,6 +41,9 @@ class OrdersService extends BaseService
 
     function saveUserOrders($userId, $orders)
     {
+        $settingOrderHour = $this->getSettingByName('order_hour');
+        $maxOrderHour = $settingOrderHour ? $settingOrderHour['value'] : 0;
+
         $this->db->beginTransaction();
         try {
             $today = strtotime(date('Y-m-d'));
@@ -49,7 +52,7 @@ class OrdersService extends BaseService
                 $orderTime =  strtotime($orderData['day']);
                 if ($orderTime >= $today) {
                     
-                    if ($orderTime === $today && $hour > 11) { // TODO take hour from config
+                    if ($orderTime === $today && $hour > $maxOrderHour) {
                         continue;
                     }
 
@@ -74,6 +77,11 @@ class OrdersService extends BaseService
         }
 
         return $orders;
+    }
+
+    private function getSettingByName($name)
+    {
+        return $this->db->fetchAssoc("SELECT * FROM `settings` WHERE `name`=?", [$name]);
     }
 
     function update($data = array())
@@ -199,10 +207,12 @@ class OrdersService extends BaseService
             }
         }
 
-        $discount = 0.25; // Replace with value for config
-        $weeklyDiscount = 0.05; // Replace with value for config
-        $lunchGroupsCount = 4; // Replace with value for config
-        $workingDays = 5; // Calculate for period
+        $settingWeeklyDiscount = $this->getSettingByName('weekly_discount');
+        $settingLunchDiscount = $this->getSettingByName('lunch_discount');
+
+        $discount = $settingLunchDiscount ? intval($settingLunchDiscount['value']) / 100 : 0;
+        $weeklyDiscount = $settingWeeklyDiscount ? intval($settingWeeklyDiscount['value']) / 100 : 0;
+        $lunchGroupsCount = 4;
 
         $totalPriceInfo = array(
             'total_price' => 0,

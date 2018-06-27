@@ -25,6 +25,12 @@ class RoutesLoader
                 return $rc->newInstanceArgs(array($this->app, $this->app["{$resource}.service"]));
             };
         }  
+
+        $this->app["settings.controller"] = function() use($resource) {
+            $rc = new \ReflectionClass('App\\Controllers\\Api\\SettingsController');
+            return $rc->newInstanceArgs(array($this->app));
+        };
+
         $this->instantiateWebControllers();
     }
 
@@ -51,6 +57,8 @@ class RoutesLoader
 
         $api->post("/users/current", "users.controller:saveCurrent");
         $api->post("/dishes/upload/{id}", "dishes.controller:upload");
+        $api->get("/settings", "settings.controller:getAll");
+        $api->post("/settings", "settings.controller:save");
     }
 
     private function bindWebRoutes($web) 
@@ -71,6 +79,7 @@ class RoutesLoader
         $web->get("/companies", "companies.web.controller:index");
         $web->get("/dishes", "dishes.web.controller:index");
         $web->get("/filters", "filters.web.controller:index");
+        $web->get("/settings", "settings.web.controller:index");
 
         $web->get("/profile", "profile.web.controller:index");
         $web->get("/profile/feedback", "profile.web.controller:feedback");
@@ -125,6 +134,7 @@ class RoutesLoader
         };
 
         $this->app['filters.web.controller'] = function() { return new Controllers\Web\FiltersController($this->app); };
+        $this->app['settings.web.controller'] = function() { return new Controllers\Web\SettingsController($this->app); };
         $this->app['errors.web.controller'] = function() { return new Controllers\Web\ErrorsController(); };
     }
 

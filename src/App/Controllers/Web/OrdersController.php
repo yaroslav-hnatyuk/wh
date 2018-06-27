@@ -70,6 +70,7 @@ class OrdersController extends BaseController
         $filterPeriod = $this->app['session']->get('filter_period') ?: 'week';
         $period = $this->ordersService->getPeriodForYearAndWeek($year, $week, $filterPeriod);
 
+        $settingOrderHour = $this->app['settings.service']->getOneByName('order_hour');
         $menu = $this->menuService->getForPeriodForOrders($period);
 
         $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
@@ -81,7 +82,7 @@ class OrdersController extends BaseController
             'filterPeriod' => $filterPeriod,
             'userRole' => $this->getUser()->role,
             'menu' => $menu,
-            'orderHour' => 11, // TODO get this value from system settings
+            'orderHour' => $settingOrderHour ? intval($settingOrderHour['value']) : 0, 
             'totalByDays' => $totalByDays,
             'totalPriceInfo' => $totalPriceInfo
         ));
