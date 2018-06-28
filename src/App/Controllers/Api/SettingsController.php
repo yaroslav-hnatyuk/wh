@@ -16,11 +16,13 @@ class SettingsController extends BaseController
 
     public function getAll()
     {
+        $this->checkPermissions(array('admin'));
         return new JsonResponse($this->app['settings.service']->getAll());
     }
 
     public function save(Request $request)
     {
+        $this->checkPermissions(array('admin'));
         $settingsData = array();
 
         $lunchDiscount = array(

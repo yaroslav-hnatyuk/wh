@@ -20,6 +20,8 @@ class CompaniesController extends BaseController
 
     public function index(Request $request)
     {
+        $this->checkPermissions(array('admin'));
+
         $companies = $this->companiesService->getAllGroupedById();
         $offices = $this->officesService->getAll();
         foreach ($offices as $office) {

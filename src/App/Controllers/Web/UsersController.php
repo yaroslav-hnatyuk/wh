@@ -18,6 +18,8 @@ class UsersController extends BaseController
 
     public function index()
     {
+        $this->checkPermissions(array('admin'));
+
         $company = $this->app['session']->get('filter_company');
         $office = $this->app['session']->get('filter_office');
 

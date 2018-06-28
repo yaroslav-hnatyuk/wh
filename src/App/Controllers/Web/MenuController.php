@@ -30,6 +30,8 @@ class MenuController extends BaseController
 
     public function index(Request $request)
     {
+        $this->checkPermissions(array('manager', 'admin'));
+
         $week = $request->query->get('week');
         $year = $request->query->get('year');
 

@@ -19,34 +19,12 @@ class OrdersController extends BaseController
         $this->ordersService = $service;
     }
 
-    public function getOne($id)
-    {
-        return new JsonResponse($this->ordersService->getOne($id));
-    }
-
-    public function getAll()
-    {
-        return new JsonResponse($this->ordersService->getAll());
-    }
-
     public function save(Request $request)
     {
+        $this->checkPermissions(array('user'));
         $orders = json_decode($request->getContent(), true);
         $this->ordersService->saveUserOrders($this->getUser()->id, $orders);
         return new JsonResponse();
     }
 
-    public function update($id, Request $request)
-    {
-        $data = $request->request->all();
-        $data['id'] = $id;
-        return new JsonResponse(
-            $this->ordersService->update($data)
-        );
-    }
-
-    public function delete($id)
-    {
-        return new JsonResponse($this->ordersService->delete($id));
-    }
 }

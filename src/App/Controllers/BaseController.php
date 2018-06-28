@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 abstract class BaseController
@@ -20,5 +21,12 @@ abstract class BaseController
         }
 
         return $this->user;
+    }
+
+    protected function checkPermissions($allowedRoles)
+    {
+        if (!in_array($this->getUser()->role, $allowedRoles, true)) {
+            throw new NotFoundHttpException("Access not allowed");
+        }
     }
 }

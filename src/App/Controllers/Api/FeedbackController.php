@@ -18,18 +18,16 @@ class FeedbackController extends BaseController
         $this->feedbackService = $service;
     }
 
-    public function getOne($id)
-    {
-        return new JsonResponse($this->feedbackService->getOne($id));
-    }
-
     public function getAll()
     {
+        $this->checkPermissions(array('admin', 'manager'));
         return new JsonResponse($this->feedbackService->getAll());
     }
 
     public function save(Request $request)
     {
+        $this->checkPermissions(array('user'));
+
         $feedbackList = array();
         $created = date("Y-m-d");
         $feedbacksData = json_decode($request->getContent(), true);
@@ -51,17 +49,4 @@ class FeedbackController extends BaseController
         );
     }
 
-    public function update($id, Request $request)
-    {
-        $data = $request->request->all();
-        $data['id'] = $id;
-        return new JsonResponse(
-            $this->feedbackService->update($data)
-        );
-    }
-
-    public function delete($id)
-    {
-        return new JsonResponse($this->feedbackService->delete($id));
-    }
 }

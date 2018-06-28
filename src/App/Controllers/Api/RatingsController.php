@@ -18,18 +18,10 @@ class RatingsController extends BaseController
         $this->ratingsService = $service;
     }
 
-    public function getOne($id)
-    {
-        return new JsonResponse($this->ratingsService->getOne($id));
-    }
-
-    public function getAll()
-    {
-        return new JsonResponse($this->ratingsService->getAll());
-    }
-
     public function save(Request $request)
     {
+        $this->checkPermissions(array('user'));
+        
         $rating = array(
             'user_id' => $this->getUser()->id,
             'dish_id' => $request->request->get('dish_id'),
@@ -41,17 +33,4 @@ class RatingsController extends BaseController
         );
     }
 
-    public function update($id, Request $request)
-    {
-        $data = $request->request->all();
-        $data['id'] = $id;
-        return new JsonResponse(
-            $this->ratingsService->update($data)
-        );
-    }
-
-    public function delete($id)
-    {
-        return new JsonResponse($this->ratingsService->delete($id));
-    }
 }

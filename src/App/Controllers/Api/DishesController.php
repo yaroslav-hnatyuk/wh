@@ -40,6 +40,7 @@ class DishesController extends BaseController
 
     public function save(Request $request)
     {
+        $this->checkPermissions(array('admin', 'manager'));
         $dishes = json_decode($request->getContent(), true);
         return new JsonResponse(
             $this->dishesService->saveDishes($dishes)
@@ -57,11 +58,14 @@ class DishesController extends BaseController
 
     public function delete($id)
     {
+        $this->checkPermissions(array('admin', 'manager'));
         return new JsonResponse($this->dishesService->delete($id));
     }
 
     public function upload($id, Request $request)
     {
+        $this->checkPermissions(array('admin', 'manager'));
+
         $file = $request->files->get('cropped_image');                                                                    
         if ($file == NULL) {
             $send = json_encode(array("status" => "Fail"));

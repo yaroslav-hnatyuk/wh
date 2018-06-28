@@ -18,18 +18,10 @@ class CompaniesController extends BaseController
         $this->companiesService = $service;
     }
 
-    public function getOne($id)
-    {
-        return new JsonResponse($this->companiesService->getOne($id));
-    }
-
-    public function getAll()
-    {
-        return new JsonResponse($this->companiesService->getAll());
-    }
-
     public function save(Request $request)
     {
+        $this->checkPermissions(array('admin'));
+
         return new JsonResponse(
             $this->companiesService->save($request->request->all())
         );
@@ -37,6 +29,8 @@ class CompaniesController extends BaseController
 
     public function update($id, Request $request)
     {
+        $this->checkPermissions(array('admin'));
+        
         $data = $request->request->all();
         $data['id'] = $id;
         return new JsonResponse(
@@ -44,8 +38,4 @@ class CompaniesController extends BaseController
         );
     }
 
-    public function delete($id)
-    {
-        return new JsonResponse($this->companiesService->delete($id));
-    }
 }

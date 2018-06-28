@@ -15,6 +15,7 @@ class SettingsController extends BaseController
 
     public function index()
     {
+        $this->checkPermissions(array('admin'));
         return $this->app['twig']->render("settings/index.twig", array(
             'userRole' => $this->getUser()->role,
             'user' => $this->getUser(),

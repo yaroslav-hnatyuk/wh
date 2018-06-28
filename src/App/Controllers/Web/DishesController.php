@@ -20,6 +20,8 @@ class DishesController extends BaseController
 
     public function index()
     {
+        $this->checkPermissions(array('admin', 'manager'));
+
         $dishes = $this->dishesService->getAll();
         $dishes = $this->groupsService->groupDishes($dishes);
 

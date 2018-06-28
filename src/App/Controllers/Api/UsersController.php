@@ -18,25 +18,10 @@ class UsersController extends BaseController
         $this->usersService = $service;
     }
 
-    public function getOne($id)
-    {
-        return new JsonResponse($this->usersService->getOne($id));
-    }
-
-    public function getAll()
-    {
-        return new JsonResponse($this->usersService->getAll());
-    }
-
-    public function save(Request $request)
-    {
-        return new JsonResponse(
-            $this->usersService->save($request->request->all())
-        );
-    }
-
     public function saveCurrent(Request $request)
     {
+        $this->checkPermissions(array('user'));
+
         $userData = array(
             'id' => $this->getUser()->id,
             'first_name' => $request->request->get('first_name'),
@@ -51,7 +36,9 @@ class UsersController extends BaseController
 
     public function update($id, Request $request)
     {
+        $this->checkPermissions(array('admin'));
         $data = json_decode($request->getContent(), true);
+
         return new JsonResponse(
             $this->usersService->update($id, $data['email'])
         );
@@ -59,6 +46,7 @@ class UsersController extends BaseController
 
     public function delete($id)
     {
+        $this->checkPermissions(array('admin'));
         return new JsonResponse($this->usersService->changeActive($id));
     }
 }

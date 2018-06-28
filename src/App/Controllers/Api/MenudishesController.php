@@ -18,18 +18,9 @@ class MenudishesController extends BaseController
         $this->menuDishesService = $service;
     }
 
-    public function getOne($id)
-    {
-        return new JsonResponse($this->menuDishesService->getOne($id));
-    }
-
-    public function getAll()
-    {
-        return new JsonResponse($this->menuDishesService->getAll());
-    }
-
     public function save(Request $request)
     {
+        $this->checkPermissions(array('admin', 'manager'));
         $menuDish = json_decode($request->getContent(), true);
         return new JsonResponse(
             $this->menuDishesService->save($menuDish)
@@ -38,6 +29,7 @@ class MenudishesController extends BaseController
 
     public function update($id, Request $request)
     {
+        $this->checkPermissions(array('admin', 'manager'));
         $data = $request->request->all();
         $data['id'] = $id;
         return new JsonResponse(
@@ -47,6 +39,7 @@ class MenudishesController extends BaseController
 
     public function delete($id)
     {
+        $this->checkPermissions(array('admin', 'manager'));
         return new JsonResponse($this->menuDishesService->delete($id));
     }
 }

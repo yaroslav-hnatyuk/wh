@@ -602,26 +602,16 @@ $(document).ready(function (){
         return "";
     }
 
-    $("#salads-header").click(function(){
-        $( "#salads-list" ).toggle();
+    $(".group-header").click(function(){
+        var groupId = $(this).attr('data-group-id');
+        $(".group-" + groupId).toggle();
     });
-
-    $("#soups-header").click(function(){
-        $( "#soups-list" ).toggle();
-    }); 
-
-    $("#main-dish-header").click(function(){
-        $( "#main-dish-list" ).toggle();
-    }); 
-
-    $("#dessert-header").click(function(){
-        $( "#dessert-list" ).toggle();
-    }); 
-
 
     // SHOW DISH
     $(".user .dish-link").click(function(){
         var dishId = $(this).attr('data-link-dish-id');
+        var totalCount = 0;
+        var disabledCount = 0;
 
         $(this).parent().parent().parent().find(".order-cell").each(function(  ) {
             let day = $(this).attr('data-day');
@@ -629,7 +619,16 @@ $(document).ready(function (){
             let count = $(this).val();
             $('input[data-modal-dish-day="' + day + '"]').val(count);
             $('input[data-modal-dish-day="' + day + '"]').attr('data-modal-menu-id', menuId);
+            
+            totalCount++;
+            if ($(this).attr('disabled')) disabledCount++;
         });
+
+        if (disabledCount === totalCount) {
+            $("#save-order-popup").css('display', 'none');
+        } else {
+            $("#save-order-popup").css('display', 'inline-block');
+        }
 
         API.getDish(dishId);
     });

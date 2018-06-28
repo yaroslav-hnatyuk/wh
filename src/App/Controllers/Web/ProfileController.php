@@ -15,6 +15,7 @@ class ProfileController extends BaseController
 
     public function index()
     {
+        $this->checkPermissions(array('user'));
         return $this->app['twig']->render("profile/index.twig", array(
             'active' => 'index',
             'userRole' => $this->getUser()->role,
@@ -26,6 +27,7 @@ class ProfileController extends BaseController
 
     public function feedback()
     {
+        $this->checkPermissions(array('user'));
         $dishes = array();
         if ($this->getUser()->is_feedback_active) {
             $period = $this->app['orders.service']->getPeriodForYearAndWeek();
@@ -56,6 +58,7 @@ class ProfileController extends BaseController
 
     public function reminders()
     {
+        $this->checkPermissions(array('user'));
         $this->app['users.service']->clearReminders($this->getUser()->id);
         return $this->app['twig']->render("profile/reminders.twig", array(
             'active' => 'reminders',
@@ -68,6 +71,7 @@ class ProfileController extends BaseController
 
     public function promo()
     {
+        $this->checkPermissions(array('user'));
         return $this->app['twig']->render("profile/promo.twig", array(
             'active' => 'promo',
             'userRole' => $this->getUser()->role,

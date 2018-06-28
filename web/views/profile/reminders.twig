@@ -51,7 +51,7 @@
                 {% if reminders|length > 0 %}
                   {% for reminder in reminders %}
                     <div class="col-md-12" style="border-bottom: 1px solid #ddd">
-                      <div class="alert">
+                      <div class="alert {% if loop.index == 1 %} alert-info {% endif %}">
                         <p><b>{{reminder.created|date("Y-m-d")}}</b></p>
                         {{reminder.text}}
                       </div>

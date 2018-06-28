@@ -18,35 +18,13 @@ class OfficesController extends BaseController
         $this->officesService = $service;
     }
 
-    public function getOne($id)
-    {
-        return new JsonResponse($this->officesService->getOne($id));
-    }
-
-    public function getAll()
-    {
-        return new JsonResponse($this->officesService->getAll());
-    }
-
     public function save(Request $request)
     {
+        $this->checkPermissions(array('admin'));
+        
         $offices = json_decode($request->getContent(), true);
         return new JsonResponse(
             $this->officesService->saveOffices($offices)
         );
-    }
-
-    public function update($id, Request $request)
-    {
-        $data = $request->request->all();
-        $data['id'] = $id;
-        return new JsonResponse(
-            $this->officesService->update($data)
-        );
-    }
-
-    public function delete($id)
-    {
-        return new JsonResponse($this->officesService->delete($id));
     }
 }

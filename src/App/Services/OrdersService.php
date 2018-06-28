@@ -51,11 +51,9 @@ class OrdersService extends BaseService
             foreach ($orders as $orderData) {
                 $orderTime =  strtotime($orderData['day']);
                 if ($orderTime >= $today) {
-                    
                     if ($orderTime === $today && $hour > $maxOrderHour) {
                         continue;
                     }
-
                     $order = $this->getByMenuAndUserAndDay($userId, $orderData['menu_dish_id'], $orderData['day']);
                     if ($order->id !== null) {
                         $order->count = $orderData['count'];
@@ -65,9 +63,6 @@ class OrdersService extends BaseService
                         $order['user_id'] = $userId;
                         $this->save($order);
                     }
-
-                } else {
-                    throw new \Exception("Incorect order day");
                 }
             }
             $this->db->commit();

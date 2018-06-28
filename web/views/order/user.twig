@@ -190,8 +190,8 @@
             </table>
 
             {% for group in menu %}
-                <table class="table order-table" id="salads-header" style="cursor: pointer; width: 100%; margin: 0px">
-                    <tr>
+                <table class="table order-table" style="cursor: pointer; width: 100%; margin: 0px">
+                    <tr class="group-header" data-group-id="{{group.group_id}}">
                         <th><b style="text-transform: uppercase;">{{ group.group_name}}</b></th>
                         {% for date, weekday in period.items %}
                             {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
@@ -204,7 +204,7 @@
                         {% endfor %}
                     </tr>
                 </table>
-                <table class="dish-list table order-table user" id="salads-list"  style="margin: 0px">
+                <table class="dish-list table order-table user group-{{ group.group_id }}" style="margin: 0px">
                     {% for dish in group.dishes %}
                     <tr>
                         <th style="padding-left: 40px;">
