@@ -33,6 +33,11 @@ class ServicesLoader
             $rc = new \ReflectionClass('App\\Services\\SettingsService');
             return $rc->newInstanceArgs(array($this->app["db"]));
         }; 
+
+        $this->app["reminders.service"] = function() {
+            $rc = new \ReflectionClass('App\\Services\\RemindersService');
+            return $rc->newInstanceArgs(array($this->app["db"]));
+        }; 
     }
 }
 

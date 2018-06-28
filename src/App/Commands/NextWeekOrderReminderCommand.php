@@ -18,6 +18,12 @@ class NextWeekOrderReminderCommand extends BaseCommand
  
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln("Send reminders about order for next week");
+        $stmt= $this->db->prepare("INSERT INTO reminder (`text`, `created`) VALUES ('Замовляйте обіди на наступний тиждень. Смачного Вам і ганих вихідних! :)', DATE_FORMAT(NOW(),'%Y-%m-%d'))");
+        $stmt->execute([1, 'user']);
+
+        $stmt= $this->db->prepare("UPDATE user SET `reminders`=? WHERE `role`=?");
+        $stmt->execute([1, 'user']);
+
+        $output->writeln("Reminder about order for the next week sent");
     }
 }

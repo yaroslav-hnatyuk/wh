@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\Loader\YamlFileLoader;
 use App\ServicesLoader;
 use App\RoutesLoader;
 use Carbon\Carbon;
@@ -82,6 +83,21 @@ $app->register(new MonologServiceProvider(), array(
     "monolog.level" => $app["log.level"],
     "monolog.name" => "application"
 ));
+
+$app->register(new Silex\Provider\LocaleServiceProvider());
+$app->register(new Silex\Provider\TranslationServiceProvider(), array(
+    'locale' => 'ua',
+    'locale_fallbacks' => array('en', 'ua')
+));
+
+$app->extend('translator', function($translator, $app) {
+    $translator->addLoader('yaml', new YamlFileLoader());
+
+    $translator->addResource('yaml', __DIR__.'/App/Locales/en.yml', 'en');
+    $translator->addResource('yaml', __DIR__.'/App/Locales/ua.yml', 'ua');
+
+    return $translator;
+});
 
 $resources = array(
     'users',

@@ -6,7 +6,7 @@ require __DIR__.'/vendor/autoload.php';
 use Symfony\Component\Console\Application;
  
 try {
-    $dbh = new PDO('mysql:host=127.0.0.1;dbname=wh', 'root', 'wh');
+    $dbh = new PDO('mysql:host=127.0.0.1;dbname=wh;charset=utf8', 'root', 'wh');
 } catch (PDOException $e) {
     print "Error!: " . $e->getMessage() . "<br/>";
     die();

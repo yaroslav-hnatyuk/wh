@@ -16,6 +16,8 @@ class User extends BaseEntity
     public $office_id;
     public $is_feedback_active;
     public $is_active;
+    public $feedback_count;
+    public $reminders;
 
     public function __construct($data)
     {

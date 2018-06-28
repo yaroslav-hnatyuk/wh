@@ -18,7 +18,10 @@
 		"symfony/asset": "^3.4",
 		"symfony/twig-bridge": "^3.4",
 		"symfony/security": "^3.4",
-		"phpoffice/phpspreadsheet": "^1.3"
+		"phpoffice/phpspreadsheet": "^1.3",
+		"symfony/translation": "^3.4",
+		"symfony/config": "^3.4",
+		"symfony/yaml": "^3.4"
 	},
 	"autoload": {
 		"psr-0": {

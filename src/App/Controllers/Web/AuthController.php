@@ -89,6 +89,8 @@ class AuthController
         $user->salt = hash('sha256', md5($data['email'] . uniqid(rand(), TRUE)));
         $user->is_feedback_active = 1;
         $user->is_active = 1;
+        $user->reminders = 0;
+        $user->feedback_count = 0;
         $user->office_id = $office->id;
 
         $this->usersService->save($user->getArray());

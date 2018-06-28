@@ -18,7 +18,9 @@ class ProfileController extends BaseController
         return $this->app['twig']->render("profile/index.twig", array(
             'active' => 'index',
             'userRole' => $this->getUser()->role,
-            'user' => $this->getUser()
+            'user' => $this->getUser(),
+            'reminders_count' => $this->getUser()->reminders,
+            'feedback_count' => $this->getUser()->feedback_count
         ));
     }
 
@@ -46,15 +48,21 @@ class ProfileController extends BaseController
         return $this->app['twig']->render("profile/feedback.twig", array(
             'active' => 'feedback',
             'userRole' => $this->getUser()->role,
-            'dishes' => $dishes
+            'dishes' => $dishes,
+            'reminders_count' => $this->getUser()->reminders,
+            'feedback_count' => $this->getUser()->feedback_count
         ));
     }
 
     public function reminders()
     {
+        $this->app['users.service']->clearReminders($this->getUser()->id);
         return $this->app['twig']->render("profile/reminders.twig", array(
             'active' => 'reminders',
-            'userRole' => $this->getUser()->role
+            'userRole' => $this->getUser()->role,
+            'reminders' => $this->app['reminders.service']->getAll(),
+            'reminders_count' => 0,
+            'feedback_count' => $this->getUser()->feedback_count
         ));
     }
 
@@ -62,7 +70,9 @@ class ProfileController extends BaseController
     {
         return $this->app['twig']->render("profile/promo.twig", array(
             'active' => 'promo',
-            'userRole' => $this->getUser()->role
+            'userRole' => $this->getUser()->role,
+            'reminders_count' => $this->getUser()->reminders,
+            'feedback_count' => $this->getUser()->feedback_count
         ));
     }
 }
