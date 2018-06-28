@@ -119,17 +119,17 @@
                     {% for date, weekday in period.items %}
                         {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
                             <th style="background-color: #e5feefcc;">
-                                <span class="day-name">{{ weekday.day }}</span><br/>
+                                <span class="day-name">{{ weekday.day|trans }}</span><br/>
                                 <span class="day-date">{{ weekday.number }}</span>
                             </th>
                         {% elseif weekday.is_working_day %}
                             <th>
-                                <span class="day-name">{{ weekday.day }}</span><br/>
+                                <span class="day-name">{{ weekday.day|trans }}</span><br/>
                                 <span class="day-date">{{ weekday.number }}</span>
                             </th>
                         {% else %}
                             <th style="background-color: #fff0e3cc;">
-                                <span class="day-name">{{ weekday.day }}</span><br/>
+                                <span class="day-name">{{ weekday.day|trans }}</span><br/>
                                 <span class="day-date">{{ weekday.number }}</span>
                             </th>
                         {% endif %}
