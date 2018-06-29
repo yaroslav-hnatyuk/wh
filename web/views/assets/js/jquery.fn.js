@@ -325,7 +325,7 @@ $(document).ready(function (){
                 method: "GET",
                 contentType:'application/json',
                 success: function (feedback) {
-                    var feedbackHtml = ""
+                    var feedbackHtml = "";
                     for (const item in feedback) {
                         if (feedback.hasOwnProperty(item)) {
                             const data = feedback[item];
@@ -339,7 +339,11 @@ $(document).ready(function (){
                                 '</div>';
                         }
                     }
-                    $("#modal-dish-feedback").html(feedbackHtml);
+                    if (feedbackHtml) {
+                        $("#modal-dish-feedback").html(feedbackHtml);
+                    } else {
+                        $("#modal-dish-feedback").html('Фідбеків не знайдено.');
+                    }
                     $("#myModal").modal();
                 },
                 error: function (error) {
