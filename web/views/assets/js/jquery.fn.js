@@ -152,12 +152,6 @@ $(document).ready(function (){
                     data: JSON.stringify(ordersData),
                     dataType: "json",
                     success: function (result) {
-                        // for (const index in ordersData) {
-                        //     if (ordersData.hasOwnProperty(index)) {
-                        //         const order = ordersData[index];
-                        //         $('.order-cell[data-menu-id="' + order.menu_dish_id + '"][data-day="' + order.day + '"]').val(order.count);
-                        //     }
-                        // }
                         $("#myModal").modal('hide');
                         $(location).attr('href', '/order'); 
                     },
@@ -211,23 +205,6 @@ $(document).ready(function (){
                 dataType: "json",
                 success: function (dishes) {
                     $(location).attr('href', '/dishes');
-                    // for (const index in dishes) {
-                    //     if (dishes.hasOwnProperty(index)) {
-                    //         var dish = dishes[index];
-                    //         if (dish.tmp_id) {
-                    //             var dishTableRow = $('tr[data-tmp-id="' + dish.tmp_id + '"]');
-                    //             dishTableRow.removeAttr('data-tmp-id');
-                    //             dishTableRow. attr('data-dish-id', dish.id);
-                    //             dishTableRow.find('.dish-thumbnail').attr('data-dish-image', dish.id);
-                    //         }
-                    //     }
-                    // }
-                    // spop({
-                    //     template: 'Зміни успішно збережені!',
-                    //     position  : 'top-left',
-                    //     style: 'success',
-                    //     autoclose: 6000
-                    // });
                 },
                 error: function (error) {
                     spop({
@@ -269,7 +246,6 @@ $(document).ready(function (){
                 data: JSON.stringify(data),
                 dataType: "json",
                 success: function (dish) {
-                    console.log(dish);
                     var menuRow = $('tr[data-dish-id="' + dish.dish_id + '"]');
                     menuRow.attr('data-menu-id', dish.id);
                     callback();
@@ -454,7 +430,6 @@ $(document).ready(function (){
                 dataType: "json",
                 contentType:'application/json',
                 success: function (resp) {
-                    console.log(resp);
                     $(location).attr('href', '/dishes');
                 },
                 error: function (error) {
@@ -495,7 +470,6 @@ $(document).ready(function (){
                 dataType: "json",
                 contentType:'application/json',
                 success: function (resp) {
-                    console.log(resp);
                     $(location).attr('href', '/companies');
                 },
                 error: function (error) {

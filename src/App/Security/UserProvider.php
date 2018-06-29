@@ -21,7 +21,7 @@ class UserProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
         $stmt = $this->conn->executeQuery(
-            "SELECT * FROM user WHERE SHA2(CONCAT(email, 'bAziNgA', `role`, salt), 256) = ?", array($username)
+            "SELECT * FROM user WHERE SHA2(CONCAT(email, 'bAziNgA', `role`, salt), 256) = ? AND is_active = 1", array($username)
         );
 
         if (!$user = $stmt->fetch()) {
