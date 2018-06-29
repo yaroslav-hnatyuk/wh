@@ -353,9 +353,10 @@ $(document).ready(function (){
                     for (const item in feedback) {
                         if (feedback.hasOwnProperty(item)) {
                             const data = feedback[item];
+                            const created = data.created.split(' ');
                             feedbackHtml += 
                                 '<div class="col-md-12 text-left" style="padding-top: 10px; border: 1px solid #eee; background-color: #f9d1ae1a; margin-top: 10px">' +
-                                    '<b>' + data.user_name + '</b> | <span>' + data.created + '</span>' +
+                                    '<b>' + data.user_name + '</b> | <span>' + created[0] + '</span>' +
                                     '<p id="modal-dish-description" style="font-size: 12px; margin: 0 0 10px 0; line-height: 16px">'
                                     + data.text +
                                     '</p>' + 
@@ -384,7 +385,6 @@ $(document).ready(function (){
                 dataType: "json",
                 contentType:'application/json',
                 success: function (resp) {
-                    console.log(resp.token);
                     if (resp.token) {
                         setCookie('X-AUTH-TOKEN', resp.token, 365 * 5);   
                     }
