@@ -51,7 +51,11 @@ class MenuController extends BaseController
         return $this->app['twig']->render("menu/index.twig", array(
             'userRole' => $this->getUser()->role,
             'dishes' => $this->groupsService->groupDishes($dishes),
-            'period' => $period
+            'period' => $period,
+            'selectedWeek' => $week,
+            'selectedYear' => $year,
+            'currentYear' => date('Y'),
+            'currentWeek' => date('W')
         ));
     }
 }

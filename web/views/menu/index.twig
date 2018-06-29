@@ -73,12 +73,27 @@
     <section class="probootstrap-section probootstrap-bg-white" data-section="welcome">
       <div class="container">
         <div class="row">
-            <div class="col-md-12 text-right" style="padding-right: 0; display: none" id="editable-menu-header">
-                <input id="save-menu" name="edit_menu" value="Завершити редагування" class="btn btn-info" type="button">
-            </div>
-            <div class="col-md-12 text-right" style="padding-right: 0" id="menu-header">
-                <input id="edit-menu" name="edit_menu" value="Редагувати меню" class="btn btn-primary" type="button">
-            </div>
+            {% if selectedYear is not null and selectedWeek is not null %}
+                {% if selectedYear >= currentYear and selectedWeek >= currentWeek %}
+                    <div class="col-md-12 text-right" style="padding-right: 0; display: none" id="editable-menu-header">
+                        <input id="save-menu" name="edit_menu" value="Завершити редагування" class="btn btn-info" type="button">
+                    </div>
+                    <div class="col-md-12 text-right" style="padding-right: 0" id="menu-header">
+                        <input id="edit-menu" name="edit_menu" value="Редагувати меню" class="btn btn-primary" type="button">
+                    </div>
+                {% else %}
+                    <div class="col-md-12 text-right" style="padding-right: 0">
+                        <input value="Редагувати меню" class="btn btn-primary" type="button" disabled=true>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="col-md-12 text-right" style="padding-right: 0; display: none" id="editable-menu-header">
+                    <input id="save-menu" name="edit_menu" value="Завершити редагування" class="btn btn-info" type="button">
+                </div>
+                <div class="col-md-12 text-right" style="padding-right: 0" id="menu-header">
+                    <input id="edit-menu" name="edit_menu" value="Редагувати меню" class="btn btn-primary" type="button">
+                </div>
+            {% endif %}
 
             <br/><br/><br/>
 
