@@ -14,6 +14,11 @@ class UsersService extends BaseService
         return $user->getArray();
     }
 
+    public function findOne($id)
+    {
+        return $this->db->fetchAssoc("SELECT * FROM user WHERE id=?", [(int) $id]);
+    }
+
     public function getByEmail($email) 
     {
         $data = $this->db->fetchAssoc("SELECT * FROM user WHERE email=?", [$email]);

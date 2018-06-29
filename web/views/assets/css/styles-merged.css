@@ -10982,3 +10982,7 @@ hr.bottom-table-border {
 .btn-group .week-2weeks-toggle-active {
   background-color: #eee;
 }
+
+.feedback-link {
+  cursor: pointer;
+}

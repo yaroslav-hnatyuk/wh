@@ -21,7 +21,9 @@ class FeedbackService extends BaseService
 
     public function getAllByDishId($dishId) 
     {
-        return $this->db->fetchAll("SELECT * FROM `feedback` WHERE dish_id=?", [(int) $dishId]);
+        return $this->db->fetchAll(
+            "SELECT feedback.*, CONCAT(user.first_name, ' ', user.last_name) as user_name FROM `feedback`, `user` WHERE feedback.user_id = `user`.id AND dish_id=? ORDER BY created ASC", 
+            [(int) $dishId]);
     }
 
     public function getAll()

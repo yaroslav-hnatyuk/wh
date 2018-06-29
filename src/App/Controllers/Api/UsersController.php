@@ -29,8 +29,14 @@ class UsersController extends BaseController
             'email' => $request->request->get('email')
         );
         
+        $token = null;
+        $user = $this->usersService->findOne($this->getUser()->id);
+        if ($user && $this->usersService->updatePersonalData($userData)) {
+            $token = hash('sha256', $userData['email'] . 'bAziNgA' . $user['role'] . $user['salt']);
+        }
+
         return new JsonResponse(
-            $this->usersService->updatePersonalData($userData)
+            array('token' => $token)
         );
     }
 

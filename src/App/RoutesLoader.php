@@ -59,6 +59,7 @@ class RoutesLoader
         $api->post("/dishes/upload/{id}", "dishes.controller:upload");
         $api->get("/settings", "settings.controller:getAll");
         $api->post("/settings", "settings.controller:save");
+        $api->get("/feedback/dish/{id}", "feedback.controller:dish");
     }
 
     private function bindWebRoutes($web) 

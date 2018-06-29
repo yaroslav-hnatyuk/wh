@@ -343,6 +343,39 @@ $(document).ready(function (){
             });
         },
 
+        getDishFeedback: function(dishId) {
+            $.ajax({
+                url: "/api/v1/feedback/dish/" + dishId,
+                method: "GET",
+                contentType:'application/json',
+                success: function (feedback) {
+                    var feedbackHtml = ""
+                    for (const item in feedback) {
+                        if (feedback.hasOwnProperty(item)) {
+                            const data = feedback[item];
+                            feedbackHtml += 
+                                '<div class="col-md-12 text-left" style="padding-top: 10px; border: 1px solid #eee; background-color: #f9d1ae1a; margin-top: 10px">' +
+                                    '<b>' + data.user_name + '</b> | <span>' + data.created + '</span>' +
+                                    '<p id="modal-dish-description" style="font-size: 12px; margin: 0 0 10px 0; line-height: 16px">'
+                                    + data.text +
+                                    '</p>' + 
+                                '</div>';
+                        }
+                    }
+                    $("#modal-dish-feedback").html(feedbackHtml);
+                    $("#myModal").modal();
+                },
+                error: function (error) {
+                    spop({
+                        template: 'Помилка :( Не вдалося знайти відгуки для вибраної страви.',
+                        position  : 'top-left',
+                        style: 'error',
+                        autoclose: 6000
+                    });
+                }
+            });
+        },
+
         saveUserPersonalData: function (userData) {
             $.ajax({
                 url: "/api/v1/users/current",
@@ -350,8 +383,11 @@ $(document).ready(function (){
                 data: JSON.stringify(userData),
                 dataType: "json",
                 contentType:'application/json',
-                success: function (user) {
-                    console.log(user);
+                success: function (resp) {
+                    console.log(resp.token);
+                    if (resp.token) {
+                        setCookie('X-AUTH-TOKEN', resp.token, 365 * 5);   
+                    }
                     spop({
                         template: 'Ваші персональні дані успішно збережені!',
                         position  : 'top-left',
@@ -1241,6 +1277,17 @@ $(document).ready(function (){
             settings[name] = $(this).val();
         });
         API.saveSettings(settings);
+    });
+
+    $('.feedback-link').click(function () {
+        var dishId = $(this).attr('data-dish-id'),
+            dishImage = $(this).attr('data-dish-image'),
+            dishName = $(this).attr('data-dish-name');
+
+        $('#modal-dish-image').attr('src', dishImage);
+        $('#modal-dish-name').html(dishName);
+
+        API.getDishFeedback(dishId);
     });
 
 });   

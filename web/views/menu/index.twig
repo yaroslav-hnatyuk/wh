@@ -22,6 +22,36 @@
   </head>
   <body>
 
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog" style="width: 765px; margin: 5% auto">
+    
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body" style="float: left; padding: 35px 10px 20px 20px; margin: 0;">
+                <div class="col-md-6">
+                    <img style="width: 338px" id="modal-dish-image" src="/views/assets/dishes/38.jpg?version=v1"/>
+                </div> 
+                <div class="col-md-6 col-sm-6 text-left" style="font-size: 13px; font-weight: normal">
+                    <div class="col-md-12 text-left" style="padding-left: 0">
+                        <h3 style="padding: 0; margin: 0;" id="modal-dish-name">Борщ</h3>
+                    </div>
+                    <div class="col-md-12" id="modal-dish-feedback" style="padding: 0px; overflow: auto; height: 250px">
+                      
+                    </div>
+                    <div class="col-md-12 text-left" style="margin-top: 10px; padding-left: 0px">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" style="border: 1px solid #ccc">Закрити</button>
+                    </div>
+                </div>            
+            </div>
+            <div class="modal-footer" style="margin: 0; visibility: hidden;">
+                <!--  -->
+            </div>
+        </div>
+        
+    </div>
+    </div>
+
     <!-- Fixed navbar -->
     
     <nav class="navbar navbar-default navbar-fixed-top probootstrap-navbar scrolled">
@@ -56,6 +86,7 @@
                 <tr class="wh-head">
                     <th>  
                         <ul class="pager">
+                            <li><a href="/menu" class="btn btn-default" style="color: rgba(0, 0, 0, 0.7);"><b>Сьогодні</b></a></li>
                             <li><a href="/menu?year={{period.prev.year}}&week={{period.prev.week}}" class="btn"><</a></li>
                             <li class="date-range" data-start="{{ period.start.date }}" data-end="{{ period.end.date }}">{{ period.start.day }} - {{ period.end.day }}</li>
                             <li><a href="/menu?year={{period.next.year}}&week={{period.next.week}}" class="btn">></a></li>
@@ -74,7 +105,7 @@
                 </tr>
                 {% for dish in group.dishes %}
                 <tr class="menu-item" data-dish-id={{ dish.id }} data-menu-id="{{ dish.menu.menu_id }}" {% if dish.menu.menu_id is not defined %} {{'style="display: none"'}} {% endif %}>
-                    <th class="wh-name">{{ dish.name }}</th>
+                    <th class="wh-name feedback-link" data-dish-id="{{dish.id}}" data-dish-name="{{dish.name}}" data-dish-image="{{ asset('assets/dishes/' ~ dish.id ~ '.jpg') }}">{{ dish.name }}</th>
                     <th class="wh-rating">
                       <div>
                         {% for i in 1..5 %}
@@ -86,7 +117,7 @@
                         {% endfor %}
                       </div>
                     </th>
-                    <th class="wh-reviews"><a>відгуків: {{dish.feedback_count}}</a></th>
+                    <th class="wh-reviews"><a class="feedback-link" data-dish-id="{{dish.id}}" data-dish-name="{{dish.name}}" data-dish-image="{{ asset('assets/dishes/' ~ dish.id ~ '.jpg') }}">відгуків: {{dish.feedback_count}}</a></th>
                     <th class="wh-actions menu-action" style="display: none">
                       <label class="switch">
                         <input type="checkbox" {% if dish.menu is defined %} {{'checked=true'}} {% endif %}>
