@@ -103,7 +103,7 @@ $(document).ready(function (){
                         data: JSON.stringify(ordersData),
                         dataType: "json",
                         success: function (result) {
-                            $(location).attr('href', '/order');
+                            $(location).attr('href', location.href);
                         },
                         error: function (error) {
                             spop({
@@ -153,7 +153,7 @@ $(document).ready(function (){
                     dataType: "json",
                     success: function (result) {
                         $("#myModal").modal('hide');
-                        $(location).attr('href', '/order'); 
+                        $(location).attr('href', location.href);
                     },
                     error: function (error) {
                         spop({
