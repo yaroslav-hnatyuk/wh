@@ -297,8 +297,8 @@ $(document).ready(function (){
                     $("#modal-dish-image").attr('src', '/views/assets/dishes/' + dishId + '.jpg');
                     $("#modal-dish-description").html(dish.description);
                     $("#modal-dish-reviews-count").html(dish.reviews_count);
-                    let rating = "";
-                    for (let i = 1; i <= 5; i++) {
+                    var rating = "";
+                    for (var i = 1; i <= 5; i++) {
                         if (dish.rating >= i) {
                             rating = '<span style="color: #FFA33E;">&#9733;</span>' + rating;
                         } else {
@@ -326,10 +326,10 @@ $(document).ready(function (){
                 contentType:'application/json',
                 success: function (feedback) {
                     var feedbackHtml = "";
-                    for (const item in feedback) {
+                    for (var item in feedback) {
                         if (feedback.hasOwnProperty(item)) {
-                            const data = feedback[item];
-                            const created = data.created.split(' ');
+                            var data = feedback[item];
+                            var created = data.created.split(' ');
                             feedbackHtml += 
                                 '<div class="col-md-12 text-left" style="padding-top: 10px; border: 1px solid #eee; background-color: #f9d1ae1a; margin-top: 10px">' +
                                     '<b>' + data.user_name + '</b> | <span>' + created[0] + '</span>' +
@@ -628,9 +628,9 @@ $(document).ready(function (){
         var disabledCount = 0;
 
         $(this).parent().parent().parent().find(".order-cell").each(function(  ) {
-            let day = $(this).attr('data-day');
-            let menuId = $(this).attr('data-menu-id');
-            let count = $(this).val();
+            var day = $(this).attr('data-day');
+            var menuId = $(this).attr('data-menu-id');
+            var count = $(this).val();
             $('input[data-modal-dish-day="' + day + '"]').val(count);
             $('input[data-modal-dish-day="' + day + '"]').attr('data-modal-menu-id', menuId);
             
