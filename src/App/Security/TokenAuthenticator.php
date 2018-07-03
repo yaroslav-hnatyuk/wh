@@ -88,6 +88,8 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
+        return new RedirectResponse('/login');
+        
         if (!isMobile()) {
             return new RedirectResponse('/login');
         }
