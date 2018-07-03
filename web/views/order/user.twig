@@ -190,7 +190,7 @@
             </table>
 
             {% for group in menu %}
-                <table class="table order-table" style="cursor: pointer; width: 100%; margin: 0px">
+                <table class="table order-table" style="cursor: pointer; width: 100%; margin: 0px; min-width: 1170px;">
                     <tr class="group-header" data-group-id="{{group.group_id}}">
                         <th><b style="text-transform: uppercase;">{{ group.group_name}}</b></th>
                         {% for date, weekday in period.items %}
@@ -204,7 +204,7 @@
                         {% endfor %}
                     </tr>
                 </table>
-                <table class="dish-list table order-table user group-{{ group.group_id }}" style="margin: 0px">
+                <table class="dish-list table order-table user group-{{ group.group_id }}" style="margin: 0px; min-width: 1170px;">
                     {% for dish in group.dishes %}
                     <tr>
                         <th style="padding-left: 40px;">
@@ -273,7 +273,7 @@
                 </table>
             {% endfor %}
             <hr class="bottom-table-border"/>
-            <table class="dish-list table order-table" id="salads-list"  style="margin: 0px; border: 0;">
+            <table class="dish-list table order-table" id="salads-list"  style="margin: 0px; border: 0; min-width: 1170px;">
             <tr style=" border: 0;">
                 <th style="text-align: right; padding-right: 20px; border: 0; position: relative">
                     Всього: <b>{{ totalPriceInfo.total_price_with_discount }} грн</b>
