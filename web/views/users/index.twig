@@ -74,14 +74,14 @@
                 </form>
             </div>
             <div class="col-md-5 text-right" style="padding-right: 0">
-                {# <input id="add-new user" name="add_new user" value="Створити менеджера або адміна" class="btn btn-primary" type="button"> #}
+                <input id="add-new-admin-moder" name="add_new_user_moder" value="Створити менеджера або адміна" class="btn btn-primary" type="button">
             </div>
             
             <br/><br/><br/>
 
             <ul class="nav nav-tabs users-tabs" style="border-bottom: 0">
               <li data-tab="users" class="active"><a data-tab="users" href="#">Користувачі</a></li>
-              <li data-tab="stuff"><a class="users-tab" data-tab="stuff" href="#">Менеджери і Адміністратори</a></li>
+              <li id="users-stuff-tab" data-tab="stuff"><a class="users-tab" data-tab="stuff" href="#">Менеджери і Адміністратори</a></li>
             </ul>
 
             <table id="users" class="table wh-table" style="width: 100%; margin: 0px">
@@ -115,18 +115,35 @@
             </table>
 
             <table id="stuff" class="table wh-table" style="width: 100%; margin: 0px; display: none">
-              <tr class="wh-head">
+              <tr class="wh-head stuff-table-row">
                 <th>Імя</th>
                 <th>Email</th>
                 <th>Роль</th>
               </tr>
             {% for member in stuff %}
-              <tr data-user-id={{ member.user_id }}>
+              <tr class="stuff-table-row" data-user-id={{ member.user_id }}>
                 <th>{{ member.user_name }}</th>
                 <th>{{ member.email }}</th>
                 <th>{{ member.role }}</th>
               </tr>
             {% endfor %}
+              <tr class="new-moder-admin-row" style="display: none">
+                <th style="width: 400px">
+                  <input style="width: 45%" class="moder-admin-first-name" type="text" name="first_name" placeholder="Імя..."/>
+                  <input style="width: 45%" class="moder-admin-last-name" type="text" name="last_name" placeholder="Прізвище..."/>
+                </th>
+                <th>
+                  <input style="width: 45%" class="moder-admin-email" type="text" name="email" placeholder="Email..."/>
+                  <input style="width: 45%" class="moder-admin-pass" type="password" name="pass" placeholder="Пароль..."/>
+                </th>
+                <th style="position: relative">
+                  <select class="moder-admin-role">
+                    <option value="manager">Менеджер</option>
+                    <option value="admin">Адміністратор</option>
+                  </select>
+                  <input class="moder-admin-actions-confirm" type="button" value="&#10003;">
+                </th>
+              </tr>
             </table>
 
             <hr class="bottom-table-border"/>

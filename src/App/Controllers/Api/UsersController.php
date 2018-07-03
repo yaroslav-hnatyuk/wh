@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Controllers\BaseController;
 use Silex\Application;
+use App\Entities\User;
 
 class UsersController extends BaseController
 {
@@ -16,6 +17,27 @@ class UsersController extends BaseController
     {
         $this->app = $app;
         $this->usersService = $service;
+    }
+
+    public function save(Request $request)
+    {
+        $this->checkPermissions(array('admin'));
+
+        $data = $request->request->all();
+        $user = new User($data);
+
+        $user->phone = 'n/a';
+        $user->pass = password_hash($data['pass'], PASSWORD_BCRYPT);
+        $user->salt = hash('sha256', md5($data['email'] . uniqid(rand(), TRUE)));
+        $user->is_feedback_active = 1;
+        $user->is_active = 1;
+        $user->reminders = 0;
+        $user->feedback_count = 0;
+        $user->office_id = null;
+
+        return new JsonResponse(
+            $this->usersService->save($user->getArray())
+        );
     }
 
     public function saveCurrent(Request $request)

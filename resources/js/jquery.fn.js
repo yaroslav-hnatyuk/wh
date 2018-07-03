@@ -529,6 +529,33 @@ $(document).ready(function (){
             });
         },
 
+        saveUser: function (user) {
+            $.ajax({
+                url: "/api/v1/users",
+                method: "POST",
+                data: JSON.stringify(user),
+                dataType: "json",
+                contentType:'application/json',
+                success: function (resp) {
+                    spop({
+                        template: 'Дані успішно збережені!',
+                        position  : 'top-left',
+                        style: 'success',
+                        autoclose: 6000
+                    });
+                    setTimeout(function() { $(location).attr('href', '/users'); }, 1000);
+                },
+                error: function (error) {
+                    spop({
+                        template: 'Сталася помилка при збереженні :( Перевірте будь-ласка правильність введених даних.',
+                        position  : 'top-left',
+                        style: 'error',
+                        autoclose: 6000
+                    });
+                }
+            });
+        },
+
         saveFeedback: function (feedback) {
             $.ajax({
                 url: "/api/v1/feedback",
@@ -1253,6 +1280,24 @@ $(document).ready(function (){
         $('#modal-dish-name').html(dishName);
 
         API.getDishFeedback(dishId);
+    });
+
+    $('#add-new-admin-moder').click(function () {
+        $('#users-stuff-tab').click();
+        $('.new-moder-admin-row').css('display', 'table-row');
+    });
+
+    $(".moder-admin-actions-confirm").click(function () {
+        var user = {
+            first_name: $('.moder-admin-first-name').val(),
+            last_name: $('.moder-admin-last-name').val(),
+            email: $('.moder-admin-email').val(),
+            role: $('.moder-admin-role').val(),
+            pass: $('.moder-admin-pass').val()
+        };
+
+        API.saveUser(user);
+
     });
 
 });   

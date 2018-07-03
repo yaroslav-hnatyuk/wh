@@ -10954,6 +10954,16 @@ hr.bottom-table-border {
   width: 25px;
 }
 
+.wh-table tr th input.moder-admin-actions-confirm {
+  position: absolute;
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  background-color: #4CAF50;
+  color: #fff;
+  right: 10px;
+}
+
 .order-cell:disabled {
   cursor: not-allowed;
   background: #fff;
