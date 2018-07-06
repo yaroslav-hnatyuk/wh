@@ -245,8 +245,8 @@
                                         </th>
                                     {% endif %}
                                 {% else %}
-                                    <th class="disabled-cell" style="cursor: not-allowed">
-                                        <input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" disabled=true/>
+                                    <th class="disabled-cell" style="cursor: not-allowed; background-color: #f6f6f6">
+                                        <input class="order-cell" style="background-color: #f6f6f6; color: #aaa;" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" disabled=true/>
                                         <span class="orders-not-allowed-tooltip">Замовлення на цей період закриті</span>
                                     </th>
                                 {% endif %}
@@ -262,9 +262,15 @@
                                         </th>
                                     {% endif %}
                                 {% elseif order.available == false %}
-                                    <th class="disabled-cell" style="background-color: #efefef4d; color: #ccc; cursor: not-allowed">
-                                        <span class="orders-not-allowed-tooltip">Страва недоступна для замовлень на цей період</span>
-                                    </th>
+                                    {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
+                                        <th class="disabled-cell" style="background-color: #e5feef80; color: #ccc; cursor: not-allowed">
+                                            <span class="orders-not-allowed-tooltip">Страва недоступна для замовлень на цей період</span>
+                                        </th>
+                                    {% else %}
+                                        <th class="disabled-cell" style="background-color: #f6f6f6; color: #ccc; cursor: not-allowed">
+                                            <span class="orders-not-allowed-tooltip">Страва недоступна для замовлень на цей період</span>
+                                        </th>
+                                    {% endif %}
                                 {% endif %}    
                             {% endif %}
                         {% endfor %}
