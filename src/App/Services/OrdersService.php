@@ -258,7 +258,6 @@ class OrdersService extends BaseService
             $workingDaysByWeeks = $this->getWokringDaysForPeriod($period);
             foreach ($workingDaysByWeeks as $week => $workingDaysCount) {
                 foreach ($totalPriceInfo['total_weekly'] as $userId => $weeks) {
-                    // if (!isset($totalPriceInfo['total_weekly_discount'][$userId])) $totalPriceInfo['total_weekly_discount'][$userId] = 0;
                     if ($workingDaysCount === $weeks[$week]['days_with_orders']) {
                         $totalPriceInfo['total_user_weekly_discount'][$userId] += $weeks[$week]['discount'];
                     }
@@ -276,8 +275,9 @@ class OrdersService extends BaseService
                 foreach ($users as $userId => $total) {
                     $lunchDiscount = 0;
                     if (isset($total['lunch']['groups'])) {
-                        $minOrder = min(array_column($total['lunch']['groups'], 'day_count'));
+                        $minOrder = 0;
                         if ($lunchGroupsCount === count($total['lunch']['groups'])) {
+                            $minOrder = min(array_column($total['lunch']['groups'], 'day_count'));
                             foreach ($total['lunch']['groups'] as $groupId => $orderInfo) {
                                 $dishPrice = round($orderInfo['day_price'] / $orderInfo['day_count']);
                                 $lunchDiscount += round($dishPrice * $minOrder * $discount);
