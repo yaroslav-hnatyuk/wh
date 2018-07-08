@@ -87,11 +87,6 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group" style="width: 160px; float: left; margin-right: 5px">
-                        <div class="form-field">
-                            <a href="/export?year={{year}}&week={{week}}" class="btn btn-primary">Експорт в XLS</a>
-                        </div>
-                    </div>
                 </form>
             </div>
             <div class="col-md-3 text-right" style="padding-right: 0">
@@ -260,6 +255,26 @@
                 <th style="color: #aaa; border: 0"></th>
             </tr>
             </table>
+            <div class="row">
+                <div class="col-md-12 text-left" >
+                    <div class="probootstrap-form" style="margin: 0">
+                        <div class="form-group" style="width: 180px; float: left; margin-right: 5px">
+                            <div class="form-field">
+                                <i class="icon icon-chevron-down"></i>
+                                <select name="export_period" class="form-control" style="height: 35px;">
+                                    <option value="period">Вибраний період</option>
+                                    <option value="tomorrow">Наступний день</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" style="width: 160px; float: left; margin-right: 5px">
+                            <div class="form-field">
+                                <a href="/export?year={{year}}&week={{week}}" class="btn btn-primary">Експорт в XLS</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
       </div>
     </section>
 
