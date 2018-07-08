@@ -42,16 +42,16 @@ class OrdersService extends BaseService
     function saveUserOrders($userId, $orders)
     {
         $settingOrderHour = $this->getSettingByName('order_hour');
-        $maxOrderHour = $settingOrderHour ? $settingOrderHour['value'] : 0;
+        $maxOrderHour = $settingOrderHour ? (int)$settingOrderHour['value'] : 0;
 
         $this->db->beginTransaction();
         try {
-            $today = strtotime(date('Y-m-d'));
-            $hour = date('H');
+            $tomorrow = strtotime('tomorrow');
+            $hour = (int)date('G');
             foreach ($orders as $orderData) {
                 $orderTime =  strtotime($orderData['day']);
-                if ($orderTime >= $today) {
-                    if ($orderTime === $today && $hour > $maxOrderHour) {
+                if ($orderTime >= $tomorrow) {
+                    if ($orderTime === $tomorrow && $hour >= $maxOrderHour) {
                         continue;
                     }
                     $order = $this->getByMenuAndUserAndDay($userId, $orderData['menu_dish_id'], $orderData['day']);

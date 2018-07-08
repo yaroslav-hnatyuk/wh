@@ -22,6 +22,9 @@
   </head>
   <body>
 
+    {% set tomorrow = 'now'|date_modify("+1 day")|date('Y-m-d') %}
+    {% set today = "now"|date('Y-m-d') %}
+    {% set currentHour = "now"|date('H') %}
 
     <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog" style="width: 765px; margin: 5% auto">
@@ -56,7 +59,7 @@
                             <tr style="background-color:#efefef;">
                                 {% for date, weekday in period.items %}
                                     {% if loop.index <= 7 %}
-                                        {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
+                                        {% if today == date|date('Y-m-d') %}
                                             <th class="wh-display-cell" style="background-color: #e5feefcc;">
                                                 <span class="day-name">{{ weekday.day|trans }}</span><br/>
                                                 <span class="day-date">{{ weekday.number }}</span>
@@ -78,18 +81,18 @@
                             <tr>
                                 {% for date, weekday in period.items %}
                                     {% if loop.index <= 7 %}
-                                        {% if "now"|date('Y-m-d') > date|date('Y-m-d') %}
-                                            <th class="wh-display-cell" style="cursor: not-allowed">
-                                                <input class="modal-order-cell" style="background-color: #fff; cursor: not-allowed" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value="" disabled=true/>
+                                        {% if tomorrow > date|date('Y-m-d') %}
+                                            <th class="wh-display-cell" style="cursor: not-allowed; background-color: #f6f6f6;">
+                                                <input class="modal-order-cell" style="background-color: #f6f6f6; cursor: not-allowed" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value="" disabled=true/>
                                             </th>
-                                        {% elseif "now"|date('Y-m-d') == date|date('Y-m-d') %}
-                                            {% if "now"|date('H') < orderHour %}
-                                                <th class="wh-display-cell" style="background-color: #e5feefcc;">
-                                                    <input class="modal-order-cell" style="background-color: #e5feefcc;" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value=""/>
+                                        {% elseif tomorrow == date|date('Y-m-d') %}
+                                            {% if currentHour < orderHour %}
+                                                <th class="wh-display-cell">
+                                                    <input class="modal-order-cell" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value=""/>
                                                 </th>
                                             {% else %}
-                                                <th class="wh-display-cell" style="background-color: #e5feefcc; cursor: not-allowed">
-                                                    <input class="modal-order-cell" style="background-color: #e5feefcc;  cursor: not-allowed" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value="" disabled=true/>
+                                                <th class="wh-display-cell" style="background-color: #f6f6f6; cursor: not-allowed">
+                                                    <input class="modal-order-cell" style="background-color: #f6f6f6;  cursor: not-allowed" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value="" disabled=true/>
                                                 </th>
                                             {% endif %}
                                         {% elseif weekday.is_working_day %}
@@ -229,19 +232,20 @@
                             </a>
                         </div>
                         </th>
+
                         {% for date, order in dish.orders %}
                             {% if order.available and order.is_working_day %}
-                                {% if "now"|date('Y-m-d') < date|date('Y-m-d') %}
+                                {% if tomorrow < date|date('Y-m-d') %}
                                     <th><input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/></th>
-                                {% elseif "now"|date('Y-m-d') == date|date('Y-m-d') %}
-                                    {% if "now"|date('H') < orderHour %}
-                                        <th style="background-color: #e5feef80;">
-                                            <input style="background-color: #e5feef4d;" class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/>
+                                {% elseif tomorrow == date|date('Y-m-d') %}
+                                    {% if currentHour < orderHour %}
+                                        <th>
+                                            <input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/>
                                         </th>
                                     {% else %}
-                                        <th class="disabled-cell" style="background-color: #e5feef80; cursor: not-allowed">
-                                            <input style="background-color: #e5feef4d;" class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" disabled=true/>
-                                            <span class="orders-not-allowed-tooltip">Замовлення можна здійснювати до <b>{{orderHour}}</b> години</span>
+                                        <th class="disabled-cell" style="background-color: #f6f6f6; cursor: not-allowed">
+                                            <input style="background-color: #f6f6f6;" class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" disabled=true/>
+                                            <span class="orders-not-allowed-tooltip">Замовлення доступні до <b>{{orderHour}}</b> години</span>
                                         </th>
                                     {% endif %}
                                 {% else %}
@@ -252,7 +256,7 @@
                                 {% endif %}
                             {% else %}
                                 {% if order.is_working_day == false %}
-                                    {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
+                                    {% if today == date|date('Y-m-d') %}
                                         <th class="disabled-cell" style="background-color: #e5feef80">
                                             <span class="orders-not-allowed-tooltip">Вихідний день або державне свято</span>
                                         </th>
@@ -262,9 +266,9 @@
                                         </th>
                                     {% endif %}
                                 {% elseif order.available == false %}
-                                    {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
+                                    {% if today == date|date('Y-m-d') %}
                                         <th class="disabled-cell" style="background-color: #e5feef80; color: #ccc; cursor: not-allowed">
-                                            <span class="orders-not-allowed-tooltip">Страва недоступна для замовлень на цей період</span>
+                                            <span class="orders-not-allowed-tooltip">Замовлення на наступний день доступні до <b>{{orderHour}}</b> години</span>
                                         </th>
                                     {% else %}
                                         <th class="disabled-cell" style="background-color: #f6f6f6; color: #ccc; cursor: not-allowed">
