@@ -249,10 +249,17 @@
                                         </th>
                                     {% endif %}
                                 {% else %}
-                                    <th class="disabled-cell" style="cursor: not-allowed; background-color: #f6f6f6">
-                                        <input class="order-cell" style="background-color: #f6f6f6; color: #aaa;" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" disabled=true/>
-                                        <span class="orders-not-allowed-tooltip">Замовлення на цей період закриті</span>
-                                    </th>
+                                    {% if today == date|date('Y-m-d') %}
+                                        <th class="disabled-cell" style="cursor: not-allowed; background-color: #e5feef80">
+                                            <input class="order-cell" style="background-color: #e6fff000; color: #aaa;" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" disabled=true/>
+                                            <span class="orders-not-allowed-tooltip">Замовлення на наступний день доступні до <b>{{orderHour}}</b> години</span>
+                                        </th>
+                                    {% else %}
+                                        <th class="disabled-cell" style="cursor: not-allowed; background-color: #f6f6f6">
+                                            <input class="order-cell" style="background-color: #f6f6f6; color: #aaa;" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" disabled=true/>
+                                            <span class="orders-not-allowed-tooltip">Замовлення на цей період закриті</span>
+                                        </th>      
+                                    {% endif %}
                                 {% endif %}
                             {% else %}
                                 {% if order.is_working_day == false %}
