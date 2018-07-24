@@ -34,6 +34,7 @@ class OrdersController extends BaseController
     {
         $week = $request->query->get('week');
         $year = $request->query->get('year');
+        $nextday = $request->query->get('nextday');
 
         $company = $this->app['session']->get('filter_company');
         $office = $this->app['session']->get('filter_office');
@@ -41,12 +42,16 @@ class OrdersController extends BaseController
         $filterPeriod = $this->app['session']->get('filter_period') ?: FiltersController::FILTER_PERIOD_WEEK;
         $period = $this->ordersService->getPeriodForYearAndWeek($year, $week, $filterPeriod);
 
+        if ($nextday) {
+            $tomorrow = date('Y-m-d',strtotime("tomorrow"));
+        }
+
         $filters = array(
             'company' => $company,
             'office' => $office,
             'user' => $user,
-            'start_date' => $period['start']['date'],
-            'end_date' => $period['end']['date']
+            'start_date' => $nextday ? $tomorrow : $period['start']['date'],
+            'end_date' => $nextday ? $tomorrow : $period['end']['date']
         );
 
         $menu = $this->menuService->getForPeriodForOrders($period);
@@ -58,8 +63,8 @@ class OrdersController extends BaseController
         $this->app['export.service']->createXlsReport($menu, $users, $totalByUsers, $totalPriceInfo, array(
             'company' => $this->app['companies.service']->findOne($company),
             'office' => $this->app['offices.service']->findOne($office),
-            'start_date' => $period['start']['date'],
-            'end_date' => $period['end']['date']
+            'start_date' => $nextday ? $tomorrow : $period['start']['date'],
+            'end_date' => $nextday ? $tomorrow : $period['end']['date']
         ));
     }
 
