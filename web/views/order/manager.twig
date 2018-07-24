@@ -48,7 +48,7 @@
     </nav>
 
     <section class="probootstrap-section probootstrap-bg-white" data-section="welcome">
-      <div class="container">
+      <div class="container" style="margin-top: 30px">
         <div class="row">
             <div class="col-md-9 text-left" style="padding-left: 0">
                 <form id="order-filters" class="probootstrap-form" style="margin: 0" methos="GET" action="/filters">
@@ -261,15 +261,20 @@
                         <div class="form-group" style="width: 180px; float: left; margin-right: 5px">
                             <div class="form-field">
                                 <i class="icon icon-chevron-down"></i>
-                                <select name="export_period" class="form-control" style="height: 35px;">
+                                <select id="select-export-type" name="export_period" class="form-control" style="height: 35px;">
                                     <option value="period">Вибраний період</option>
                                     <option value="tomorrow">Наступний день</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group" style="width: 160px; float: left; margin-right: 5px">
+                        <div id="export-selected-period-button" class="form-group" style="width: 160px; float: left; margin-right: 5px; display: block">
                             <div class="form-field">
                                 <a href="/export?year={{year}}&week={{week}}" class="btn btn-primary">Експорт в XLS</a>
+                            </div>
+                        </div>
+                        <div id="export-nextday-button" class="form-group" style="width: 160px; float: left; margin-right: 5px; display: none">
+                            <div class="form-field">
+                                <a href="/export?nextday=1" class="btn btn-primary">Експорт в XLS</a>
                             </div>
                         </div>
                     </div>

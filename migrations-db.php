@@ -7,6 +7,6 @@ return array(
         'charset'   => 'utf8',
         'dbname'    => 'wh',
         'user'      => 'root',
-        'password'  => 'wh'
+        'password'  => 'root'
         // 'defaultTableOptions' => [ 'charset'=> 'utf8mb4', 'collate' => 'utf8mb4_slovenian_ci'],
 );

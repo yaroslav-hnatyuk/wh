@@ -1,3 +1,6 @@
 /vendor
 /web/views/assets/dishes
 .DS_Store
+resources/config/prod.php
+console.php
+migrations-db.php

@@ -1300,4 +1300,15 @@ $(document).ready(function (){
 
     });
 
+    $("#select-export-type").change(function() {
+        var selectedType = $(this).val();
+        if (selectedType === 'period') {
+            $("#export-selected-period-button").css('display', 'block');
+            $("#export-nextday-button").css('display', 'none');
+        } else {
+            $("#export-selected-period-button").css('display', 'none');
+            $("#export-nextday-button").css('display', 'block');
+        }
+    });
+
 });   
