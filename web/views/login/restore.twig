@@ -52,8 +52,8 @@
                         <div class="col-sm-6 col-sm-offset-3 form-box">
                         	<div class="form-top">
                         		<div class="form-top-left">
-                        			<h3>Вхід в систему замовлень</h3>
-                            		<p>Введіть свій email та пароль для того щоб увійти:</p>
+                        			<h3>Відновлення паролю</h3>
+                            		<p>Введіть свій email для того щоб відновити пароль:</p>
                         		</div>
                         		<div class="form-top-right">
                                     <img src={{ asset('login/assets/img/logo.svg') }} alt="Горіховий Дім" style="width: 75px">
@@ -61,18 +61,14 @@
                         		</div>
                             </div>
                             <div class="form-bottom">
-			                    <form role="form" action="" method="post" class="login-form">
+			                    <div class="login-form">
 			                    	<div class="form-group">
 			                    		<label class="sr-only" for="username">Email</label>
-			                        	<input type="text" name="email" placeholder="Email..." class="form-username form-control" id="form-username">
+			                        	<input id="restore-email-input"type="text" name="email" placeholder="Email..." class="form-username form-control" id="form-username">
 			                        </div>
-			                        <div class="form-group">
-			                        	<label class="sr-only" for="password">Пароль</label>
-			                        	<input type="password" name="password" placeholder="Пароль..." class="form-password form-control" id="form-password">
-			                        </div>
-			                        <button type="submit" class="btn" id="login-btn">Вхід</button>
-                                    <span style="font-size: 12px">Забули пароль? Перейдіть на <a href="/restore">сторінку відновлення паролю</a>.</span>
-			                    </form>
+			                        <button style="width: 100%" class="btn" id="restore-pass-btn">Відновити</button>
+                                    <br/><span style="font-size: 12px">Повернутись на <a href="/login">сторінку входу в систему</a></span>
+			                    </div>
 		                    </div>
                             <br/><br/>
                             <div class="alert alert-warning" id="alert-error">

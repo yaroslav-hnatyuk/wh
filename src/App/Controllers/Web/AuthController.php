@@ -70,6 +70,41 @@ class AuthController
         ));
     }
 
+    public function restore() {
+        return $this->app['twig']->render('login/restore.twig');
+    }
+
+    public function sendpass(Request $request) {
+        $result = false;
+        $email = $request->request->get('email');
+        
+        try {
+            $user = $this->usersService->getByEmail($email);
+            if ($user->id) {
+                $newPass = uniqid();
+                $result = $this->usersService->updatePass($user->id, password_hash($newPass, PASSWORD_BCRYPT));
+
+                if ($result) {
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject('[Walnut House] New password')
+                        ->setFrom(array('noreply@walnut.house'))
+                        ->setTo(array($email))
+                        ->setBody("Ваш новий пароль: {$newPass}");
+    
+                    $this->app['mailer']->send($message);
+                } else {
+                    throw new \Exception("DB record was not updated.");
+                }
+            } else {
+                throw new \Exception("Email not found.");
+            }
+        } catch (\Exception $exc) {
+            throw new \Exception("Password was not updated. Something went wrong.");
+        }
+
+        return json_encode(array($result));
+    }
+
     public function register(Request $request) {
         $data = $request->request->all();
         $user = new User($data);

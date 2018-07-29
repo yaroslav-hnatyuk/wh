@@ -68,6 +68,8 @@ class RoutesLoader
         $web->post("/login", "auth.web.controller:login");
         $web->get("/registration/{cid}", "auth.web.controller:registration");
         $web->post("/register", "auth.web.controller:register");
+        $web->get("/restore", "auth.web.controller:restore");
+        $web->post("/restore", "auth.web.controller:sendpass");
         $web->get("/logout", "auth.web.controller:logout");
         
         $web->get("/", "orders.web.controller:main");

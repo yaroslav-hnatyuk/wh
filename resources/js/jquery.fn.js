@@ -213,6 +213,31 @@ $(document).ready(function (){
                 }
             });
         },
+     
+        restoreEmail: function(email) {
+            $.ajax({
+                url: "/restore",
+                method: "POST",
+                data: {email: email},
+                dataType: "json",
+                success: function (result) {
+                    spop({
+                        template: 'На Ваш email було відправлено новий пароль для входу в систему.',
+                        position  : 'top-left',
+                        style: 'success',
+                        autoclose: 6000
+                    });
+                },
+                error: function (error) {
+                    spop({
+                        template: 'Помилка :( Перевірте будь-ласка введений email.',
+                        position  : 'top-left',
+                        style: 'error',
+                        autoclose: 6000
+                    });
+                }
+            });
+        },
 
         saveUserOrder: function() {
             var defer = jQuery.Deferred();
@@ -1309,6 +1334,12 @@ $(document).ready(function (){
             $("#export-selected-period-button").css('display', 'none');
             $("#export-nextday-button").css('display', 'block');
         }
+    });
+
+    $("#restore-pass-btn").click(function () {
+        var email = $("#restore-email-input").val();
+        API.restoreEmail(email);
+        return false;
     });
 
 });   

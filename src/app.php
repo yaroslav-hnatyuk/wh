@@ -34,7 +34,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 ));
 
 $app->register(new Silex\Provider\AssetServiceProvider(), array(
-    'assets.version' => 'v7',
+    'assets.version' => 'v8',
     'assets.version_format' => '%s?version=%s',
     'assets.base_path' => 'views/'
 ));
@@ -64,6 +64,10 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
             'pattern' => '^/(registration)/',
             'security' => false
         ),
+        'restore' => array(
+            'pattern' => '^/restore$',
+            'security' => false
+        ),
         'secured' => array(
             'pattern' => '^.*$',
             'guard' => array(
@@ -89,6 +93,17 @@ $app->register(new Silex\Provider\TranslationServiceProvider(), array(
     'locale' => 'ua',
     'locale_fallbacks' => array('en', 'ua')
 ));
+
+$app->register(new Silex\Provider\SwiftmailerServiceProvider());
+
+$app['swiftmailer.options'] = array(
+    'host' => 'mail.adm.tools',
+    'port' => '25',
+    'username' => 'lunch@walnut.house',
+    'password' => '4N10ykcC6GHl',
+    'encryption' => null,
+    'auth_mode' => null
+);
 
 $app->extend('translator', function($translator, $app) {
     $translator->addLoader('yaml', new YamlFileLoader());
