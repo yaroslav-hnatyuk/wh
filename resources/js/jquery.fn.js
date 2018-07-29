@@ -510,7 +510,7 @@ $(document).ready(function (){
                     if (feedbackHtml) {
                         $("#modal-dish-feedback").html(feedbackHtml);
                     } else {
-                        $("#modal-dish-feedback").html('Фідбеків не знайдено.');
+                        $("#modal-dish-feedback").html('Відгуків не знайдено.');
                     }
                     $("#myModal").modal();
                 },
