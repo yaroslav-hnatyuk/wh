@@ -34,7 +34,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 ));
 
 $app->register(new Silex\Provider\AssetServiceProvider(), array(
-    'assets.version' => 'v8',
+    'assets.version' => 'v1.0.8',
     'assets.version_format' => '%s?version=%s',
     'assets.base_path' => 'views/'
 ));
