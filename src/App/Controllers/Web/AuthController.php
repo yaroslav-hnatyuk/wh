@@ -74,6 +74,10 @@ class AuthController
         return $this->app['twig']->render('login/restore.twig');
     }
 
+    public function agreement() {
+        return $this->app['twig']->render('login/agreement.twig');
+    }
+
     public function sendpass(Request $request) {
         $result = false;
         $email = $request->request->get('email');

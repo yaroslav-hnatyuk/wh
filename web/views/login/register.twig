@@ -71,6 +71,10 @@
 			                        	<input type="password" name="password" placeholder="Пароль..." class="form-password form-control" id="form-password">
 			                        </div>
                                     <div class="form-group">
+			                        	<label class="sr-only" for="password">Повторіть пароль</label>
+			                        	<input type="password" name="password2" placeholder="Повторіть пароль..." class="form-password form-control">
+			                        </div>
+                                    <div class="form-group">
 			                        	<input style="width: 47%; float: left; margin-right: 5px" type="text" name="first_name" placeholder="Ім'я..." class="form-first-name form-control" id="form-first-name">
                                         <input style="width: 47%; float: right; margin-left: 5px" type="text" name="last_name" placeholder="Прізвище..." class="form-first-name form-control" id="form-last-name">
 			                        </div>
@@ -78,6 +82,11 @@
                                     <div class="form-group" style="margin-top:5px">
 			                    		<label class="sr-only" for="ipn">ІПН</label>
 			                        	<input type="text" name="ipn" placeholder="ІПН..." class="form-ipn form-control" id="form-ipn">
+			                        </div>
+                                    <div class="form-group" style="margin-top:5px">
+			                    		<label class="sr-only" for="ipn">ІПН</label>
+			                        	<input type="checkbox" style="float: left; margin-right: 10px"/>
+                                        <p style="font-size: 12px; line-height: 24px">Відмічаючи цю галочку Ви тим самим висловлюєте свою згоду з умовами <a href="/agreement" target="_blank">договору</a></p>
 			                        </div>
                                     <input type="hidden" name="cid" id="form-cid" value="{{cid}}">
 			                        <button type="submit" class="btn" id="register-btn">Реєстрація</button>

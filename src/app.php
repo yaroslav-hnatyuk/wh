@@ -68,6 +68,10 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
             'pattern' => '^/restore$',
             'security' => false
         ),
+        'agreement' => array(
+            'pattern' => '^/agreement$',
+            'security' => false
+        ),
         'secured' => array(
             'pattern' => '^.*$',
             'guard' => array(
