@@ -44,6 +44,15 @@ class OrdersController extends BaseController
 
         if ($nextday) {
             $tomorrow = date('Y-m-d',strtotime("tomorrow"));
+            $dayname = date('D', strtotime($tomorrow));
+            if ($dayname === 'Sat' || $dayname === 'Sun') {
+                if ($dayname === 'Sat') {
+                    $tomorrow = date('Y-m-d',strtotime("+3 days"));
+                }
+                if ($dayname === 'Sun') {
+                    $tomorrow = date('Y-m-d',strtotime("+2 days"));
+                }
+            }
         }
 
         $filters = array(
@@ -82,12 +91,28 @@ class OrdersController extends BaseController
         list($menu, $totalByDays, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
         $menu = $this->menuService->groupMenuDishes($menu, true);
 
+        $disabledMonday = null;
+        $dayname = date('D');
+        $orderHour = $settingOrderHour ? intval($settingOrderHour['value']) : 0;
+        if ($dayname === 'Fri' || $dayname === 'Sat' || $dayname === 'Sun') {
+            if ($dayname === 'Fri' && (int)date('H') >= $orderHour) {
+                $disabledMonday = date('Y-m-d',strtotime("+3 days"));
+            }
+            if ($dayname === 'Sat') {
+                $disabledMonday = date('Y-m-d',strtotime("+2 days"));
+            }
+            if ($dayname === 'Sun') {
+                $disabledMonday = date('Y-m-d',strtotime("+1 days"));
+            }
+        }
+
         return $this->app['twig']->render("order/user.twig", array(
             'period' => $period,
             'filterPeriod' => $filterPeriod,
             'userRole' => $this->getUser()->role,
             'menu' => $menu,
             'orderHour' => $settingOrderHour ? intval($settingOrderHour['value']) : 0, 
+            'disabledMonday' => $disabledMonday,
             'totalByDays' => $totalByDays,
             'totalPriceInfo' => $totalPriceInfo
         ));
