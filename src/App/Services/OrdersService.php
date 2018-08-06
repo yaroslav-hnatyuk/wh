@@ -183,6 +183,12 @@ class OrdersService extends BaseService
                         $ordersSum = array_sum($groupedOrders[$dish['menu_id'] . '_day_' . $date]);
                         foreach ($groupedOrders[$dish['menu_id'] . '_day_' . $date] as $userId => $userOrdersCount) {
                             if ($dish['is_lunch'] && $userOrdersCount > 0) {
+                                if (!isset($totalByDaysAndUsers[$date][$userId]['lunch']['groups'][$dish['group_id']])) {
+                                    $totalByDaysAndUsers[$date][$userId]['lunch']['groups'][$dish['group_id']] = array(
+                                        'day_count' => 0,
+                                        'day_price' => 0
+                                    );
+                                }
                                 $totalByDaysAndUsers[$date][$userId]['lunch']['groups'][$dish['group_id']]['day_count'] += $userOrdersCount;
                                 $totalByDaysAndUsers[$date][$userId]['lunch']['groups'][$dish['group_id']]['day_price'] += $userOrdersCount * $dish['price'];
                             }
