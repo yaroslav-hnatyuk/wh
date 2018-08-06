@@ -8,8 +8,28 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class ExportService extends BaseService
 {
-    public function createXlsReport($menu, $users, $totalByUsers, $totalPriceInfo, $filters)
+    public function createXlsReport($menu, $users, $totalByDaysAndUsers, $totalPriceInfo, $filters)
     {
+        $gUsers = array();
+        foreach ($users as $user) {
+            $gUsers[$user['id']] = array(
+                'user_id' => $user['id'],
+                'name' => "{$user['first_name']} {$user['last_name']}",
+                'email' => $user['email'],
+                'ipn' => $user['ipn']
+            );
+        }
+
+        $gDishes = array();
+        foreach ($menu as $item) {
+            $gDishes[$item['dish_id']] = array(
+                'dish_id' => $item['dish_id'],
+                'dish_name' => $item['dish_name'],
+                'group_id' => $item['group_id'],
+                'group_name' => $item['group_name']
+            );
+        }
+
         $spreadsheet = new Spreadsheet();
         $spreadsheet->getProperties()->setCreator('Walnut House')
             ->setLastModifiedBy('Walnut House')
@@ -32,45 +52,41 @@ class ExportService extends BaseService
             $spreadsheet->getActiveSheet()->setCellValue("D3", 'Всі');
         }
         
-
         $spreadsheet->setActiveSheetIndex(0)
             ->mergeCells('F2:G2')
             ->setCellValue('F2', 'Період');
         $spreadsheet->getActiveSheet()->setCellValue("F3", $filters['start_date']);
         $spreadsheet->getActiveSheet()->setCellValue("G3", $filters['end_date']);
 
+        $rowNumber = 5;
+        foreach ($totalByDaysAndUsers as $date => $usersOrders) {
+            if (count($usersOrders)) {
+                $spreadsheet->setActiveSheetIndex(0)
+                    ->setCellValue("A{$rowNumber}", $date);
+                $columnNumber = 2;
+                foreach ($gDishes as $dish) {
+                    $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $dish['group_name']  . ' - ' . $dish['dish_name']);
+                    $columnNumber++;
+                }
+                $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", 'Сума');
+                $rowNumber++;
 
-        $spreadsheet->setActiveSheetIndex(0)
-            ->setCellValue('A5', 'Користувач');
-
-        $columnNumber = 2;
-        foreach ($menu as $item) {
-            $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}5", $item['dish_name']);
-            $columnNumber++;
-        }
-        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}5", 'Сума без знижок');
-        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 1)}5", 'Знажка за комплексні');
-        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 2)}5", 'Знижка за тижневі замовлення');
-        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 3)}5", 'Кінцева сума');
-
-        $usersCount = 6;
-        foreach ($users as $user) {
-            $columnNumber = 2;
-            $spreadsheet->getActiveSheet()->setCellValue("A{$usersCount}", $user['first_name'] . " " . $user['last_name']);
-            
-            $totalPrice = 0;
-            foreach ($menu as $dish) {
-                $ordersCount = isset($dish['users'][$user['id']]) ? $dish['users'][$user['id']] : 0;
-                $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$usersCount}", $ordersCount);
-                $totalPrice += $ordersCount * $dish['price'];
-                $columnNumber++;
+                foreach ($usersOrders as $userId => $orders) {
+                    $spreadsheet->getActiveSheet()->setCellValue("A{$rowNumber}", $gUsers[$userId]['name']);
+                    $columnNumber = 2;
+                    $ordersPrice = 0;
+                    foreach ($gDishes as $dish) {
+                        $count = isset($orders['items'][$dish['dish_id']]) ? (int)$orders['items'][$dish['dish_id']]['count'] : 0;
+                        $price = isset($orders['items'][$dish['dish_id']]) ? (int)$orders['items'][$dish['dish_id']]['price'] : 0;
+                        $ordersPrice += $price;
+                        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $count);
+                        $columnNumber++;
+                    }
+                    $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $ordersPrice);
+                    $rowNumber++;
+                }
+                $rowNumber += 2;
             }
-
-            $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$usersCount}", $totalByUsers[$user['id']]['total_price']);
-            $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 1)}{$usersCount}", $totalByUsers[$user['id']]['total_price_discount']);
-            $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 2)}{$usersCount}", $totalPriceInfo['total_user_weekly_discount'][$user['id']]);
-            $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber + 3)}{$usersCount}", $totalByUsers[$user['id']]['total_price_with_discount'] - $totalPriceInfo['total_user_weekly_discount'][$user['id']]);
-            $usersCount++;
         }
 
         $spreadsheet->getActiveSheet()->setTitle('Report');

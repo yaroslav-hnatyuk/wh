@@ -66,10 +66,10 @@ class OrdersController extends BaseController
         $menu = $this->menuService->getForPeriodForOrders($period);
         $orders = $this->ordersService->getOrdersByFilters($filters);
 
-        list($menu, $totalByUsers, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period, true);
+        list($menu, $totalByDaysAndUsers, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrdersForExport($menu, $orders, $period);
         $users = $this->app['users.service']->getUsersByFilters($filters);
 
-        $this->app['export.service']->createXlsReport($menu, $users, $totalByUsers, $totalPriceInfo, array(
+        $this->app['export.service']->createXlsReport($menu, $users, $totalByDaysAndUsers, $totalPriceInfo, array(
             'company' => $this->app['companies.service']->findOne($company),
             'office' => $this->app['offices.service']->findOne($office),
             'start_date' => $nextday ? $tomorrow : $period['start']['date'],
