@@ -377,7 +377,7 @@ class OrdersService extends BaseService
             if (!isset($groupedOrders[$order['menu_dish_id'] . '_day_' . $order['day']][$order['user_id']])) {
                 $groupedOrders[$order['menu_dish_id'] . '_day_' . $order['day']][$order['user_id']] = 0;
             }
-            if (!$groupedOrders[$order['menu_dish_id'] . '_users'][$order['user_id']]) {
+            if (!isset($groupedOrders[$order['menu_dish_id'] . '_users'][$order['user_id']])) {
                 $groupedOrders[$order['menu_dish_id'] . '_users'][$order['user_id']] = 0;
             }
             $groupedOrders[$order['menu_dish_id'] . '_day_' . $order['day']][$order['user_id']] += $order['count'];
@@ -394,6 +394,9 @@ class OrdersService extends BaseService
 
             if ($export && isset($groupedOrders[$dish['menu_id'] . '_users'])) {
                 foreach ($groupedOrders[$dish['menu_id'] . '_users'] as $userId => $ordersCount) {
+                    if (!isset($result[$dish['dish_id']]['users'][$userId])) {
+                        $result[$dish['dish_id']]['users'][$userId] = 0;
+                    }
                     $result[$dish['dish_id']]['users'][$userId] += $ordersCount;
                 }
             }
