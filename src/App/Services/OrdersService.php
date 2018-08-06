@@ -192,6 +192,18 @@ class OrdersService extends BaseService
                                 $totalByDaysAndUsers[$date][$userId]['lunch']['groups'][$dish['group_id']]['day_count'] += $userOrdersCount;
                                 $totalByDaysAndUsers[$date][$userId]['lunch']['groups'][$dish['group_id']]['day_price'] += $userOrdersCount * $dish['price'];
                             }
+                            if (!isset($totalByDaysAndUsers[$date][$userId])) {
+                                $totalByDaysAndUsers[$date][$userId] = array(
+                                    'total_count' => 0,
+                                    'total_price' => 0
+                                );
+                            }
+                            if (!isset($totalByDaysAndUsers[$date][$userId]['items'][$dish['dish_id']])) {
+                                $totalByDaysAndUsers[$date][$userId]['items'][$dish['dish_id']] = array(
+                                    'count' => 0,
+                                    'price' => 0
+                                );
+                            }
                             $totalByDaysAndUsers[$date][$userId]['items'][$dish['dish_id']]['count'] += $userOrdersCount;
                             $totalByDaysAndUsers[$date][$userId]['items'][$dish['dish_id']]['price'] += $userOrdersCount * $dish['price'];
                             $totalByDaysAndUsers[$date][$userId]['total_count'] += $userOrdersCount;
