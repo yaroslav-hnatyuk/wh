@@ -292,6 +292,12 @@ class OrdersService extends BaseService
     
                     if ($totalByDaysAndUsers[$day][$userId]['total_count'] > 0) {
                         $w = date("W", strtotime($day));
+                        if (!isset($totalPriceInfo['total_weekly'][$userId][$w])) {
+                            $totalPriceInfo['total_weekly'][$userId][$w] = array(
+                                'days_with_orders' => 0,
+                                'discount' => 0
+                            );
+                        }
                         $totalPriceInfo['total_weekly'][$userId][$w]['days_with_orders'] += 1;
                         $totalPriceInfo['total_weekly'][$userId][$w]['discount'] += round($weeklyDiscount * ($totalByDaysAndUsers[$day][$userId]['total_price'] - $lunchDiscount));
                     }
