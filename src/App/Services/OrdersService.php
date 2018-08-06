@@ -454,6 +454,9 @@ class OrdersService extends BaseService
         foreach ($period['items'] as $date => $value) {
             $w = date("W", strtotime($date));
             if ($this->isWorkingDay($date, $value['day'])) {
+                if (!isset($result[$w])) {
+                    $result[$w] = 0;    
+                }
                 $result[$w] += 1;
             }
         }
