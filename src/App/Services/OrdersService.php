@@ -209,7 +209,7 @@ class OrdersService extends BaseService
                             if (!isset($totalByDaysAndUsers[$date][$userId]['total_count'])) {
                                 $totalByDaysAndUsers[$date][$userId]['total_count'] = 0;
                             }
-                            if (!isset($totalByDaysAndUsers[$date][$userId]['total_count'])) {
+                            if (!isset($totalByDaysAndUsers[$date][$userId]['total_price'])) {
                                 $totalByDaysAndUsers[$date][$userId]['total_price'] = 0;
                             }
                             $totalByDaysAndUsers[$date][$userId]['total_count'] += $userOrdersCount;
