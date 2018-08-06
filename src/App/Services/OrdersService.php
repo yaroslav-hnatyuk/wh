@@ -407,11 +407,29 @@ class OrdersService extends BaseService
                         $ordersSum = array_sum($groupedOrders[$dish['menu_id'] . '_day_' . $date]);
                         foreach ($groupedOrders[$dish['menu_id'] . '_day_' . $date] as $userId => $userOrdersCount) {
                             if ($dish['is_lunch'] && $userOrdersCount > 0) {
+                                if (!isset($totalByDaysAndUsers[$date][$userId]['lunch']['groups'][$dish['group_id']])) {
+                                    $totalByDaysAndUsers[$date][$userId]['lunch']['groups'][$dish['group_id']] = array(
+                                        'day_count' => 0,
+                                        'day_price' => 0
+                                    );
+                                }
                                 $totalByDaysAndUsers[$date][$userId]['lunch']['groups'][$dish['group_id']]['day_count'] += $userOrdersCount;
                                 $totalByDaysAndUsers[$date][$userId]['lunch']['groups'][$dish['group_id']]['day_price'] += $userOrdersCount * $dish['price'];
                             }
+                            if (!isset($totalByDaysAndUsers[$date][$userId]['items'][$dish['dish_id']])) {
+                                $totalByDaysAndUsers[$date][$userId]['items'][$dish['dish_id']] = array(
+                                    'count' => 0,
+                                    'price' => 0
+                                );
+                            }
                             $totalByDaysAndUsers[$date][$userId]['items'][$dish['dish_id']]['count'] += $userOrdersCount;
                             $totalByDaysAndUsers[$date][$userId]['items'][$dish['dish_id']]['price'] += $userOrdersCount * $dish['price'];
+                            if (!isset($totalByDaysAndUsers[$date][$userId]['total_count'])) {
+                                $totalByDaysAndUsers[$date][$userId]['total_count'] = 0;
+                            }
+                            if(!isset($totalByDaysAndUsers[$date][$userId]['total_price'])) {
+                                $totalByDaysAndUsers[$date][$userId]['total_price'] = 0;
+                            }
                             $totalByDaysAndUsers[$date][$userId]['total_count'] += $userOrdersCount;
                             $totalByDaysAndUsers[$date][$userId]['total_price'] += $userOrdersCount * $dish['price'];
                             $result[$dish['dish_id']]['orders'][$date]['count'] += $userOrdersCount;
