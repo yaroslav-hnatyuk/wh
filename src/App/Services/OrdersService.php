@@ -100,6 +100,14 @@ class OrdersService extends BaseService
         );
     }
 
+    function getUserOrdersGroupsByPeriod($userId, $period)
+    {
+        return $this->db->fetchAll("SELECT * FROM `order_group` 
+            WHERE user_id = ? AND day BETWEEN ? AND ?",
+            array($userId, $period['start']['date'], $period['end']['date'])
+        );
+    }
+
     function getOrdersByFilters($filters = array())
     {
         $params = array();
@@ -354,6 +362,107 @@ class OrdersService extends BaseService
         return array(
             $result,
             $export ? $totalByUsers : $totalByDays,
+            $totalPriceInfo
+        );
+    }
+
+    function mergeMenuWithOrdersGroups($menu, $orders, $period)
+    {
+        $result = array();
+        $userOrders = array_combine(
+            array_keys($period['items']),
+            array_fill(0, count($period['items']), array(
+                'group_id' => null,
+                'count' => 0,
+                'available' => false,
+                'is_working_day' => true
+            ))
+        );
+
+        $groupedOrders = array();
+        foreach($orders as $order) {
+            if (!isset($groupedOrders[$order['group_id'] . '_day_' . $order['day']][$order['user_id']])) {
+                $groupedOrders[$order['group_id'] . '_day_' . $order['day']][$order['user_id']] = 0;
+            }
+            if (!isset($groupedOrders[$order['group_id'] . '_users'][$order['user_id']])) {
+                $groupedOrders[$order['group_id'] . '_users'][$order['user_id']] = 0;
+            }
+            $groupedOrders[$order['group_id'] . '_day_' . $order['day']][$order['user_id']] += $order['count'];
+            if ($export) $groupedOrders[$order['group_id'] . '_users'][$order['user_id']] += $order['count'];
+        }
+
+        $groups = array();
+        foreach ($menu as $dish) {
+            if(!isset($groups[$dish['group_id']])) {
+                $groups[$dish['group_id']] = array(
+                    'group_id' => $dish['group_id'],
+                    'group_name' => $dish['group_name'],
+                    'dishes' => array()
+                );
+            }
+            $groups[$dish['group_id']]['dishes'][] = $dish;
+        }
+
+        $totalByDaysAndUsers = array();
+
+        foreach ($groups as $group) {
+            if (!isset($result[$group['group_id']])) {
+                $result[$group['group_id']] = $group;
+                $result[$group['group_id']]['total_count'] = 0;
+            }
+
+            foreach ($userOrders as $date => $orderData) {
+                $time = strtotime($date);
+                if (!isset($result[$group['group_id']]['orders'][$date])) {
+                    $result[$group['group_id']]['orders'][$date] = $orderData;
+                }
+                if (!isset($totalByDaysAndUsers[$date])) {
+                    $totalByDaysAndUsers[$date] = array();
+                }
+                $result[$group['group_id']]['orders'][$date]['is_working_day'] = $this->isWorkingDay($date, date('D', strtotime($date)));
+                // if ($time >= strtotime($dish['start']) && $time <= strtotime($dish['end'])) {
+                    // $result[$dish['dish_id']]['orders'][$date]['menu_id'] = $dish['menu_id'];
+                    $result[$group['group_id']]['orders'][$date]['available'] = true;
+                    if (isset($groupedOrders[$group['group_id'] . '_day_' . $date]) && is_array($groupedOrders[$group['group_id'] . '_day_' . $date]) && !empty($groupedOrders[$group['group_id'] . '_day_' . $date])) {
+                        foreach ($groupedOrders[$group['group_id'] . '_day_' . $date] as $userId => $userOrdersCount) {
+                            if (!isset($totalByDaysAndUsers[$date][$userId]['items'][$group['group_id']])) {
+                                $totalByDaysAndUsers[$date][$userId]['items'][$group['group_id']] = array(
+                                    'count' => 0,
+                                    'price' => 0
+                                );
+                            }
+                            $totalByDaysAndUsers[$date][$userId]['items'][$group['group_id']]['count'] += $userOrdersCount;
+                            $totalByDaysAndUsers[$date][$userId]['items'][$group['group_id']]['price'] += $userOrdersCount * 100; //todo fix price
+                            if (!isset($totalByDaysAndUsers[$date][$userId]['total_count'])) {
+                                $totalByDaysAndUsers[$date][$userId]['total_count'] = 0;
+                            }
+                            if (!isset($totalByDaysAndUsers[$date][$userId]['total_price'])) {
+                                $totalByDaysAndUsers[$date][$userId]['total_price'] = 0;
+                            }
+                            $totalByDaysAndUsers[$date][$userId]['total_count'] += $userOrdersCount;
+                            $totalByDaysAndUsers[$date][$userId]['total_price'] += $userOrdersCount * 100; // todo fix price
+                            $result[$group['group_id']]['orders'][$date]['count'] += $userOrdersCount;
+                            $result[$group['group_id']]['total_count'] += $userOrdersCount;   
+                        }
+                    }
+                // }
+            }
+        }
+
+        $totalByDays = array();
+        foreach ($totalByDaysAndUsers as $day => $users) {
+            $totalByDays[$day] = array(
+                'total_price' => 0
+            );
+            foreach ($users as $userId => $total) {
+                $totalByDays[$day]['total_price'] += $totalByDaysAndUsers[$day][$userId]['total_price'];
+            }
+            $totalPriceInfo['total_price'] += $totalByDays[$day]['total_price'];
+        }
+
+        return array(
+            $result,
+            $totalByDays,
             $totalPriceInfo
         );
     }

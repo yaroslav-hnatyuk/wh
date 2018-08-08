@@ -31,7 +31,7 @@
     
         <!-- Modal content-->
         <div class="modal-content">
-            <div class="modal-body" style="float: left; padding: 35px 10px 20px 20px; margin: 0;">
+            <div class="modal-body" style="float: left; padding: 35px 10px 20px 20px; margin: 0; position: relative">
                 <div class="col-md-6">
                     <img style="width: 338px" id="modal-dish-image" src=""/>
                 </div> 
@@ -48,80 +48,14 @@
                             <span style="padding: 15px"><a href="#">Написати відгук</a></span> #}
                         </div>
                     </div>
-                    <div class="col-md-12 text-left" style="height: 126px; padding-top: 10px;">
+                    <div class="col-md-12 text-left" style="height: 180px; padding-top: 10px;">
                         <b>Опис</b>
-                        <p id="modal-dish-description" style="font-size: 11px">
-                            
+                        <p id="modal-dish-description" style="font-size: 11px">    
                         </p>
-                    </div>
-                    <div class="col-md-12" style="padding-bottom: 15px; margin-top: 5px; overflow-x: auto;">
-                        <table class="table order-table" style="margin: 0">
-                            <tr style="background-color:#efefef;">
-                                {% for date, weekday in period.items %}
-                                    {% if loop.index <= 7 %}
-                                        {% if today == date|date('Y-m-d') %}
-                                            <th class="wh-display-cell" style="background-color: #e5feefcc;">
-                                                <span class="day-name">{{ weekday.day|trans }}</span><br/>
-                                                <span class="day-date">{{ weekday.number }}</span>
-                                            </th>
-                                        {% elseif weekday.is_working_day %}
-                                            <th class="wh-display-cell">
-                                                <span class="day-name">{{ weekday.day|trans }}</span><br/>
-                                                <span class="day-date">{{ weekday.number }}</span>
-                                            </th>
-                                        {% else %}
-                                            <th class="wh-display-cell" style="background-color: #fff0e3cc;">
-                                                <span class="day-name">{{ weekday.day|trans }}</span><br/>
-                                                <span class="day-date">{{ weekday.number }}</span>
-                                            </th>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                            </tr>
-                            <tr>
-                                {% for date, weekday in period.items %}
-                                    {% if loop.index <= 7 %}
-                                        {% if tomorrow > date|date('Y-m-d') %}
-                                            <th class="wh-display-cell" style="cursor: not-allowed; background-color: #f6f6f6;">
-                                                <input class="modal-order-cell" style="background-color: #f6f6f6; cursor: not-allowed" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value="" disabled=true/>
-                                            </th>
-                                        {% elseif tomorrow == date|date('Y-m-d') %}
-                                            {% if currentHour < orderHour %}
-                                                <th class="wh-display-cell">
-                                                    <input class="modal-order-cell" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value=""/>
-                                                </th>
-                                            {% else %}
-                                                <th class="wh-display-cell" style="background-color: #f6f6f6; cursor: not-allowed">
-                                                    <input class="modal-order-cell" style="background-color: #f6f6f6;  cursor: not-allowed" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value="" disabled=true/>
-                                                </th>
-                                            {% endif %}
-                                        {% elseif weekday.is_working_day %}
-                                            {% if disabledMonday == date|date('Y-m-d') %}
-                                                <th class="wh-display-cell" style="cursor: not-allowed; background-color: #f6f6f6;">
-                                                    <input class="modal-order-cell" style="background-color: #f6f6f6; cursor: not-allowed" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value="" disabled=true/>
-                                                </th>
-                                            {% else %}
-                                                <th class="wh-display-cell">
-                                                    <input class="modal-order-cell" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value=""/>
-                                                </th>
-                                            {% endif %}
-                                        {% else %}
-                                            <th class="wh-display-cell" style="background-color: #fff0e3cc;">
-                                                <input class="modal-order-cell" style="background-color: #fff0e3cc;" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value="" disabled=true/>
-                                            </th>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                            </tr>
-                        </table>
-                        <hr class="bottom-table-border"/>
-                    </div>
-                    <div class="col-md-12 text-left">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" style="border: 1px solid #ccc">Закрити</button>
-                        <button type="button" id="save-order-popup" class="btn btn-primary" style="margin-right: 10px" data-dismiss="modal">Зберегти</button>
                     </div>
                 </div>            
             </div>
+            {# <button type="button" class="btn btn-default" data-dismiss="modal" style="border: 1px solid #ccc; position: absolute; top: 90%; left: 55%">Закрити</button> #}
             <div class="modal-footer" style="margin: 0; visibility: hidden;">
                 <!--  -->
             </div>
@@ -168,7 +102,7 @@
 
             <table class="table order-table" style="margin: 0; min-width: 1170px;">
                 <tr style="background-color:#efefef;">
-                    <th style="padding-left: 5px">  
+                    <th style="padding-left: 5px">
                         <ul class="pager">
                             <li><a href="/order" class="btn btn-default" style="color: rgba(0, 0, 0, 0.7);"><b>Сьогодні</b></a></li>
                             <li><a href="/order?year={{period.prev.year}}&week={{period.prev.week}}" class="btn"><</a></li>
@@ -202,44 +136,7 @@
                 <table class="table order-table" style="cursor: pointer; width: 100%; margin: 0px; min-width: 1170px;">
                     <tr class="group-header" data-group-id="{{group.group_id}}">
                         <th><b style="text-transform: uppercase;">{{ group.group_name}}</b></th>
-                        {% for date, weekday in period.items %}
-                            {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
-                                <th style="background-color: #e5feef80;"><div>&nbsp;</div></th>
-                            {% elseif weekday.is_working_day %}
-                                <th><div>&nbsp;</div></th>
-                            {% else %}
-                                <th style="background-color: #f9d1ae1a;"><div>&nbsp;</div></th>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                </table>
-                <table class="dish-list table order-table user group-{{ group.group_id }}" style="margin: 0px; min-width: 1170px;">
-                    {% for dish in group.dishes %}
-                    <tr>
-                        <th style="padding-left: 40px;">
-                        <div>
-                            <a data-link-menu-id="{{ dish.menu_id }}" data-link-dish-id="{{ dish.dish_id }}" class="dish-link" >
-                            {{ dish.dish_name }}
-                            <div class="dish-hint" style="display: none;">
-                                <div class="col-md-12 probootstrap-animate fadeInUp probootstrap-animated">
-                                    <div class="probootstrap-block-image" style="margin-bottom: 5px">
-                                        <figure><img width="338px" src="{{ asset('assets/dishes/' ~ dish.dish_id ~ '.jpg') }}"/></figure>
-                                    </div>
-                                    <div style="width: 50%; float: left; padding-top: 4px">
-                                        <b>Калорії: <span style="font-weight: normal">{{dish.calories}}</span></b><br/>
-                                    </div>
-                                    <div style="width: 50%; float: left; text-align: right;">
-                                        <span style="color: #FFA33E; font-size: 18px; font-weight: normal">{{dish.price}} грн</span>
-                                    </div>
-                                    <b>Інгредієнти</b>
-                                    <p style="font-size: 12px; margin: 0 0 10px 0;">{{dish.ingredients}}</p>
-                                </div> 
-                            </div>
-                            </a>
-                        </div>
-                        </th>
-
-                        {% for date, order in dish.orders %}
+                        {% for date, order in group.orders %}
                             {% if order.available and order.is_working_day %}
                                 {% if tomorrow < date|date('Y-m-d') %}
                                     {% if disabledMonday == date|date('Y-m-d') %}
@@ -299,6 +196,43 @@
                             {% endif %}
                         {% endfor %}
                     </tr>
+                </table>
+                <table class="dish-list table order-table user group-{{ group.group_id }}" style="margin: 0px; min-width: 1170px;">
+                    {% for dish in group.dishes %}
+                    <tr>
+                        <th style="padding-left: 40px;">
+                        <div>
+                            <a data-link-menu-id="{{ dish.menu_id }}" data-link-dish-id="{{ dish.dish_id }}" class="dish-link" >
+                            {{ dish.dish_name }}
+                            <div class="dish-hint" style="display: none;">
+                                <div class="col-md-12 probootstrap-animate fadeInUp probootstrap-animated">
+                                    <div class="probootstrap-block-image" style="margin-bottom: 5px">
+                                        <figure><img width="338px" src="{{ asset('assets/dishes/' ~ dish.dish_id ~ '.jpg') }}"/></figure>
+                                    </div>
+                                    <div style="width: 50%; float: left; padding-top: 4px">
+                                        <b>Калорії: <span style="font-weight: normal">{{dish.calories}}</span></b><br/>
+                                    </div>
+                                    <div style="width: 50%; float: left; text-align: right;">
+                                        <span style="color: #FFA33E; font-size: 18px; font-weight: normal">{{dish.price}} грн</span>
+                                    </div>
+                                    <b>Інгредієнти</b>
+                                    <p style="font-size: 12px; margin: 0 0 10px 0;">{{dish.ingredients}}</p>
+                                </div> 
+                            </div>
+                            </a>
+                        </div>
+                        </th>
+
+                        {% for date, weekday in period.items %}
+                            {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
+                                <th style="background-color: #e5feef80;"><div>&nbsp;</div></th>
+                            {% elseif weekday.is_working_day %}
+                                <th><div>&nbsp;</div></th>
+                            {% else %}
+                                <th style="background-color: #f9d1ae1a;"><div>&nbsp;</div></th>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
                     {% endfor %}
                 </table>
             {% endfor %}
@@ -306,37 +240,11 @@
             <table class="dish-list table order-table" id="salads-list"  style="margin: 0px; border: 0; min-width: 1170px;">
             <tr style=" border: 0;">
                 <th style="text-align: right; padding-right: 20px; border: 0; position: relative">
-                    Всього: <b>{{ totalPriceInfo.total_price_with_discount }} грн</b>
-                    {% if totalPriceInfo.total_price > totalPriceInfo.total_price_with_discount %}
-                        <span class="discount-price" style="text-align: right; padding-right: 15px;">{{totalPriceInfo.total_price}}<i class="infolink infolink-total-price"></i></span>
-                    {% endif %}
-                    <i class="total-price-infolink-description" style="right: 0">
-                        Знижки: <br/>
-                        {% if totalPriceInfo.total_price_discount > 0 %}
-                            <b>{{totalPriceInfo.total_price_discount}}</b> грн за комплексні обіди
-                            <br>
-                        {% endif %}
-                        {% if totalPriceInfo.total_weekly_discount > 0 %}
-                            <b>{{totalPriceInfo.total_weekly_discount}}</b> грн за тижневі замовлення
-                            <br>
-                        {% endif %}
-                    <i>
+                    Всього: <b>{{ totalPriceInfo.total_price }} грн</b>
                 </th>
                     {% for date, total in totalByDays %}
                         <th style="position: relative; border-left: 1px solid #ddd; border-bottom: 1px solid #ddd">
-                            <b>{{ total.total_price_with_discount }}</b>
-                            {% if total.total_price_with_discount < total.total_price %}
-                                <span class="discount-price">{{ total.total_price }}
-                                    <i class="infolink"></i>
-                                </span>
-                                <i class="infolink-description">
-                                    Знижки: <br/>
-                                    {% if total.total_price_discount > 0 %}
-                                        <b>{{total.total_price_discount}}</b> грн за <b>{{total.lunch_count}}</b> комплекс{% if total.lunch_count > 1 and total.lunch_count < 5%}и{% endif %}{% if total.lunch_count >= 5%}ів{% endif %}
-                                        <br>
-                                    {% endif %}
-                                <i>
-                            {% endif %}
+                            <b>{{ total.total_price }}</b>
                         </th>
                     {% endfor %}
             </tr>

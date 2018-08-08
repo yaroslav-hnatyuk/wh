@@ -26,7 +26,7 @@ class OrdersController extends BaseController
 
     public function index(Request $request)
     {
-        $handler = $this->getUser()->role . "Order";
+        $handler = $this->getUser()->role . "OrderGroup";
         return $this->$handler($request);
     }
 
@@ -90,6 +90,50 @@ class OrdersController extends BaseController
         $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
         list($menu, $totalByDays, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
         $menu = $this->menuService->groupMenuDishes($menu, true);
+
+        $disabledMonday = null;
+        $dayname = date('D');
+        $orderHour = $settingOrderHour ? intval($settingOrderHour['value']) : 0;
+        if ($dayname === 'Fri' || $dayname === 'Sat' || $dayname === 'Sun') {
+            if ($dayname === 'Fri' && (int)date('H') >= $orderHour) {
+                $disabledMonday = date('Y-m-d',strtotime("+3 days"));
+            }
+            if ($dayname === 'Sat') {
+                $disabledMonday = date('Y-m-d',strtotime("+2 days"));
+            }
+            if ($dayname === 'Sun') {
+                $disabledMonday = date('Y-m-d',strtotime("+1 days"));
+            }
+        }
+
+        return $this->app['twig']->render("order/user.twig", array(
+            'period' => $period,
+            'filterPeriod' => $filterPeriod,
+            'userRole' => $this->getUser()->role,
+            'menu' => $menu,
+            'orderHour' => $settingOrderHour ? intval($settingOrderHour['value']) : 0, 
+            'disabledMonday' => $disabledMonday,
+            'totalByDays' => $totalByDays,
+            'totalPriceInfo' => $totalPriceInfo
+        ));
+    }
+
+    private function userOrderGroup(Request $request)
+    {
+        $week = $request->query->get('week');
+        $year = $request->query->get('year');
+        $filterPeriod = $this->app['session']->get('filter_period') ?: 'week';
+        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week, $filterPeriod);
+
+        $settingOrderHour = $this->app['settings.service']->getOneByName('order_hour');
+        $menu = $this->menuService->getForPeriodForOrders($period);
+
+        $orders = $this->ordersService->getUserOrdersGroupsByPeriod($this->getUser()->id, $period);
+        list($menu, $totalByDays, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrdersGroups($menu, $orders, $period);
+        // echo "<pre>";
+        // print_r($menu);
+        // die;
+        // $menu = $this->menuService->addDishes($menu, true);
 
         $disabledMonday = null;
         $dayname = date('D');
