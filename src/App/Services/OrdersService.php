@@ -30,6 +30,14 @@ class OrdersService extends BaseService
         return $order;
     }
 
+    function getOrderGroupByGroupAndUserAndDay($userId, $groupId, $day)
+    {
+        return $this->db->fetchAssoc(
+            "SELECT * FROM `order_group` WHERE `user_id`=? AND `group_id`=? AND `day`=?", 
+            array($userId, $groupId, $day)
+        );
+    }
+
     function save($data = array())
     {
         $order = new Order($data);
@@ -55,6 +63,41 @@ class OrdersService extends BaseService
                         continue;
                     }
                     $order = $this->getByMenuAndUserAndDay($userId, $orderData['menu_dish_id'], $orderData['day']);
+                    if ($order->id !== null) {
+                        $order->count = $orderData['count'];
+                        $this->db->update('`order`', $order->getArray(), ['id' => $order->id]);
+                    } else if ((int)$orderData['count'] > 0) {
+                        $order = $orderData;
+                        $order['user_id'] = $userId;
+                        $this->save($order);
+                    }
+                }
+            }
+            $this->db->commit();
+        } catch (\Exception $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
+
+        return $orders;
+    }
+
+    function saveUserOrdersGroups($userId, $orders)
+    {
+        $settingOrderHour = $this->getSettingByName('order_hour');
+        $maxOrderHour = $settingOrderHour ? (int)$settingOrderHour['value'] : 0;
+
+        $this->db->beginTransaction();
+        try {
+            $tomorrow = strtotime('tomorrow');
+            $hour = (int)date('G');
+            foreach ($orders as $orderData) {
+                $orderTime =  strtotime($orderData['day']);
+                if ($orderTime >= $tomorrow) {
+                    if ($orderTime === $tomorrow && $hour >= $maxOrderHour) {
+                        continue;
+                    }
+                    $order = $this->getOrderGroupByGroupAndUserAndDay($userId, $orderData['group_id'], $orderData['day']);
                     if ($order->id !== null) {
                         $order->count = $orderData['count'];
                         $this->db->update('`order`', $order->getArray(), ['id' => $order->id]);

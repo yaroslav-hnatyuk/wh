@@ -256,7 +256,8 @@ $(document).ready(function (){
                     if (dayDate.getTime() >= currentDate.getTime()) {
                         ordersData.push({
                             day: day,
-                            menu_dish_id: $(this).attr('data-menu-id'),
+                            order_group_id: $(this).attr('data-order-group-id'),
+                            dessert: false,
                             count: $(this).val()
                         });
                     }
@@ -283,55 +284,6 @@ $(document).ready(function (){
                         }
                     });
                 }
-            });
-
-            defer.resolve();
-        },
-
-
-        saveUserOrderFromPopup: function() {
-            var defer = jQuery.Deferred();
-
-            defer.then(function(){
-                var ordersData = [],
-                    popupDay,
-                    popupCurrentDate = new Date(),
-                    popupDayDate;
-
-                popupCurrentDate.setDate(popupCurrentDate.getDate() - 1);
-
-                $( ".modal-order-cell" ).each(function(  ) {
-                    popupDay = $(this).attr('data-modal-dish-day');
-                    popupDayDate = new Date(popupDay);
-                    if (popupDayDate.getTime() >= popupCurrentDate.getTime()) {
-                        ordersData.push({
-                            day: popupDay,
-                            menu_dish_id: $(this).attr('data-modal-menu-id'),
-                            count: $(this).val()
-                        });
-                    }
-                });
-
-                return ordersData;
-            }).then(function(ordersData) {
-                $.ajax({
-                    url: "/api/v1/orders",
-                    method: "POST",
-                    data: JSON.stringify(ordersData),
-                    dataType: "json",
-                    success: function (result) {
-                        $("#myModal").modal('hide');
-                        $(location).attr('href', location.href);
-                    },
-                    error: function (error) {
-                        spop({
-                            template: 'Помилка :( Перевірте будь-ласка ваше замовлення.',
-                            position  : 'top-left',
-                            style: 'error',
-                            autoclose: 6000
-                        });
-                    }
-                });
             });
 
             defer.resolve();
@@ -791,26 +743,6 @@ $(document).ready(function (){
     // SHOW DISH
     $(".user .dish-link").click(function(){
         var dishId = $(this).attr('data-link-dish-id');
-        var totalCount = 0;
-        var disabledCount = 0;
-
-        $(this).parent().parent().parent().find(".order-cell").each(function(  ) {
-            var day = $(this).attr('data-day');
-            var menuId = $(this).attr('data-menu-id');
-            var count = $(this).val();
-            $('input[data-modal-dish-day="' + day + '"]').val(count);
-            $('input[data-modal-dish-day="' + day + '"]').attr('data-modal-menu-id', menuId);
-            
-            totalCount++;
-            if ($(this).attr('disabled')) disabledCount++;
-        });
-
-        if (disabledCount === totalCount) {
-            $("#save-order-popup").css('display', 'none');
-        } else {
-            $("#save-order-popup").css('display', 'inline-block');
-        }
-
         API.getDish(dishId);
     });
     
@@ -874,11 +806,6 @@ $(document).ready(function (){
     //SAVE ORDER
     $("#save-order").click(function(){
         API.saveUserOrder();
-        return false;
-    });
-
-    $("#save-order-popup").click(function(){
-        API.saveUserOrderFromPopup();
         return false;
     });
 
