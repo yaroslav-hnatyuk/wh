@@ -8,7 +8,7 @@ class RemindersService extends BaseService
 
     public function getAll()
     {
-        return $this->db->fetchAll("SELECT * FROM reminder ORDER BY created ASC");
+        return $this->db->fetchAll("SELECT * FROM reminder ORDER BY created DESC");
     }
 
 }
