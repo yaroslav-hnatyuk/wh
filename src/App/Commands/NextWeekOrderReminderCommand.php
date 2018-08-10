@@ -18,7 +18,7 @@ class NextWeekOrderReminderCommand extends BaseCommand
  
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $stmt= $this->db->prepare("INSERT INTO reminder (`text`, `created`) VALUES ('Замовляйте обіди на наступний тиждень. Смачного Вам і ганих вихідних! :)', DATE_FORMAT(NOW(),'%Y-%m-%d'))");
+        $stmt= $this->db->prepare("INSERT INTO reminder (`text`, `created`) VALUES ('Замовляйте обіди на наступний тиждень. Смачного Вам і гарних вихідних! :)', DATE_FORMAT(NOW(),'%Y-%m-%d'))");
         $stmt->execute([1, 'user']);
 
         $stmt= $this->db->prepare("UPDATE user SET `reminders`=? WHERE `role`=?");
