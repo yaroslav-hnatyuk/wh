@@ -114,7 +114,9 @@ class OrdersController extends BaseController
             'orderHour' => $settingOrderHour ? intval($settingOrderHour['value']) : 0, 
             'disabledMonday' => $disabledMonday,
             'totalByDays' => $totalByDays,
-            'totalPriceInfo' => $totalPriceInfo
+            'totalPriceInfo' => $totalPriceInfo,
+            'reminders_count' => $this->getUser()->reminders,
+            'feedback_count' => $this->getUser()->feedback_count
         ));
     }
 

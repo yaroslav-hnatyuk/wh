@@ -25,6 +25,7 @@
     {% set tomorrow = 'now'|date_modify("+1 day")|date('Y-m-d') %}
     {% set today = "now"|date('Y-m-d') %}
     {% set currentHour = "now"|date('H') %}
+    {% set notifications = reminders_count + feedback_count %}
 
     <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog" style="width: 765px; margin: 5% auto">
@@ -144,7 +145,7 @@
           <a class="navbar-brand" href="/order"></a>
         </div>
 
-        {% include 'parts/menu/' ~ userRole ~ '.twig' %}
+        {% include 'parts/menu/' ~ userRole ~ '.twig' with {'notifications': notifications} %}
       </div>
     </nav>
 

@@ -36,7 +36,8 @@
           <a class="navbar-brand" href="/order"></a>
         </div>
 
-        {% include 'parts/menu/' ~ userRole ~ '.twig' %}
+        {% set notifications = reminders_count %}
+        {% include 'parts/menu/' ~ userRole ~ '.twig' with {'notifications': notifications} %}
       </div>
     </nav>
 

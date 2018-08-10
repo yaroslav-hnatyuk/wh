@@ -1,7 +1,12 @@
 <div id="navbar-collapse" class="navbar-collapse collapse">
     <ul class="nav navbar-nav navbar-right">
     <li><a class="nav-link" href="/order">Замовлення</a></li>
-    <li><a class="nav-link" href="/profile">Профіль</a></li>
+    <li style="position: relative">
+        <a class="nav-link" href="/profile">Профіль</a>
+        {% if notifications > 0 %}
+            <span class="badge" style="position: absolute; top: 7px; left: 80%;">{{ notifications }}</span>
+        {% endif %}
+    </li>
     <li><a class="nav-link" href="/logout">Вихід</a></li>
     </ul>
 </div>
