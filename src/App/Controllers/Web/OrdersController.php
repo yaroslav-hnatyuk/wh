@@ -137,7 +137,7 @@ class OrdersController extends BaseController
             'userRole' => $this->getUser()->role,
             'menu' => $menu,
             'orderHour' => $settingOrderHour ? intval($settingOrderHour['value']) : 0, 
-            'disabledMonday' => $this->getDisabledMonday($disabledMonday),
+            'disabledMonday' => $this->ordersService->getDisabledMonday(),
             'totalByDays' => $totalByDays,
             'totalPriceInfo' => $totalPriceInfo
         ));
@@ -194,23 +194,4 @@ class OrdersController extends BaseController
         return $this->managerAdminOrder($request);
     }
 
-    private function getDisabledMonday($settingOrderHour)
-    {
-        $disabledMonday = null;
-        $dayname = date('D');
-        $orderHour = $settingOrderHour ? intval($settingOrderHour['value']) : 0;
-        if ($dayname === 'Fri' || $dayname === 'Sat' || $dayname === 'Sun') {
-            if ($dayname === 'Fri' && (int)date('H') >= $orderHour) {
-                $disabledMonday = date('Y-m-d',strtotime("+3 days"));
-            }
-            if ($dayname === 'Sat') {
-                $disabledMonday = date('Y-m-d',strtotime("+2 days"));
-            }
-            if ($dayname === 'Sun') {
-                $disabledMonday = date('Y-m-d',strtotime("+1 days"));
-            }
-        }
-
-        return $disabledMonday;
-    }
 }

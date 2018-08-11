@@ -94,6 +94,7 @@ class OrdersService extends BaseService
     {
         $settingOrderHour = $this->getSettingByName('order_hour');
         $maxOrderHour = $settingOrderHour ? (int)$settingOrderHour['value'] : 0;
+        $disabledMonday = $this->getDisabledMonday();
 
         $this->db->beginTransaction();
         try {
@@ -101,6 +102,9 @@ class OrdersService extends BaseService
             $hour = (int)date('G');
             foreach ($orders as $orderData) {
                 $orderTime =  strtotime($orderData['day']);
+                if ($disabledMonday && $orderData['day'] === $disabledMonday) {
+                    continue;
+                }
                 if ($orderTime >= $tomorrow) {
                     if ($orderTime === $tomorrow && $hour >= $maxOrderHour) {
                         continue;
@@ -726,5 +730,26 @@ class OrdersService extends BaseService
             ),
             'items' => $week
         );
+    }
+
+    function getDisabledMonday()
+    {
+        $disabledMonday = null;
+        $dayname = date('D');
+        $settingOrderHour = $this->getSettingByName('order_hour');
+        $orderHour = $settingOrderHour ? intval($settingOrderHour['value']) : 0;
+        if ($dayname === 'Fri' || $dayname === 'Sat' || $dayname === 'Sun') {
+            if ($dayname === 'Fri' && (int)date('H') >= $orderHour) {
+                $disabledMonday = date('Y-m-d',strtotime("+3 days"));
+            }
+            if ($dayname === 'Sat') {
+                $disabledMonday = date('Y-m-d',strtotime("+2 days"));
+            }
+            if ($dayname === 'Sun') {
+                $disabledMonday = date('Y-m-d',strtotime("+1 days"));
+            }
+        }
+
+        return $disabledMonday;
     }
 }
