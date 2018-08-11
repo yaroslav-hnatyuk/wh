@@ -130,25 +130,6 @@ class OrdersController extends BaseController
 
         $orders = $this->ordersService->getUserOrdersGroupsByPeriod($this->getUser()->id, $period);
         list($menu, $totalByDays, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrdersGroups($menu, $orders, $period);
-        // echo "<pre>";
-        // print_r($menu);
-        // die;
-        // $menu = $this->menuService->addDishes($menu, true);
-
-        $disabledMonday = null;
-        $dayname = date('D');
-        $orderHour = $settingOrderHour ? intval($settingOrderHour['value']) : 0;
-        if ($dayname === 'Fri' || $dayname === 'Sat' || $dayname === 'Sun') {
-            if ($dayname === 'Fri' && (int)date('H') >= $orderHour) {
-                $disabledMonday = date('Y-m-d',strtotime("+3 days"));
-            }
-            if ($dayname === 'Sat') {
-                $disabledMonday = date('Y-m-d',strtotime("+2 days"));
-            }
-            if ($dayname === 'Sun') {
-                $disabledMonday = date('Y-m-d',strtotime("+1 days"));
-            }
-        }
 
         return $this->app['twig']->render("order/user.twig", array(
             'period' => $period,
@@ -156,7 +137,7 @@ class OrdersController extends BaseController
             'userRole' => $this->getUser()->role,
             'menu' => $menu,
             'orderHour' => $settingOrderHour ? intval($settingOrderHour['value']) : 0, 
-            'disabledMonday' => $disabledMonday,
+            'disabledMonday' => $this->getDisabledMonday($disabledMonday),
             'totalByDays' => $totalByDays,
             'totalPriceInfo' => $totalPriceInfo
         ));
@@ -211,5 +192,25 @@ class OrdersController extends BaseController
     private function adminOrder(Request $request)
     {
         return $this->managerAdminOrder($request);
+    }
+
+    private function getDisabledMonday($settingOrderHour)
+    {
+        $disabledMonday = null;
+        $dayname = date('D');
+        $orderHour = $settingOrderHour ? intval($settingOrderHour['value']) : 0;
+        if ($dayname === 'Fri' || $dayname === 'Sat' || $dayname === 'Sun') {
+            if ($dayname === 'Fri' && (int)date('H') >= $orderHour) {
+                $disabledMonday = date('Y-m-d',strtotime("+3 days"));
+            }
+            if ($dayname === 'Sat') {
+                $disabledMonday = date('Y-m-d',strtotime("+2 days"));
+            }
+            if ($dayname === 'Sun') {
+                $disabledMonday = date('Y-m-d',strtotime("+1 days"));
+            }
+        }
+
+        return $disabledMonday;
     }
 }

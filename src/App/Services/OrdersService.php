@@ -47,6 +47,14 @@ class OrdersService extends BaseService
         return $order->getArray();
     }
 
+    function saveOrderGroup($orderGroup = array())
+    {
+        $this->db->insert("`order_group`", $orderGroup);
+        $orderGroup['id'] = $this->db->lastInsertId();
+
+        return $orderGroup;
+    }
+
     function saveUserOrders($userId, $orders)
     {
         $settingOrderHour = $this->getSettingByName('order_hour');
@@ -97,14 +105,14 @@ class OrdersService extends BaseService
                     if ($orderTime === $tomorrow && $hour >= $maxOrderHour) {
                         continue;
                     }
-                    $order = $this->getOrderGroupByGroupAndUserAndDay($userId, $orderData['group_id'], $orderData['day']);
-                    if ($order->id !== null) {
-                        $order->count = $orderData['count'];
-                        $this->db->update('`order`', $order->getArray(), ['id' => $order->id]);
+                    $orderGroup = $this->getOrderGroupByGroupAndUserAndDay($userId, $orderData['group_id'], $orderData['day']);
+                    if ($orderGroup) {
+                        $orderGroup['count'] = $orderData['count'];
+                        $this->db->update('`order_group`', $orderGroup, ['id' => $orderGroup['id']]);
                     } else if ((int)$orderData['count'] > 0) {
-                        $order = $orderData;
-                        $order['user_id'] = $userId;
-                        $this->save($order);
+                        $orderGroup = $orderData;
+                        $orderGroup['user_id'] = $userId;
+                        $this->saveOrderGroup($orderGroup);
                     }
                 }
             }
@@ -443,7 +451,7 @@ class OrdersService extends BaseService
                     'dishes' => array()
                 );
             }
-            $groups[$dish['group_id']]['dishes'][] = $dish;
+            $groups[$dish['group_id']]['dishes'][$dish['dish_id']] = $dish;
         }
 
         $totalByDaysAndUsers = array();

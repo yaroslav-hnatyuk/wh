@@ -256,8 +256,8 @@ $(document).ready(function (){
                     if (dayDate.getTime() >= currentDate.getTime()) {
                         ordersData.push({
                             day: day,
-                            order_group_id: $(this).attr('data-order-group-id'),
-                            dessert: false,
+                            group_id: $(this).attr('data-group-id'),
+                            dessert: 0,
                             count: $(this).val()
                         });
                     }

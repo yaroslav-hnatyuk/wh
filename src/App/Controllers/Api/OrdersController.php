@@ -23,7 +23,7 @@ class OrdersController extends BaseController
     {
         $this->checkPermissions(array('user'));
         $orders = json_decode($request->getContent(), true);
-        $this->ordersService->saveUserOrders($this->getUser()->id, $orders);
+        $this->ordersService->saveUserOrdersGroups($this->getUser()->id, $orders);
         return new JsonResponse();
     }
 
