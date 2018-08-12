@@ -112,6 +112,7 @@ class OrdersService extends BaseService
                     $orderGroup = $this->getOrderGroupByGroupAndUserAndDay($userId, $orderData['group_id'], $orderData['day']);
                     if ($orderGroup) {
                         $orderGroup['count'] = $orderData['count'];
+                        $orderGroup['dessert'] = (int)$orderData['dessert'];
                         $this->db->update('`order_group`', $orderGroup, ['id' => $orderGroup['id']]);
                     } else if ((int)$orderData['count'] > 0) {
                         $orderGroup = $orderData;
@@ -464,6 +465,7 @@ class OrdersService extends BaseService
             array_fill(0, count($period['items']), array(
                 'group_id' => null,
                 'count' => 0,
+                'dessert' => 0,
                 'available' => false,
                 'is_working_day' => true
             ))
@@ -474,11 +476,11 @@ class OrdersService extends BaseService
             if (!isset($groupedOrders[$order['group_id'] . '_day_' . $order['day']][$order['user_id']])) {
                 $groupedOrders[$order['group_id'] . '_day_' . $order['day']][$order['user_id']] = 0;
             }
-            if (!isset($groupedOrders[$order['group_id'] . '_users'][$order['user_id']])) {
-                $groupedOrders[$order['group_id'] . '_users'][$order['user_id']] = 0;
+            if (!isset($groupedOrders[$order['group_id'] . '_dessert_' . $order['day']][$order['user_id']])) {
+                $groupedOrders[$order['group_id'] . '_dessert_' . $order['day']][$order['user_id']] = 0;
             }
             $groupedOrders[$order['group_id'] . '_day_' . $order['day']][$order['user_id']] += $order['count'];
-            if ($export) $groupedOrders[$order['group_id'] . '_users'][$order['user_id']] += $order['count'];
+            $groupedOrders[$order['group_id'] . '_dessert_' . $order['day']][$order['user_id']] = $order['dessert'];
         }
 
         $groups = array();
@@ -518,11 +520,16 @@ class OrdersService extends BaseService
                             if (!isset($totalByDaysAndUsers[$date][$userId]['items'][$group['group_id']])) {
                                 $totalByDaysAndUsers[$date][$userId]['items'][$group['group_id']] = array(
                                     'count' => 0,
-                                    'price' => 0
+                                    'price' => 0,
+                                    'dessert' => 0
                                 );
                             }
                             $totalByDaysAndUsers[$date][$userId]['items'][$group['group_id']]['count'] += $userOrdersCount;
                             $totalByDaysAndUsers[$date][$userId]['items'][$group['group_id']]['price'] += $userOrdersCount * 100; //todo fix price
+                            if (isset($groupedOrders[$group['group_id'] . '_dessert_' . $date][$userId])) {
+                                $totalByDaysAndUsers[$date][$userId]['items'][$group['group_id']]['dessert'] = $groupedOrders[$group['group_id'] . '_dessert_' . $date][$userId];
+                                $result[$group['group_id']]['orders'][$date]['dessert'] += $groupedOrders[$group['group_id'] . '_dessert_' . $date][$userId];
+                            }
                             if (!isset($totalByDaysAndUsers[$date][$userId]['total_count'])) {
                                 $totalByDaysAndUsers[$date][$userId]['total_count'] = 0;
                             }

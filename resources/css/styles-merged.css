@@ -10511,7 +10511,7 @@ section[data-section="menu"] {
   font-weight: normal;
 }
 
-.order-table tr th input {
+.order-table tr th input[type=number] {
   width: 25px;
   text-align: center;
   border: 0;
@@ -10885,6 +10885,60 @@ hr.bottom-table-border {
   display: none;
 }
 
+
+.dessert
+{
+  font-size: 12px;
+  line-height: 7px;
+  padding: 0px;
+  position: absolute;
+  cursor: pointer;
+  top: 2px;
+  right: -7px;
+}
+
+.dessert:before
+{
+    content: '+';
+    display: inline-block;
+    font-family: sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    text-align: center;
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    margin-right: 10px;
+    padding: 1px;
+    color: #666;
+    background: white;
+    border: 1px solid #666;
+    text-decoration: none;
+}
+
+.dessert:hover:before
+{
+    color: #FFA33E;
+    text-decoration: none;
+}
+
+.dessert-description {
+  font-size: 11px;
+  position: absolute;
+  width: 150px;
+  /* height: 100px; */
+  background-color: #fff;
+  color: #666;
+  border: 1px solid #ddd;
+  /* left: 44px; */
+  top: 47px;
+  z-index: 99999;
+  font-style: normal;
+  text-align: left;
+  padding: 5px;
+  display: none;
+}
+
 .total-price-infolink-description {
   font-size: 11px;
   position: absolute;
@@ -10995,4 +11049,15 @@ hr.bottom-table-border {
 
 .feedback-link {
   cursor: pointer;
+}
+
+.order-table tr th div.dessert-hint {
+  position: absolute; 
+  font-size: 10px; 
+  width: 135px; 
+  background-color: #fff; 
+  border: 1px solid #ddd; 
+  text-align: left; 
+  padding: 5px;
+  display: none;
 }

@@ -134,7 +134,7 @@
 
             {% for group in menu %}
                 <table class="table order-table" style="cursor: pointer; width: 100%; margin: 0px; min-width: 1170px;">
-                    <tr class="group-header" data-group-id="{{group.group_id}}">
+                    <tr data-group-id="{{group.group_id}}">
                         <th><b style="text-transform: uppercase;">{{ group.group_name}}</b></th>
                         {% for date, order in group.orders %}
                             {% if order.available and order.is_working_day %}
@@ -145,7 +145,14 @@
                                             <span class="orders-not-allowed-tooltip">Замовлення на понеділок доступні до <b>{{orderHour}}</b> години п'ятниці</span>
                                         </th>
                                     {% else %}
-                                        <th><input class="order-cell" data-group-id="{{ group.group_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/></th>
+                                        <th style="position: relative">
+                                            <input class="order-cell" data-group-id="{{ group.group_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" data-dessert="{{ order.dessert }}"/>
+                                            <div class="dessert-hint hint-{{ group.group_id }}-{{ date }}">
+                                                <b>Виберіть варіант обіду:</b><br/>
+                                                <input type="radio" class="dessert-hint-option group-{{ group.group_id }}-{{ date }}" name="group-{{ group.group_id }}-{{ date }}" value="0" {% if order.dessert == 0 %} checked="checked" {% endif %}/><span>з першою стравою</span><br>
+                                                <input type="radio" class="dessert-hint-option group-{{ group.group_id }}-{{ date }}" name="group-{{ group.group_id }}-{{ date }}" value="1" {% if order.dessert == 1 %} checked="checked" {% endif %}/><span>з десертом</span>
+                                            </div>
+                                        </th>
                                     {% endif %}
                                 {% elseif tomorrow == date|date('Y-m-d') %}
                                     {% if disabledMonday == date|date('Y-m-d') %}

@@ -257,7 +257,7 @@ $(document).ready(function (){
                         ordersData.push({
                             day: day,
                             group_id: $(this).attr('data-group-id'),
-                            dessert: 0,
+                            dessert: $(this).attr('data-dessert'),
                             count: $(this).val()
                         });
                     }
@@ -1267,6 +1267,27 @@ $(document).ready(function (){
         var email = $("#restore-email-input").val();
         API.restoreEmail(email);
         return false;
+    });
+
+    $(".order-cell").focus(function () {
+        var groupId = $(this).attr('data-group-id'),
+            groupDay = $(this).attr('data-day');
+
+        $('.dessert-hint').css('display', 'none');
+        $('.hint-' + groupId + '-' + groupDay).css('display', 'block');
+
+        return false;
+    });
+
+    $(".dessert-hint-option").click(function () {
+        var self = this;
+        var dessert = parseInt($(this).val());
+
+        $(this).parent().parent().find('.order-cell').attr('data-dessert', dessert);
+
+        setTimeout(function () {
+            $(self).parent().css('display', 'none');
+        }, 150);
     });
 
 });   

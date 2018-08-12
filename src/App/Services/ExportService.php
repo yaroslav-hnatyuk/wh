@@ -4,6 +4,8 @@ namespace App\Services;
 
 use PhpOffice\PhpSpreadsheet\Helper\Sample;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\PHPExcel_IOFactory;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx as WriterXlsx;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class ExportService extends BaseService
@@ -76,8 +78,14 @@ class ExportService extends BaseService
                     foreach ($gGroups as $group) {
                         $count = isset($orders['items'][$group['group_id']]) ? (int)$orders['items'][$group['group_id']]['count'] : 0;
                         $price = isset($orders['items'][$group['group_id']]) ? (int)$orders['items'][$group['group_id']]['price'] : 0;
+                        $dessert = isset($orders['items'][$group['group_id']]) ? (int)$orders['items'][$group['group_id']]['dessert'] : 0;
                         $ordersPrice += $price;
                         $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $count);
+                        if ($dessert) {
+                            $spreadsheet->getActiveSheet()->getComment("{$this->columnLetter($columnNumber)}{$rowNumber}")->getText()->createTextRun('з десертом');
+                        } else {
+                            $spreadsheet->getActiveSheet()->getComment("{$this->columnLetter($columnNumber)}{$rowNumber}")->getText()->createTextRun('з першою стравою');
+                        }
                         $columnNumber++;
                     }
                     $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $ordersPrice);
@@ -90,18 +98,18 @@ class ExportService extends BaseService
         $spreadsheet->getActiveSheet()->setTitle('Report');
         $spreadsheet->setActiveSheetIndex(0);
         
-        header('Content-Type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment;filename=\"walnut-house-report-{$filters['start_date']}-{$filters['end_date']}.xls\"");
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header("Content-Disposition: attachment;filename=\"walnut-house-report-{$filters['start_date']}-{$filters['end_date']}.xlsx\"");
         header('Cache-Control: max-age=0');
-        
-        header('Cache-Control: max-age=1');
         
         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); 
         header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
         header('Cache-Control: cache, must-revalidate');
         header('Pragma: public');
-        $writer = IOFactory::createWriter($spreadsheet, 'Xls');
+
+        $writer = new WriterXlsx($spreadsheet);
         $writer->save('php://output');
+
         exit;
     }
 
