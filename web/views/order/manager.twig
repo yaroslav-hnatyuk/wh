@@ -46,7 +46,9 @@
         {% include 'parts/menu/' ~ userRole ~ '.twig' %}
       </div>
     </nav>
-
+    
+    {% set today = "now"|date('Y-m-d') %}
+    
     <section class="probootstrap-section probootstrap-bg-white" data-section="welcome">
       <div class="container" style="margin-top: 30px">
         <div class="row">
@@ -137,27 +139,33 @@
             </table>
 
             {% for group in menu %}
-                <table class="table order-table" id="salads-header" style="cursor: pointer; width: 100%; margin: 0px; min-width: 1170px;">
-                    <tr>
+                <table class="table order-table" style="cursor: pointer; width: 100%; margin: 0px; min-width: 1170px;">
+                    <tr class="group-header" data-group-id="{{group.group_id}}">
                         <th><b style="text-transform: uppercase;">{{ group.group_name}}</b></th>
-                        {% for date, weekday in period.items %}
-                            {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
-                                <th style="background-color: #e5feef80;"><div>&nbsp;</div></th>
-                            {% elseif weekday.is_working_day %}
-                                <th><div>&nbsp;</div></th>
+                        {% for date, order in group.orders %}
+                            {% if order.is_working_day %}
+                                <th>{{ order.count }}</th>
                             {% else %}
-                                <th style="background-color: #f9d1ae1a;"><div>&nbsp;</div></th>
+                                {% if today == date|date('Y-m-d') %}
+                                <th class="disabled-cell" style="background-color: #e5feef80">
+                                    <span class="orders-not-allowed-tooltip">Вихідний день або державне свято</span>
+                                </th>
+                                {% else %}
+                                    <th class="disabled-cell" style="background-color: #f9d1ae1a">
+                                        <span class="orders-not-allowed-tooltip">Вихідний день або державне свято</span>
+                                    </th>
+                                {% endif %}  
                             {% endif %}
                         {% endfor %}
-                        <th></th>
+                        <th><b>{{ group.total_count }}</b></th>
                     </tr>
                 </table>
-                <table class="dish-list table order-table manager" id="salads-list"  style="margin: 0px; min-width: 1170px;">
+                <table class="dish-list table order-table user group-{{ group.group_id }}" style="margin: 0px; min-width: 1170px;">
                     {% for dish in group.dishes %}
                     <tr>
                         <th style="padding-left: 40px;">
                         <div>
-                            <a data-link-menu-id="{{ dish.menu_id }}" data-link-dish-id="{{ dish.dish_id }}" class="dish-link" style="cursor: auto">
+                            <a data-link-dish-id="{{ dish.dish_id }}" class="dish-link" >
                             {{ dish.dish_name }}
                             <div class="dish-hint" style="display: none;">
                                 <div class="col-md-12 probootstrap-animate fadeInUp probootstrap-animated">
@@ -177,82 +185,33 @@
                             </a>
                         </div>
                         </th>
-                        {% for date, order in dish.orders %}
-                            {% if order.available and order.is_working_day %}
-                                {% if "now"|date('Y-m-d') < date|date('Y-m-d') %}
-                                    <th>{{ order.count }}</th>
-                                {% elseif "now"|date('Y-m-d') == date|date('Y-m-d') %}
-                                    {% if "now"|date('H') < orderHour %}
-                                        <th style="background-color: #e5feef80;">{{ order.count }}</th>
-                                    {% else %}
-                                        <th class="disabled-cell" style="background-color: #e5feef80">{{ order.count }}</th>
-                                    {% endif %}
-                                {% else %}
-                                    <th class="disabled-cell">{{ order.count }}</th>
-                                {% endif %}
+
+                        {% for date, weekday in period.items %}
+                            {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
+                                <th style="background-color: #e5feef80;"><div>&nbsp;</div></th>
+                            {% elseif weekday.is_working_day %}
+                                <th><div>&nbsp;</div></th>
                             {% else %}
-                                {% if order.is_working_day == false %}
-                                    {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
-                                        <th class="disabled-cell" style="background-color: #e5feef80">
-                                            <span class="orders-not-allowed-tooltip">Вихідний день або державне свято</span>
-                                        </th>
-                                    {% else %}
-                                        <th class="disabled-cell" style="background-color: #f9d1ae1a">
-                                            <span class="orders-not-allowed-tooltip">Вихідний день або державне свято</span>
-                                        </th>
-                                    {% endif %}
-                                {% elseif order.available == false %}
-                                    <th class="disabled-cell" style="background-color: #efefef4d">
-                                        <span class="orders-not-allowed-tooltip">Страва недоступна для замовлень на цей період</span>
-                                    </th>
-                                {% endif %}    
+                                <th style="background-color: #f9d1ae1a;"><div>&nbsp;</div></th>
                             {% endif %}
                         {% endfor %}
-                        <th><b>{{dish.total_count}}</b></th>
+                        <th></th>
                     </tr>
                     {% endfor %}
                 </table>
             {% endfor %}
             <hr class="bottom-table-border"/>
-
             <table class="dish-list table order-table" id="salads-list"  style="margin: 0px; border: 0; min-width: 1170px;">
             <tr style=" border: 0;">
                 <th style="text-align: right; padding-right: 20px; border: 0; position: relative">
-                    Всього: <b>{{ totalPriceInfo.total_price_with_discount }} грн</b>
-                    {% if totalPriceInfo.total_price > totalPriceInfo.total_price_with_discount %}
-                        <span class="discount-price" style="text-align: right; padding-right: 15px;">{{totalPriceInfo.total_price}}<i class="infolink infolink-total-price"></i></span>
-                    {% endif %}
-                    <i class="total-price-infolink-description" style="right: 0">
-                        Знижки: <br/>
-                        {% if totalPriceInfo.total_price_discount > 0 %}
-                            <b>{{totalPriceInfo.total_price_discount}}</b> грн за комплексні обіди
-                            <br>
-                        {% endif %}
-                        {% if totalPriceInfo.total_weekly_discount > 0 %}
-                            <b>{{totalPriceInfo.total_weekly_discount}}</b> грн за тижневі замовлення
-                            <br>
-                        {% endif %}
-                    <i>
+                    Всього: <b>{{ totalPriceInfo.total_price }} грн</b>
                 </th>
-                    {% for date, total in totalByDays %}
-                        <th style="position: relative; border-left: 1px solid #ddd; border-bottom: 1px solid #ddd">
-                            <b>{{ total.total_price_with_discount }}</b>
-                            {% if total.total_price_with_discount < total.total_price %}
-                                <span class="discount-price">{{ total.total_price }}
-                                    <i class="infolink"></i>
-                                </span>
-                                <i class="infolink-description">
-                                    Знижки: <br/>
-                                    {% if total.total_price_discount > 0 %}
-                                        <b>{{total.total_price_discount}}</b> грн за <b>{{total.lunch_count}}</b> комплекс{% if total.lunch_count > 1 and total.lunch_count < 5%}и{% endif %}{% if total.lunch_count >= 5%}ів{% endif %}
-                                        <br>
-                                    {% endif %}
-                                <i>
-                            {% endif %}
-                        </th>
-                    {% endfor %}
-                    
-                <th style="color: #aaa; border: 0"></th>
+                {% for date, total in totalByDays %}
+                    <th style="position: relative; border-left: 1px solid #ddd; border-bottom: 1px solid #ddd">
+                        <b>{{ total.total_price }}</b>
+                    </th>
+                {% endfor %}
+                <th style="border-bottom: 1px solid #ddd">{{ totalPriceInfo.total_count }}</th>
             </tr>
             </table>
             <div class="row">

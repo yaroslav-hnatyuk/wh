@@ -34,87 +34,31 @@ class OrdersController extends BaseController
     {
         $week = $request->query->get('week');
         $year = $request->query->get('year');
-        $nextday = $request->query->get('nextday');
-
+        
+        $filterPeriod = $this->app['session']->get('filter_period') ?: FiltersController::FILTER_PERIOD_WEEK;
         $company = $this->app['session']->get('filter_company');
         $office = $this->app['session']->get('filter_office');
         $user = $this->app['session']->get('filter_user');
-        $filterPeriod = $this->app['session']->get('filter_period') ?: FiltersController::FILTER_PERIOD_WEEK;
-        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week, $filterPeriod);
-
-        if ($nextday) {
-            $tomorrow = date('Y-m-d',strtotime("tomorrow"));
-            $dayname = date('D', strtotime($tomorrow));
-            if ($dayname === 'Sat' || $dayname === 'Sun') {
-                if ($dayname === 'Sat') {
-                    $tomorrow = date('Y-m-d',strtotime("+3 days"));
-                }
-                if ($dayname === 'Sun') {
-                    $tomorrow = date('Y-m-d',strtotime("+2 days"));
-                }
-            }
-        }
-
         $filters = array(
             'company' => $company,
             'office' => $office,
             'user' => $user,
-            'start_date' => $nextday ? $tomorrow : $period['start']['date'],
-            'end_date' => $nextday ? $tomorrow : $period['end']['date']
+            'start_date' => $period['start']['date'],
+            'end_date' => $period['end']['date']
         );
 
+        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week, $filterPeriod);
         $menu = $this->menuService->getForPeriodForOrders($period);
-        $orders = $this->ordersService->getOrdersByFilters($filters);
+        $orders = $this->ordersService->getOrdersGroupsByFilters($filters);
 
-        list($menu, $totalByDaysAndUsers, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrdersForExport($menu, $orders, $period);
+        list($menu, $totalByDaysAndUsers, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrdersGroups($menu, $orders, $period, true);
         $users = $this->app['users.service']->getUsersByFilters($filters);
 
         $this->app['export.service']->createXlsReport($menu, $users, $totalByDaysAndUsers, $totalPriceInfo, array(
             'company' => $this->app['companies.service']->findOne($company),
             'office' => $this->app['offices.service']->findOne($office),
-            'start_date' => $nextday ? $tomorrow : $period['start']['date'],
-            'end_date' => $nextday ? $tomorrow : $period['end']['date']
-        ));
-    }
-
-    private function userOrder(Request $request)
-    {
-        $week = $request->query->get('week');
-        $year = $request->query->get('year');
-        $filterPeriod = $this->app['session']->get('filter_period') ?: 'week';
-        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week, $filterPeriod);
-
-        $settingOrderHour = $this->app['settings.service']->getOneByName('order_hour');
-        $menu = $this->menuService->getForPeriodForOrders($period);
-
-        $orders = $this->ordersService->getUserOrdersByPeriod($this->getUser()->id, $period);
-        list($menu, $totalByDays, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
-        $menu = $this->menuService->groupMenuDishes($menu, true);
-
-        $disabledMonday = null;
-        $dayname = date('D');
-        $orderHour = $settingOrderHour ? intval($settingOrderHour['value']) : 0;
-        if ($dayname === 'Fri' || $dayname === 'Sat' || $dayname === 'Sun') {
-            if ($dayname === 'Fri' && (int)date('H') >= $orderHour) {
-                $disabledMonday = date('Y-m-d',strtotime("+3 days"));
-            }
-            if ($dayname === 'Sat') {
-                $disabledMonday = date('Y-m-d',strtotime("+2 days"));
-            }
-            if ($dayname === 'Sun') {
-                $disabledMonday = date('Y-m-d',strtotime("+1 days"));
-            }
-        }
-
-        return $this->app['twig']->render("order/user.twig", array(
-            'period' => $period,
-            'filterPeriod' => $filterPeriod,
-            'userRole' => $this->getUser()->role,
-            'menu' => $menu,
-            'orderHour' => $settingOrderHour ? intval($settingOrderHour['value']) : 0, 
-            'disabledMonday' => $disabledMonday,
-            'totalByDays' => $totalByDays,
-            'totalPriceInfo' => $totalPriceInfo
+            'start_date' => $period['start']['date'],
+            'end_date' => $period['end']['date']
         ));
     }
 
@@ -143,19 +87,20 @@ class OrdersController extends BaseController
         ));
     }
 
-    private function managerAdminOrder(Request $request)
+    private function managerAdminOrderGroup(Request $request)
     {
         $week = $request->query->get('week');
         $year = $request->query->get('year');
-
+        
+        $filterPeriod = $this->app['session']->get('filter_period') ?: FiltersController::FILTER_PERIOD_WEEK;
         $company = $this->app['session']->get('filter_company');
         $office = $this->app['session']->get('filter_office');
         $user = $this->app['session']->get('filter_user');
-        $filterPeriod = $this->app['session']->get('filter_period') ?: FiltersController::FILTER_PERIOD_WEEK;
 
         $period = $this->ordersService->getPeriodForYearAndWeek($year, $week, $filterPeriod);
         $menu = $this->menuService->getForPeriodForOrders($period);
-        $orders = $this->ordersService->getOrdersByFilters(array(
+
+        $orders = $this->ordersService->getOrdersGroupsByFilters(array(
             'company' => $company,
             'office' => $office,
             'user' => $user,
@@ -163,8 +108,7 @@ class OrdersController extends BaseController
             'end_date' => $period['end']['date']
         ));
 
-        list($menu, $totalByDays, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrders($menu, $orders, $period);
-        $menu = $this->menuService->groupMenuDishes($menu, true);
+        list($menu, $totalByDays, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrdersGroups($menu, $orders, $period);
 
         return $this->app['twig']->render("order/manager.twig", array(
             'period' => $period,
@@ -184,14 +128,14 @@ class OrdersController extends BaseController
         ));
     }
 
-    private function managerOrder(Request $request)
+    private function managerOrderGroup(Request $request)
     {
-        return $this->managerAdminOrder($request);
+        return $this->managerAdminOrderGroup($request);
     }
 
-    private function adminOrder(Request $request)
+    private function adminOrderGroup(Request $request)
     {
-        return $this->managerAdminOrder($request);
+        return $this->managerAdminOrderGroup($request);
     }
 
 }

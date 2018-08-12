@@ -197,6 +197,41 @@ class OrdersService extends BaseService
         return $this->db->fetchAll($sql, $params);
     }
 
+
+    function getOrdersGroupsByFilters($filters = array())
+    {
+        $params = array();
+        $sql = "SELECT r.* FROM `order_group` r, `user` u, `office` o 
+            WHERE r.user_id = u.id AND u.office_id = o.id";
+
+        if (empty($filters['company']) && empty($filters['office']) && empty($filters['user'])) {
+            return array();
+        }
+
+        if (!empty($filters['company'])) {
+            $sql .= " AND o.company_id = ?";
+            $params[] = $filters['company'];
+        }
+
+        if (!empty($filters['office'])) {
+            $sql .= " AND u.office_id = ?";
+            $params[] = $filters['office'];
+        }
+
+        if (!empty($filters['user'])) {
+            $sql .= " AND r.user_id = ?";
+            $params[] = $filters['user'];
+        }
+
+        if (!empty($filters['start_date']) && !empty($filters['end_date'])) {
+            $sql .= " AND r.day BETWEEN ? AND ?";
+            $params[] = $filters['start_date'];
+            $params[] = $filters['end_date'];
+        } 
+
+        return $this->db->fetchAll($sql, $params);
+    }
+
     function mergeMenuWithOrders($menu, $orders, $period, $export = false)
     {
         $result = array();
@@ -421,7 +456,7 @@ class OrdersService extends BaseService
         );
     }
 
-    function mergeMenuWithOrdersGroups($menu, $orders, $period)
+    function mergeMenuWithOrdersGroups($menu, $orders, $period, $export = false)
     {
         $result = array();
         $userOrders = array_combine(
@@ -517,125 +552,7 @@ class OrdersService extends BaseService
 
         return array(
             $result,
-            $totalByDays,
-            $totalPriceInfo
-        );
-    }
-
-    function mergeMenuWithOrdersForExport($menu, $orders, $period)
-    {
-        $result = array();
-        $export = true;
-        $userOrders = array_combine(
-            array_keys($period['items']),
-            array_fill(0, count($period['items']), array(
-                'menu_id' => null,
-                'count' => 0,
-                'available' => false,
-                'is_working_day' => true
-            ))
-        );
-
-        $groupedOrders = array();
-        foreach($orders as $order) {
-            if (!isset($groupedOrders[$order['menu_dish_id'] . '_day_' . $order['day']][$order['user_id']])) {
-                $groupedOrders[$order['menu_dish_id'] . '_day_' . $order['day']][$order['user_id']] = 0;
-            }
-            if (!isset($groupedOrders[$order['menu_dish_id'] . '_users'][$order['user_id']])) {
-                $groupedOrders[$order['menu_dish_id'] . '_users'][$order['user_id']] = 0;
-            }
-            $groupedOrders[$order['menu_dish_id'] . '_day_' . $order['day']][$order['user_id']] += $order['count'];
-            if ($export) $groupedOrders[$order['menu_dish_id'] . '_users'][$order['user_id']] += $order['count'];
-        }
-
-        $totalByDaysAndUsers = array();
-
-        foreach ($menu as $dish) {
-            if (!isset($result[$dish['dish_id']])) {
-                $result[$dish['dish_id']] = $dish;
-                $result[$dish['dish_id']]['total_count'] = 0;
-            }
-
-            if ($export && isset($groupedOrders[$dish['menu_id'] . '_users'])) {
-                foreach ($groupedOrders[$dish['menu_id'] . '_users'] as $userId => $ordersCount) {
-                    if (!isset($result[$dish['dish_id']]['users'][$userId])) {
-                        $result[$dish['dish_id']]['users'][$userId] = 0;
-                    }
-                    $result[$dish['dish_id']]['users'][$userId] += $ordersCount;
-                }
-            }
-
-            foreach ($userOrders as $date => $orderData) {
-                $time = strtotime($date);
-                if (!isset($result[$dish['dish_id']]['orders'][$date])) {
-                    $result[$dish['dish_id']]['orders'][$date] = $orderData;
-                }
-                if (!isset($totalByDaysAndUsers[$date])) {
-                    $totalByDaysAndUsers[$date] = array();
-                }
-                $result[$dish['dish_id']]['orders'][$date]['is_working_day'] = $this->isWorkingDay($date, date('D', strtotime($date)));
-                if ($time >= strtotime($dish['start']) && $time <= strtotime($dish['end'])) {
-                    $result[$dish['dish_id']]['orders'][$date]['menu_id'] = $dish['menu_id'];
-                    $result[$dish['dish_id']]['orders'][$date]['available'] = true;
-                    if (isset($groupedOrders[$dish['menu_id'] . '_day_' . $date]) && is_array($groupedOrders[$dish['menu_id'] . '_day_' . $date]) && !empty($groupedOrders[$dish['menu_id'] . '_day_' . $date])) {
-                        $ordersSum = array_sum($groupedOrders[$dish['menu_id'] . '_day_' . $date]);
-                        foreach ($groupedOrders[$dish['menu_id'] . '_day_' . $date] as $userId => $userOrdersCount) {
-                            if ($dish['is_lunch'] && $userOrdersCount > 0) {
-                                if (!isset($totalByDaysAndUsers[$date][$userId]['lunch']['groups'][$dish['group_id']])) {
-                                    $totalByDaysAndUsers[$date][$userId]['lunch']['groups'][$dish['group_id']] = array(
-                                        'day_count' => 0,
-                                        'day_price' => 0
-                                    );
-                                }
-                                $totalByDaysAndUsers[$date][$userId]['lunch']['groups'][$dish['group_id']]['day_count'] += $userOrdersCount;
-                                $totalByDaysAndUsers[$date][$userId]['lunch']['groups'][$dish['group_id']]['day_price'] += $userOrdersCount * $dish['price'];
-                            }
-                            if (!isset($totalByDaysAndUsers[$date][$userId]['items'][$dish['dish_id']])) {
-                                $totalByDaysAndUsers[$date][$userId]['items'][$dish['dish_id']] = array(
-                                    'count' => 0,
-                                    'price' => 0
-                                );
-                            }
-                            $totalByDaysAndUsers[$date][$userId]['items'][$dish['dish_id']]['count'] += $userOrdersCount;
-                            $totalByDaysAndUsers[$date][$userId]['items'][$dish['dish_id']]['price'] += $userOrdersCount * $dish['price'];
-                            if (!isset($totalByDaysAndUsers[$date][$userId]['total_count'])) {
-                                $totalByDaysAndUsers[$date][$userId]['total_count'] = 0;
-                            }
-                            if(!isset($totalByDaysAndUsers[$date][$userId]['total_price'])) {
-                                $totalByDaysAndUsers[$date][$userId]['total_price'] = 0;
-                            }
-                            $totalByDaysAndUsers[$date][$userId]['total_count'] += $userOrdersCount;
-                            $totalByDaysAndUsers[$date][$userId]['total_price'] += $userOrdersCount * $dish['price'];
-                            $result[$dish['dish_id']]['orders'][$date]['count'] += $userOrdersCount;
-                            $result[$dish['dish_id']]['total_count'] += $userOrdersCount;   
-                        }
-                    }
-                }
-            }
-        }
-
-        $settingWeeklyDiscount = $this->getSettingByName('weekly_discount');
-        $settingLunchDiscount = $this->getSettingByName('lunch_discount');
-
-        $discount = $settingLunchDiscount ? intval($settingLunchDiscount['value']) / 100 : 0;
-        $weeklyDiscount = $settingWeeklyDiscount ? intval($settingWeeklyDiscount['value']) / 100 : 0;
-        $lunchGroupsCount = 4;
-
-        $totalPriceInfo = array(
-            'total_price' => 0,
-            'total_price_with_discount' => 0,
-            'total_price_discount' => 0,
-            'total_weekly_discount' => 0,
-            'total_weekly' => array()
-        );
-
-        $totalByDays = array();
-        $totalByUsers = array();
-        // ===== DISCOUNTS ======
-
-        return array(
-            $result,
-            $totalByDaysAndUsers,
+            $export ? $totalByDaysAndUsers : $totalByDays,
             $totalPriceInfo
         );
     }

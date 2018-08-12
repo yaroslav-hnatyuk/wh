@@ -20,11 +20,9 @@ class ExportService extends BaseService
             );
         }
 
-        $gDishes = array();
+        $gGroups = array();
         foreach ($menu as $item) {
-            $gDishes[$item['dish_id']] = array(
-                'dish_id' => $item['dish_id'],
-                'dish_name' => $item['dish_name'],
+            $gGroups[$item['group_id']] = array(
                 'group_id' => $item['group_id'],
                 'group_name' => $item['group_name']
             );
@@ -64,8 +62,8 @@ class ExportService extends BaseService
                 $spreadsheet->setActiveSheetIndex(0)
                     ->setCellValue("A{$rowNumber}", $date);
                 $columnNumber = 2;
-                foreach ($gDishes as $dish) {
-                    $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $dish['group_name']  . ' - ' . $dish['dish_name']);
+                foreach ($gGroups as $group) {
+                    $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $group['group_name']);
                     $columnNumber++;
                 }
                 $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", 'Сума');
@@ -75,9 +73,9 @@ class ExportService extends BaseService
                     $spreadsheet->getActiveSheet()->setCellValue("A{$rowNumber}", $gUsers[$userId]['name']);
                     $columnNumber = 2;
                     $ordersPrice = 0;
-                    foreach ($gDishes as $dish) {
-                        $count = isset($orders['items'][$dish['dish_id']]) ? (int)$orders['items'][$dish['dish_id']]['count'] : 0;
-                        $price = isset($orders['items'][$dish['dish_id']]) ? (int)$orders['items'][$dish['dish_id']]['price'] : 0;
+                    foreach ($gGroups as $group) {
+                        $count = isset($orders['items'][$group['group_id']]) ? (int)$orders['items'][$group['group_id']]['count'] : 0;
+                        $price = isset($orders['items'][$group['group_id']]) ? (int)$orders['items'][$group['group_id']]['price'] : 0;
                         $ordersPrice += $price;
                         $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $count);
                         $columnNumber++;
