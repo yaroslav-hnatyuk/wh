@@ -18,8 +18,16 @@ class ActivateFeedbackCommand extends BaseCommand
  
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $stmt= $this->db->prepare("UPDATE user SET `is_feedback_active`=? WHERE `role`=?");
-        $stmt->execute([1, 'user']);
-        $output->writeln("Feedback for users activated");
+        $monday = date( 'Y-m-d', strtotime( 'monday this week' ) );
+        $friday = date( 'Y-m-d', strtotime( 'friday this week' ) );
+
+        $count = 0;
+        $sql = "select o.user_id, count(d.id) as orders from `order` o, `menu_dish` md, `dish` d where o.day >= '{$monday}' AND o.day <= '{$friday}' and o.menu_dish_id = md.id AND md.dish_id = d.id GROUP BY o.user_id";
+        foreach ($this->db->query($sql) as $row) {
+            $stmt= $this->db->prepare("UPDATE user SET `is_feedback_active`=?, `feedback_count`=? WHERE `role`=? AND `id`=?");
+            $stmt->execute([1, (int)$row['orders'], 'user', (int)$row['user_id']]);
+            $count++;
+        }
+        $output->writeln("Feedback for users activated: {$count}");
     }
 }

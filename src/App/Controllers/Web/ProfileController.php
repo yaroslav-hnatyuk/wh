@@ -31,8 +31,7 @@ class ProfileController extends BaseController
         $dishes = array();
         if ($this->getUser()->is_feedback_active) {
             $period = $this->app['orders.service']->getPeriodForYearAndWeek();
-            $period = $this->app['orders.service']->getPeriodForYearAndWeek($period['prev']['year'], $period['prev']['week']);
-    
+            
             $menu = $this->app['menudishes.service']->getForPeriodForOrders($period);
             $orders = $this->app['orders.service']->getUserOrdersByPeriod($this->getUser()->id, $period);
             $menuIds = array();
@@ -45,6 +44,7 @@ class ProfileController extends BaseController
                     $dishes[] = $dish;
                 }
             }
+            $this->app['users.service']->clearFeedbacks($this->getUser()->id);
         }
         
         return $this->app['twig']->render("profile/feedback.twig", array(
@@ -52,7 +52,7 @@ class ProfileController extends BaseController
             'userRole' => $this->getUser()->role,
             'dishes' => $dishes,
             'reminders_count' => $this->getUser()->reminders,
-            'feedback_count' => $this->getUser()->feedback_count
+            'feedback_count' => 0
         ));
     }
 
