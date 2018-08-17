@@ -547,12 +547,16 @@ class OrdersService extends BaseService
         }
 
         $totalByDays = array();
+        $totalPriceInfo = array();
         foreach ($totalByDaysAndUsers as $day => $users) {
             $totalByDays[$day] = array(
                 'total_price' => 0
             );
             foreach ($users as $userId => $total) {
                 $totalByDays[$day]['total_price'] += $totalByDaysAndUsers[$day][$userId]['total_price'];
+            }
+            if (!isset($totalPriceInfo['total_price'])) {
+                $totalPriceInfo['total_price'] = 0;
             }
             $totalPriceInfo['total_price'] += $totalByDays[$day]['total_price'];
         }
