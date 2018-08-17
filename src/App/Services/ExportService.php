@@ -84,7 +84,7 @@ class ExportService extends BaseService
                         if ($dessert) {
                             $spreadsheet->getActiveSheet()->getComment("{$this->columnLetter($columnNumber)}{$rowNumber}")->getText()->createTextRun('з десертом');
                         } else {
-                            $spreadsheet->getActiveSheet()->getComment("{$this->columnLetter($columnNumber)}{$rowNumber}")->getText()->createTextRun('з першою стравою');
+                            $spreadsheet->getActiveSheet()->getComment("{$this->columnLetter($columnNumber)}{$rowNumber}")->getText()->createTextRun('з салатом');
                         }
                         $columnNumber++;
                     }
