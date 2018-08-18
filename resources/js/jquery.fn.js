@@ -525,6 +525,50 @@ $(document).ready(function (){
             });
         },
 
+        getDishRatings: function(dishId) {
+            $.ajax({
+                url: "/api/v1/rating/dish/" + dishId,
+                method: "GET",
+                contentType:'application/json',
+                success: function (ratings) {
+                    var ratingHtml = "";
+                    for (var mark in ratings) {
+                        if (ratings.hasOwnProperty(mark)) {
+                            var votes = ratings[mark];
+                            console.log(votes);
+                            console.log(mark);
+                            ratingHtml += votes + ' - ';
+                            for (var i = 0; i < mark; i++) {
+                                ratingHtml += '<span style="color: #FFA33E;">★</span>';
+                            }
+                            ratingHtml += '<br/>';
+                        }
+                    }
+                    if (ratingHtml) {
+                        $("#modal-dish-feedback").html(
+                            '<div class="col-md-12 text-left" style="padding-top: 10px; border: 1px solid #eee; background-color: #f9d1ae1a; margin-top: 10px">' +
+                                '<p id="modal-dish-description" style="font-size: 12px; margin: 0 0 10px 0; line-height: 16px">' +
+                                    ratingHtml + 
+                                '</p>' +
+                            '</div>'
+                        );
+                    } else {
+                        $("#modal-dish-feedback").html('Оцінок не знайдено.');
+                    }
+                    $("#myModal").modal();
+                },
+                error: function (error) {
+                    spop({
+                        template: 'Помилка :( Не вдалося знайти відгуки для вибраної страви.',
+                        position  : 'top-left',
+                        style: 'error',
+                        autoclose: 6000
+                    });
+                }
+            });
+
+        },
+
         saveUserPersonalData: function (userData) {
             $.ajax({
                 url: "/api/v1/users/current",
@@ -1305,6 +1349,17 @@ $(document).ready(function (){
         $('#modal-dish-name').html(dishName);
 
         API.getDishFeedback(dishId);
+    });
+
+    $('.rating-link').click(function () {
+        var dishId = $(this).attr('data-dish-id'),
+            dishImage = $(this).attr('data-dish-image'),
+            dishName = $(this).attr('data-dish-name');
+
+        $('#modal-dish-image').attr('src', dishImage);
+        $('#modal-dish-name').html(dishName);
+
+        API.getDishRatings(dishId);
     });
 
     $('#add-new-admin-moder').click(function () {

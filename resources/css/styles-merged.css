@@ -10996,3 +10996,7 @@ hr.bottom-table-border {
 .feedback-link {
   cursor: pointer;
 }
+
+.rating-link {
+  cursor: pointer;
+}
