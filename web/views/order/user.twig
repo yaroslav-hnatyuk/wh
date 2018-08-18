@@ -252,7 +252,12 @@
                                         <th><input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/></th>
                                     {% endif %}
                                 {% elseif tomorrow == date|date('Y-m-d') %}
-                                    {% if currentHour < orderHour %}
+                                    {% if disabledMonday == date|date('Y-m-d') %}
+                                        <th class="disabled-cell" style="background-color: #f6f6f6; cursor: not-allowed">
+                                            <input style="background-color: #f6f6f6;" class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" disabled=true/>
+                                            <span class="orders-not-allowed-tooltip">Замовлення на понеділок доступні до <b>{{orderHour}}</b> години п'ятниці</span>
+                                        </th>
+                                    {% elseif currentHour < orderHour %}
                                         <th>
                                             <input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/>
                                         </th>
