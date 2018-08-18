@@ -33,4 +33,9 @@ class RatingsController extends BaseController
         );
     }
 
+    public function dish($id)
+    {
+        $this->checkPermissions(array('admin', 'manager'));
+        return new JsonResponse($this->ratingsService->getGroupedByDishId($id));
+    }
 }

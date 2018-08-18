@@ -33,6 +33,24 @@ class RatingsService extends BaseService
         return $this->db->fetchAll("SELECT * FROM `rating` WHERE dish_id=?", [(int) $dishId]);
     }
 
+    public function getGroupedByDishId($dishId) 
+    {
+        $result = array();
+        
+        $ratings = $this->db->fetchAll(
+            "SELECT rating.*, CONCAT(user.first_name, ' ', user.last_name) as user_name FROM `rating`, `user` WHERE `rating`.user_id = `user`.id AND `rating`.dish_id=?", 
+            [(int) $dishId]);
+        
+        foreach ($ratings as $rating) {
+            if (!isset($result[$rating['mark']])) {
+                $result[$rating['mark']] = 0;
+            }
+            $result[$rating['mark']]++;
+        }
+        
+        return $result;
+    }
+
     public function getAll()
     {
         return $this->db->fetchAll("SELECT * FROM `rating`");

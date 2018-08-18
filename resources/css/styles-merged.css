@@ -11061,3 +11061,7 @@ hr.bottom-table-border {
   padding: 5px;
   display: none;
 }
+
+.rating-link {
+  cursor: pointer;
+}
