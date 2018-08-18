@@ -1345,4 +1345,11 @@ $(document).ready(function (){
         }, 150);
     });
 
+    $(".dessert-option-label").click(function () {
+        var self = this;
+        var radioBtnId = $(this).attr('data-radio-id');
+                
+        $(this).parent().find('.' + radioBtnId +'-radio').click();
+    });
+
 });   

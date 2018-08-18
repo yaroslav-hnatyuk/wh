@@ -149,8 +149,8 @@
                                             <input class="order-cell" data-group-id="{{ group.group_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" data-dessert="{{ order.dessert }}"/>
                                             <div class="dessert-hint hint-{{ group.group_id }}-{{ date }}">
                                                 <b>Виберіть варіант обіду:</b><br/>
-                                                <input type="radio" class="dessert-hint-option group-{{ group.group_id }}-{{ date }}" name="group-{{ group.group_id }}-{{ date }}" value="0" {% if order.dessert == 0 %} checked="checked" {% endif %}/><span>з салатом</span><br>
-                                                <input type="radio" class="dessert-hint-option group-{{ group.group_id }}-{{ date }}" name="group-{{ group.group_id }}-{{ date }}" value="1" {% if order.dessert == 1 %} checked="checked" {% endif %}/><span>з десертом</span>
+                                                <input type="radio" class="dessert-hint-option group-{{ group.group_id }}-{{ date }} salad-radio" name="group-{{ group.group_id }}-{{ date }}" value="0" {% if order.dessert == 0 %} checked="checked" {% endif %}/><span class="dessert-option-label" data-radio-id="salad">з салатом</span><br>
+                                                <input type="radio" class="dessert-hint-option group-{{ group.group_id }}-{{ date }} dessert-radio" name="group-{{ group.group_id }}-{{ date }}" value="1" {% if order.dessert == 1 %} checked="checked" {% endif %}/><span class="dessert-option-label" data-radio-id="dessert">з десертом</span>
                                             </div>
                                         </th>
                                     {% endif %}
@@ -165,8 +165,8 @@
                                             <input class="order-cell" data-group-id="{{ group.group_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" data-dessert="{{ order.dessert }}"/>
                                             <div class="dessert-hint hint-{{ group.group_id }}-{{ date }}">
                                                 <b>Виберіть варіант обіду:</b><br/>
-                                                <input type="radio" class="dessert-hint-option group-{{ group.group_id }}-{{ date }}" name="group-{{ group.group_id }}-{{ date }}" value="0" {% if order.dessert == 0 %} checked="checked" {% endif %}/><span>з салатом</span><br>
-                                                <input type="radio" class="dessert-hint-option group-{{ group.group_id }}-{{ date }}" name="group-{{ group.group_id }}-{{ date }}" value="1" {% if order.dessert == 1 %} checked="checked" {% endif %}/><span>з десертом</span>
+                                                <input type="radio" class="dessert-hint-option group-{{ group.group_id }}-{{ date }} salad-radio" name="group-{{ group.group_id }}-{{ date }}" value="0" {% if order.dessert == 0 %} checked="checked" {% endif %}/><span class="dessert-option-label" data-radio-id="salad">з салатом</span><br>
+                                                <input type="radio" class="dessert-hint-option group-{{ group.group_id }}-{{ date }} dessert-radio" name="group-{{ group.group_id }}-{{ date }}" value="1" {% if order.dessert == 1 %} checked="checked" {% endif %}/><span class="dessert-option-label" data-radio-id="dessert">з десертом</span>
                                             </div>
                                         </th>
                                     {% else %}
