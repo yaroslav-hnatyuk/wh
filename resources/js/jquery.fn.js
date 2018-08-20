@@ -1348,8 +1348,27 @@ $(document).ready(function (){
     $(".dessert-option-label").click(function () {
         var self = this;
         var radioBtnId = $(this).attr('data-radio-id');
-                
+
         $(this).parent().find('.' + radioBtnId +'-radio').click();
+    });
+
+    $("#export-option").click(function () {
+        var option = $(this).val();
+        
+        $('#export-selected-period-button').css('display', 'none');
+        $('#export-weekly-button').css('display', 'none');
+        $('#export-monthly-button').css('display', 'none');
+        $('#export-month-block').css('display', 'none');
+
+        $('#' + option + '-button').css('display', 'block');
+
+        if (option === 'export-monthly') {
+            $('#export-month-block').css('display', 'block');
+        }
+    });
+
+    $("#export-month").change(function () {
+        $('#export-monthly-button').attr('href', '/export/monthly?month=' + $(this).val());
     });
 
 });   

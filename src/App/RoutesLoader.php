@@ -77,6 +77,8 @@ class RoutesLoader
         $web->get("/", "orders.web.controller:main");
         $web->get("/order", "orders.web.controller:index");
         $web->get("/export", "orders.web.controller:export");
+        $web->get("/export/weekly", "orders.web.controller:exportWeekly");
+        $web->get("/export/monthly", "orders.web.controller:exportMonthly");
 
         $web->get("/users", "users.web.controller:index");
         $web->get("/reports", "reports.web.controller:index");

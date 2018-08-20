@@ -62,6 +62,48 @@ class OrdersController extends BaseController
         ));
     }
 
+    public function exportWeekly(Request $request)
+    {
+        $week = $request->query->get('week');
+        $year = $request->query->get('year');
+        
+        $filterPeriod = $this->app['session']->get('filter_period') ?: FiltersController::FILTER_PERIOD_WEEK;
+        $company = $this->app['session']->get('filter_company');
+        $office = $this->app['session']->get('filter_office');
+        $user = $this->app['session']->get('filter_user');
+
+        $filters = array(
+            'company' => $company,
+            'office' => $office,
+            'user' => $user,
+            'start_date' => $period['start']['date'],
+            'end_date' => $period['end']['date']
+        );
+
+        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week, $filterPeriod);
+        $orders = $this->ordersService->getOrdersGroupsByFilters($filters);
+        $users = $this->app['users.service']->getUsersByFilters($filters);
+
+        $this->app['export.service']->createXlsReportWeekly($users, $orders, $period, array(
+            'company' => $this->app['companies.service']->findOne($company),
+            'office' => $this->app['offices.service']->findOne($office),
+            'start_date' => $period['start']['date'],
+            'end_date' => $period['end']['date']
+        ));
+
+    }
+
+    public function exportMonthly(Request $request)
+    {
+        $month = $request->query->get('month');   
+        
+        $company = $this->app['session']->get('filter_company');
+        $office = $this->app['session']->get('filter_office');
+        $user = $this->app['session']->get('filter_user');
+
+        echo "monthly";
+    }
+
     private function userOrderGroup(Request $request)
     {
         $week = $request->query->get('week');
@@ -108,6 +150,11 @@ class OrdersController extends BaseController
             'end_date' => $period['end']['date']
         ));
 
+        $months = array(date('m-Y'));
+        for ($i = 1; $i < 6; $i++) {
+            $months[] = date('m-Y', strtotime("-$i month"));
+        }
+
         list($menu, $totalByDays, $totalPriceInfo) = $this->ordersService->mergeMenuWithOrdersGroups($menu, $orders, $period);
 
         return $this->app['twig']->render("order/manager.twig", array(
@@ -120,6 +167,7 @@ class OrdersController extends BaseController
             'year' => $year,
             'week' => $week,
             'filterPeriod' => $filterPeriod,
+            'months' => $months,
             'companies' => $this->app['companies.service']->getAll(),
             'offices' => $this->app['offices.service']->getAllByCompany($company),
             'users' => $this->app['users.service']->getAllByOffice($office),

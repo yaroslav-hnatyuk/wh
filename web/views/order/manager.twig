@@ -217,9 +217,39 @@
             <div class="row">
                 <div class="col-md-12 text-left" >
                     <div class="probootstrap-form" style="margin: 0">
-                        <div id="export-selected-period-button" class="form-group" style="width: 160px; float: left; margin-right: 5px; display: block">
+                        <div class="form-group" style="width: 260px; float: left; margin-right: 5px; display: block">
+                            <div class="form-field">
+                                <i class="icon icon-chevron-down"></i>
+                                <select id="export-option" name="export-option" class="form-control" style="height: 35px;">
+                                    <option value="export-selected-period">Вибраний період по днях</option>
+                                    <option value="export-weekly">Тижневий звіт для компанії</option>
+                                    <option value="export-monthly">Місячний звіт для компанії</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="export-month-block"class="form-group" style="width: 160px; float: left; margin-right: 5px; display: none">
+                            <div class="form-field">
+                                <i class="icon icon-chevron-down"></i>
+                                <select id="export-month" name="export-month" class="form-control" style="height: 35px;">
+                                    {% for month in months %}
+                                        <option value="{{ month }}">{{ month }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div id="export-selected-period-button" class="form-group" style="width: 260px; float: left; margin-right: 5px; display: block">
                             <div class="form-field">
                                 <a href="/export?year={{year}}&week={{week}}" class="btn btn-primary">Експорт в XLS</a>
+                            </div>
+                        </div>
+                        <div id="export-weekly-button" class="form-group" style="width: 260px; float: left; margin-right: 5px; display: none">
+                            <div class="form-field">
+                                <a href="/export/weekly?year={{year}}&week={{week}}" class="btn btn-primary">Експорт в XLS</a>
+                            </div>
+                        </div>
+                        <div id="export-monthly-button" class="form-group" style="width: 260px; float: left; margin-right: 5px; display: none">
+                            <div class="form-field">
+                                <a href="/export/monthly?month={{ date|date('m-Y') }}" class="btn btn-primary">Експорт в XLS</a>
                             </div>
                         </div>
                     </div>
