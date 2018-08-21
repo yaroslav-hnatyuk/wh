@@ -1368,7 +1368,6 @@ $(document).ready(function (){
     });
 
     $("#export-month").change(function () {
-        console.log($(this).val());
         $('#export-monthly-button-input').attr('href', '/export/monthly?month=' + $(this).val());
     });
 
