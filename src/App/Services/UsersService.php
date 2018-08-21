@@ -96,7 +96,7 @@ class UsersService extends BaseService
         }
 
         if (!empty($filters['start_date']) && !empty($filters['end_date'])) {
-            $sql .= " AND u.id IN (SELECT user_id FROM `order` WHERE `order`.user_id = u.id AND `order`.day BETWEEN ? AND ?)";
+            $sql .= " AND u.id IN (SELECT user_id FROM `order_group` WHERE `order_group`.user_id = u.id AND `order_group`.day BETWEEN ? AND ?)";
             $params[] = $filters['start_date'];
             $params[] = $filters['end_date'];
         } 

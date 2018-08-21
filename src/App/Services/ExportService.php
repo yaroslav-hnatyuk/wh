@@ -22,10 +22,6 @@ class ExportService extends BaseService
             );
         }
 
-        echo "<pre>";
-        print_r($gUsers);
-        die;
-
         $gGroups = array();
         foreach ($menu as $item) {
             $gGroups[$item['group_id']] = array(
