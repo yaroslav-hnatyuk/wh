@@ -205,6 +205,97 @@ class ExportService extends BaseService
         exit;
     }
 
+    function createXlsReportMonthly($users, $orders, $days, $filters) {
+        $gUsers = array();
+        foreach ($users as $user) {
+            $gUsers[$user['id']] = array(
+                'user_id' => $user['id'],
+                'name' => "{$user['first_name']} {$user['last_name']}",
+                'email' => $user['email'],
+                'ipn' => $user['ipn']
+            );
+        }
+
+        $userOrders = array_combine(
+            $days, array_fill(0, count($days), 0)
+        );
+
+        $result = array();
+        foreach ($orders as $order) {
+            if (!isset($result[$order['user_id']])) {
+                $result[$order['user_id']] = $gUsers[$order['user_id']];
+                $result[$order['user_id']]['orders'] = $userOrders;
+            }
+            if (isset($result[$order['user_id']]['orders'][$order['day']])) {
+                $result[$order['user_id']]['orders'][$order['day']] += $order['count'] * 100;
+            }
+        }
+
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->getProperties()->setCreator('Walnut House')
+            ->setLastModifiedBy('Walnut House')
+            ->setTitle('Office 2007 XLSX Test Document')
+            ->setSubject('Office 2007 XLSX Test Document')
+            ->setDescription('Test document for Office 2007 XLSX.')
+            ->setKeywords('office 2007 openxml php')
+            ->setCategory('Test result file');
+
+
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('B2', 'Компанія');
+        $spreadsheet->getActiveSheet()->setCellValue("B3", $filters['company']['name']);
+
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('D2', 'Офіс');
+        if ($filters['office']) {
+            $spreadsheet->getActiveSheet()->setCellValue("D3", $filters['office']['address']);
+        } else {
+            $spreadsheet->getActiveSheet()->setCellValue("D3", 'Всі');
+        }
+        
+        $spreadsheet->setActiveSheetIndex(0)
+            ->mergeCells('F2:G2')
+            ->setCellValue('F2', 'Період');
+        $spreadsheet->getActiveSheet()->setCellValue("F3", $filters['start_date']);
+        $spreadsheet->getActiveSheet()->setCellValue("G3", $filters['end_date']);
+
+        $rowNumber = 5;
+        $columnNumber = 2;
+        $spreadsheet->setActiveSheetIndex(0)->setCellValue("{$this->columnLetter(1)}{$rowNumber}", "Користувачі");
+        foreach ($userOrders as $date => $count) {
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $date);
+            $columnNumber++;
+        }
+
+        $rowNumber = 6;
+        foreach ($result as $user) {
+            $columnNumber = 1;
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $user['name']);
+            foreach ($user['orders'] as $price) {
+                $columnNumber++;
+                $spreadsheet->setActiveSheetIndex(0)->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $price);
+            }
+            $rowNumber++;
+        }
+
+        $spreadsheet->getActiveSheet()->setTitle('Report');
+        $spreadsheet->setActiveSheetIndex(0);
+        
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header("Content-Disposition: attachment;filename=\"company-monthly-report-{$filters['start_date']}-{$filters['end_date']}.xlsx\"");
+        header('Cache-Control: max-age=0');
+        
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); 
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+
+        $writer = new WriterXlsx($spreadsheet);
+        $writer->save('php://output');
+
+        exit;
+    }
+
     function columnLetter($c){
 
         $c = intval($c);

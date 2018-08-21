@@ -23,11 +23,11 @@
   <body>
 
 
-    <div class="modal fade" id="myModal" role="dialog">
+    <!-- <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog" style="width: 765px; margin: 5% auto">
         
     </div>
-    </div>
+    </div> -->
     
     <!-- Fixed navbar -->
     
@@ -144,7 +144,11 @@
                         <th><b style="text-transform: uppercase;">{{ group.group_name}}</b></th>
                         {% for date, order in group.orders %}
                             {% if order.is_working_day %}
-                                <th>{{ order.count }}</th>
+                                {% if today == date|date('Y-m-d') %}
+                                    <th style="background-color: #e5feef80;">{{ order.count }}</th>
+                                {% else %}
+                                    <th>{{ order.count }}</th>
+                                {% endif %}
                             {% else %}
                                 {% if today == date|date('Y-m-d') %}
                                 <th class="disabled-cell" style="background-color: #e5feef80">
@@ -165,7 +169,7 @@
                     <tr>
                         <th style="padding-left: 40px;">
                         <div>
-                            <a data-link-dish-id="{{ dish.dish_id }}" class="dish-link" >
+                            <a data-link-dish-id="{{ dish.dish_id }}" class="dish-link" style="cursor: auto">
                             {{ dish.dish_name }}
                             <div class="dish-hint" style="display: none;">
                                 <div class="col-md-12 probootstrap-animate fadeInUp probootstrap-animated">
@@ -176,7 +180,7 @@
                                         <b>Калорії: <span style="font-weight: normal">{{dish.calories}}</span></b><br/>
                                     </div>
                                     <div style="width: 50%; float: left; text-align: right;">
-                                        <span style="color: #FFA33E; font-size: 18px; font-weight: normal">{{dish.price}} грн</span>
+                                        <span style="color: #FFA33E; font-size: 18px; font-weight: normal">{{dish.weight}} г</span>
                                     </div>
                                     <b>Інгредієнти</b>
                                     <p style="font-size: 12px; margin: 0 0 10px 0;">{{dish.ingredients}}</p>
@@ -214,6 +218,7 @@
                 <th style="border-bottom: 1px solid #ddd">{{ totalPriceInfo.total_count }}</th>
             </tr>
             </table>
+            <br/>
             <div class="row">
                 <div class="col-md-12 text-left" >
                     <div class="probootstrap-form" style="margin: 0">

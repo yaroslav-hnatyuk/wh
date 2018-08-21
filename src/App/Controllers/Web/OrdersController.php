@@ -39,6 +39,8 @@ class OrdersController extends BaseController
         $company = $this->app['session']->get('filter_company');
         $office = $this->app['session']->get('filter_office');
         $user = $this->app['session']->get('filter_user');
+
+        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week, $filterPeriod);
         $filters = array(
             'company' => $company,
             'office' => $office,
@@ -47,7 +49,6 @@ class OrdersController extends BaseController
             'end_date' => $period['end']['date']
         );
 
-        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week, $filterPeriod);
         $menu = $this->menuService->getForPeriodForOrders($period);
         $orders = $this->ordersService->getOrdersGroupsByFilters($filters);
 
@@ -72,6 +73,7 @@ class OrdersController extends BaseController
         $office = $this->app['session']->get('filter_office');
         $user = $this->app['session']->get('filter_user');
 
+        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week, $filterPeriod);
         $filters = array(
             'company' => $company,
             'office' => $office,
@@ -80,7 +82,6 @@ class OrdersController extends BaseController
             'end_date' => $period['end']['date']
         );
 
-        $period = $this->ordersService->getPeriodForYearAndWeek($year, $week, $filterPeriod);
         $orders = $this->ordersService->getOrdersGroupsByFilters($filters);
         $users = $this->app['users.service']->getUsersByFilters($filters);
 
@@ -95,13 +96,41 @@ class OrdersController extends BaseController
 
     public function exportMonthly(Request $request)
     {
-        $month = $request->query->get('month');   
+        $selectedMonth = $request->query->get('month');   
+        list($month, $year) = explode('-', $selectedMonth);
         
+        $days = array();
+        $start_date = "01-".$month."-".$year;
+        $start_time = strtotime($start_date);
+        $end_time = strtotime("+1 month", $start_time);
+        for($i = $start_time; $i < $end_time; $i += 86400) {
+            $days[] = date('Y-m-d', $i);
+        }
+
+        $startDate = $days[0];
+        $endDate = $days[count($days) - 1];
+
         $company = $this->app['session']->get('filter_company');
         $office = $this->app['session']->get('filter_office');
         $user = $this->app['session']->get('filter_user');
 
-        echo "monthly";
+        $filters = array(
+            'company' => $company,
+            'office' => $office,
+            'user' => $user,
+            'start_date' => $startDate,
+            'end_date' => $endDate
+        );
+
+        $orders = $this->ordersService->getOrdersGroupsByFilters($filters);
+        $users = $this->app['users.service']->getUsersByFilters($filters);
+
+        $this->app['export.service']->createXlsReportMonthly($users, $orders, $days, array(
+            'company' => $this->app['companies.service']->findOne($company),
+            'office' => $this->app['offices.service']->findOne($office),
+            'start_date' => $startDate,
+            'end_date' => $endDate
+        ));
     }
 
     private function userOrderGroup(Request $request)
