@@ -58,6 +58,11 @@ class ExportService extends BaseService
         $spreadsheet->getActiveSheet()->setCellValue("F3", $filters['start_date']);
         $spreadsheet->getActiveSheet()->setCellValue("G3", $filters['end_date']);
 
+        $options = array(
+            0 => "з салатом", 
+            1 => "з десертом"
+        );
+
         $rowNumber = 5;
         foreach ($totalByDaysAndUsers as $date => $usersOrders) {
             if (count($usersOrders)) {
@@ -65,32 +70,41 @@ class ExportService extends BaseService
                     ->setCellValue("A{$rowNumber}", $date);
                 $columnNumber = 2;
                 foreach ($gGroups as $group) {
-                    $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $group['group_name']);
-                    $columnNumber++;
+                    foreach ($options as $option) {
+                        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $group['group_name'] . " ({$option})");
+                        $columnNumber++;
+                    }
                 }
                 $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", 'Сума');
                 $rowNumber++;
 
                 foreach ($usersOrders as $userId => $orders) {
-                    $spreadsheet->getActiveSheet()->setCellValue("A{$rowNumber}", $gUsers[$userId]['name']);
-                    $columnNumber = 2;
-                    $ordersPrice = 0;
-                    foreach ($gGroups as $group) {
-                        $count = isset($orders['items'][$group['group_id']]) ? (int)$orders['items'][$group['group_id']]['count'] : 0;
-                        $price = isset($orders['items'][$group['group_id']]) ? (int)$orders['items'][$group['group_id']]['price'] : 0;
-                        $dessert = isset($orders['items'][$group['group_id']]) ? (int)$orders['items'][$group['group_id']]['dessert'] : 0;
-                        $ordersPrice += $price;
-                        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $count);
-                        if ($dessert) {
-                            $spreadsheet->getActiveSheet()->getComment("{$this->columnLetter($columnNumber)}{$rowNumber}")->getText()->createTextRun('з десертом');
-                        } else {
-                            $spreadsheet->getActiveSheet()->getComment("{$this->columnLetter($columnNumber)}{$rowNumber}")->getText()->createTextRun('з салатом');
+                        $spreadsheet->getActiveSheet()->setCellValue("A{$rowNumber}", $gUsers[$userId]['name']);
+                        $columnNumber = 2;
+                        $ordersPrice = 0;
+                        foreach ($gGroups as $group) {
+                            $count = isset($orders['items'][$group['group_id']]) ? (int)$orders['items'][$group['group_id']]['count'] : 0;
+                            $price = isset($orders['items'][$group['group_id']]) ? (int)$orders['items'][$group['group_id']]['price'] : 0;
+                            $dessert = isset($orders['items'][$group['group_id']]) ? (int)$orders['items'][$group['group_id']]['dessert'] : 0;
+                            $ordersPrice += $price;
+                            foreach ($options as $withDessert => $option) {
+                                if ($count) {
+                                    if ($withDessert && $dessert) {
+                                        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $count);
+                                    } elseif (!$withDessert && !$dessert) {
+                                        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $count);
+                                    } else {
+                                        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", 0);
+                                    }
+                                } else {
+                                    $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", 0);    
+                                }
+                                $columnNumber++;
+                            }
                         }
-                        $columnNumber++;
+                        $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $ordersPrice);
+                        $rowNumber++;
                     }
-                    $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $ordersPrice);
-                    $rowNumber++;
-                }
                 $rowNumber += 2;
             }
         }
