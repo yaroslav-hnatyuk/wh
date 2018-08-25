@@ -22,6 +22,8 @@
   </head>
   <body>
 
+    {% set notifications = reminders_count + feedback_count %}
+
     <!-- Fixed navbar -->
     
     <nav class="navbar navbar-default navbar-fixed-top probootstrap-navbar scrolled">
@@ -36,7 +38,7 @@
           <a class="navbar-brand" href="/order"></a>
         </div>
 
-        {% include 'parts/menu/' ~ userRole ~ '.twig' %}
+        {% include 'parts/menu/' ~ userRole ~ '.twig' with {'notifications': notifications} %}
       </div>
     </nav>
 

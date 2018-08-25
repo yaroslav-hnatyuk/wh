@@ -4,7 +4,9 @@
     </a>
     <a href="/profile/feedback" class="list-group-item">
         <i class="icon icon-chat" style="padding-right: 10px"></i>Відгуки 
-        {# <span class="badge" style="margin-top: 3px">14</span> #}
+        {% if feedback_count > 0 %}
+            <span class="badge" style="margin-top: 3px">{{feedback_count}}</span>
+        {% endif %}
     </a>
     <a href="/profile/reminders" class="list-group-item">
         <i class="icon icon-bell" style="padding-right: 10px"></i>Нагадування 

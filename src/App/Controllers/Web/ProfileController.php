@@ -31,28 +31,36 @@ class ProfileController extends BaseController
         $dishes = array();
         if ($this->getUser()->is_feedback_active) {
             $period = $this->app['orders.service']->getPeriodForYearAndWeek();
-            $period = $this->app['orders.service']->getPeriodForYearAndWeek($period['prev']['year'], $period['prev']['week']);
-    
             $menu = $this->app['menudishes.service']->getForPeriodForOrders($period);
-            $orders = $this->app['orders.service']->getUserOrdersByPeriod($this->getUser()->id, $period);
-            $menuIds = array();
+            $orders = $this->app['orders.service']->getUserOrdersGroupsByPeriod($this->getUser()->id, $period);
+
+            $groups = array();
             foreach ($orders as $order) {
-                $menuIds[$order['menu_dish_id']] = $order['menu_dish_id'];
-            }
-    
-            foreach ($menu as $dish) {
-                if (isset($menuIds[$dish['menu_id']])) {
-                    $dishes[] = $dish;
+                if (!isset($groups[$order['group_id']])) {
+                    $groups[$order['group_id']] = $this->app['dishgroups.service']->findOne($order['group_id']);
+                    $groups[$order['group_id']]['dishes'] = array();
                 }
             }
+
+            foreach ($menu as $dish) {
+                if (isset($groups[$dish['group_id']])) {
+                    $groups[$dish['group_id']]['dishes'][] = array(
+                        'dish_id' => $dish['dish_id'],
+                        'dish_name' => $dish['dish_name'],
+                        'description' => $dish['description']
+                    );   
+                }
+            }
+
+            $this->app['users.service']->clearFeedbacks($this->getUser()->id);
         }
         
         return $this->app['twig']->render("profile/feedback.twig", array(
             'active' => 'feedback',
             'userRole' => $this->getUser()->role,
-            'dishes' => $dishes,
+            'groups' => $groups,
             'reminders_count' => $this->getUser()->reminders,
-            'feedback_count' => $this->getUser()->feedback_count
+            'feedback_count' => 0
         ));
     }
 

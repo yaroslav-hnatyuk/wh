@@ -22,12 +22,21 @@ class ActivateFeedbackCommand extends BaseCommand
         $friday = date( 'Y-m-d', strtotime( 'friday this week' ) );
 
         $count = 0;
-        $sql = "select o.user_id, count(d.id) as orders from `order` o, `menu_dish` md, `dish` d where o.day >= '{$monday}' AND o.day <= '{$friday}' and o.menu_dish_id = md.id AND md.dish_id = d.id GROUP BY o.user_id";
+        $sql = "SELECT o.user_id, (SELECT count(dish.id) FROM `dish` WHERE dish.dish_group_id = o.group_id) as orders FROM `order_group` o WHERE o.day >= '{$monday}' AND o.day <= '{$friday}' GROUP BY o.user_id, o.group_id";
+        $users = array();
         foreach ($this->db->query($sql) as $row) {
+            if (!isset($users[$row['user_id']])) {
+                $users[$row['user_id']] = 0;
+            }
+            $users[$row['user_id']] += $row['orders'];
+        }
+
+        foreach ($users as $userId => $ordersCount) {
             $stmt= $this->db->prepare("UPDATE user SET `is_feedback_active`=?, `feedback_count`=? WHERE `role`=? AND `id`=?");
-            $stmt->execute([1, (int)$row['orders'], 'user', (int)$row['user_id']]);
+            $stmt->execute([1, (int)$ordersCount, 'user', (int)$userId]);
             $count++;
         }
+
         $output->writeln("Feedback for users activated: {$count}");
     }
 }

@@ -14,6 +14,11 @@ class DishgroupsService extends BaseService
         return $dishGroup->getArray();
     }
 
+    public function findOne($id)
+    {
+        return $this->db->fetchAssoc("SELECT * FROM dish_group WHERE id=?", [(int) $id]);
+    }
+
     public function getAll()
     {
         return $this->db->fetchAll("SELECT * FROM dish_group");

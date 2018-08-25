@@ -22,6 +22,7 @@
   </head>
   <body>
 
+    {% set notifications = reminders_count + feedback_count %}
     <!-- Fixed navbar -->
     
     <nav class="navbar navbar-default navbar-fixed-top probootstrap-navbar scrolled">
@@ -36,7 +37,7 @@
           <a class="navbar-brand" href="/order"></a>
         </div>
 
-        {% include 'parts/menu/' ~ userRole ~ '.twig' %}
+        {% include 'parts/menu/' ~ userRole ~ '.twig' with {'notifications': notifications} %}
       </div>
     </nav>
 
@@ -50,34 +51,36 @@
 
             <div class="col-md-9 text-left" style="padding: 30px 30px 0 30px; min-height: 450px; border: 1px solid #ddd">
               <div class="row">
-              {% for dish in dishes %}
-                <div class="col-md-6">
-                  <ul class="menus">
-                    <li>
-                      <figure class="image"><img src="{{ asset('assets/dishes/'~ dish.dish_id ~'.jpg') }}"></figure>
-                      <div class="text">
-                        <h3>{{ dish.dish_name }}</h3>
-                        <p class="rating" data-rating-dish-id="{{dish.dish_id}}"style="font-size: 18px; cursor: pointer">
-                            <span class="rating-feedback" style="color: #8b8e94" data-rating-mark="5" >&#9734;</span>
-                            <span class="rating-feedback" style="color: #8b8e94" data-rating-mark="4" >&#9734;</span>
-                            <span class="rating-feedback" style="color: #8b8e94" data-rating-mark="3" >&#9734;</span>
-                            <span class="rating-feedback" style="color: #8b8e94" data-rating-mark="2" >&#9734;</span>
-                            <span class="rating-feedback" style="color: #8b8e94" data-rating-mark="1" >&#9734;</span>
-                            {# <span style="color: #FFA33E;">&#9733;</span> #}
-                        </p>
-                      </div>
-                    </li>
-                  </ul>
-                  <textarea class="form-control dish-feedback-text" rows="2" data-feedback-dish-id="{{ dish.dish_id }}" style="resize: none;" placeholder="Введіть ваш відгук"></textarea>
-                </div>
-                {% if loop.index is not odd %}
-                  <div class="col-md-12"><hr/></div>
-                {% endif %}
-                
+              {% for group in groups %}
+                {% for dish in group.dishes %}
+                  <div class="col-md-6">
+                    <ul class="menus">
+                      <li>
+                        <figure class="image"><img src="{{ asset('assets/dishes/'~ dish.dish_id ~'.jpg') }}"></figure>
+                        <div class="text">
+                          <h3>{{ dish.dish_name }}</h3>
+                          <span style="float: left; text-transform: uppercase">{{group.name}}</span><br/>
+                          <p class="rating" data-rating-dish-id="{{dish.dish_id}}"style="font-size: 18px; cursor: pointer">
+                              <span class="rating-feedback" style="color: #8b8e94" data-rating-mark="5" >&#9734;</span>
+                              <span class="rating-feedback" style="color: #8b8e94" data-rating-mark="4" >&#9734;</span>
+                              <span class="rating-feedback" style="color: #8b8e94" data-rating-mark="3" >&#9734;</span>
+                              <span class="rating-feedback" style="color: #8b8e94" data-rating-mark="2" >&#9734;</span>
+                              <span class="rating-feedback" style="color: #8b8e94" data-rating-mark="1" >&#9734;</span>
+                              {# <span style="color: #FFA33E;">&#9733;</span> #}
+                          </p>
+                        </div>
+                      </li>
+                    </ul>
+                    <textarea class="form-control dish-feedback-text" rows="2" data-feedback-dish-id="{{ dish.dish_id }}" style="resize: none;" placeholder="Введіть ваш відгук"></textarea>
+                  </div>
+                  {% if loop.index is not odd %}
+                    <div class="col-md-12"><hr/></div>
+                  {% endif %}
+                {% endfor %}  
               {% endfor %}
               </div>
 
-              {% if dishes|length > 0 %}  
+              {% if groups|length > 0 %}  
                 <div class="col-md-12" style="padding-left: 0">
                   <div class="col-md-4" style="margin: 30px 0 30px 0; padding-left: 0">
                     <input value="Відправити" class="btn btn-lg btn-primary btn-block" id="save-feedbacks" type="button">
