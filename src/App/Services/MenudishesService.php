@@ -17,7 +17,7 @@ class MenudishesService extends BaseService
     public function getOneByDishIdAndPeriod($dishId, $period) {
         return $this->db->fetchAssoc(
             "SELECT * FROM `menu_dish` WHERE `dish_id`=? AND `start`=? AND `end`=?", 
-            array((int) $id, $period['start'], $period['end'])
+            array((int) $dishId, $period['start'], $period['end'])
         );
     }
 
