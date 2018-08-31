@@ -65,7 +65,7 @@ class ExportService extends BaseService
                     ->setCellValue("A{$rowNumber}", $date);
                 $columnNumber = 2;
                 foreach ($gDishes as $dish) {
-                    $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $dish['group_name']  . ' - ' . $dish['dish_name']);
+                    $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", $dish['dish_name']);
                     $columnNumber++;
                 }
                 $spreadsheet->getActiveSheet()->setCellValue("{$this->columnLetter($columnNumber)}{$rowNumber}", 'Сума');
