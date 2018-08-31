@@ -97,15 +97,9 @@
                                                 </th>
                                             {% endif %}
                                         {% elseif weekday.is_working_day %}
-                                            {% if disabledMonday == date|date('Y-m-d') %}
-                                                <th class="wh-display-cell" style="cursor: not-allowed; background-color: #f6f6f6;">
-                                                    <input class="modal-order-cell" style="background-color: #f6f6f6; cursor: not-allowed" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value="" disabled=true/>
-                                                </th>
-                                            {% else %}
-                                                <th class="wh-display-cell">
-                                                    <input class="modal-order-cell" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value=""/>
-                                                </th>
-                                            {% endif %}
+                                            <th class="wh-display-cell">
+                                                <input class="modal-order-cell" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value=""/>
+                                            </th>
                                         {% else %}
                                             <th class="wh-display-cell" style="background-color: #fff0e3cc;">
                                                 <input class="modal-order-cell" style="background-color: #fff0e3cc;" data-modal-dish-day={{ date }} data-modal-menu-id="" data-changed="0" type="number" value="" disabled=true/>
@@ -243,21 +237,9 @@
                         {% for date, order in dish.orders %}
                             {% if order.available and order.is_working_day %}
                                 {% if tomorrow < date|date('Y-m-d') %}
-                                    {% if disabledMonday == date|date('Y-m-d') %}
-                                        <th class="disabled-cell" style="background-color: #f6f6f6; cursor: not-allowed">
-                                            <input style="background-color: #f6f6f6;" class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" disabled=true/>
-                                            <span class="orders-not-allowed-tooltip">Замовлення на понеділок доступні до <b>{{orderHour}}</b> години п'ятниці</span>
-                                        </th>
-                                    {% else %}
-                                        <th><input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/></th>
-                                    {% endif %}
+                                    <th><input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/></th>
                                 {% elseif tomorrow == date|date('Y-m-d') %}
-                                    {% if disabledMonday == date|date('Y-m-d') %}
-                                        <th class="disabled-cell" style="background-color: #f6f6f6; cursor: not-allowed">
-                                            <input style="background-color: #f6f6f6;" class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}" disabled=true/>
-                                            <span class="orders-not-allowed-tooltip">Замовлення на понеділок доступні до <b>{{orderHour}}</b> години п'ятниці</span>
-                                        </th>
-                                    {% elseif currentHour < orderHour %}
+                                    if currentHour < orderHour %}
                                         <th>
                                             <input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/>
                                         </th>
