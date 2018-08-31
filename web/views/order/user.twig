@@ -239,7 +239,7 @@
                                 {% if tomorrow < date|date('Y-m-d') %}
                                     <th><input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/></th>
                                 {% elseif tomorrow == date|date('Y-m-d') %}
-                                    if currentHour < orderHour %}
+                                    {% if currentHour < orderHour %}
                                         <th>
                                             <input class="order-cell" data-menu-id="{{ order.menu_id }}" data-dish-id="{{ dish.dish_id }}" data-day={{ date }} data-changed="0" type="number" value="{{ order.count }}"/>
                                         </th>
