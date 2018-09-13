@@ -64,8 +64,17 @@ class AuthController
         );
     }
 
-    public function registration($cid) {
+    public function registration(Request $request, $cid) {
+
+        $week = $request->query->get('week');
+        $year = $request->query->get('year');
+        $period = $this->app['orders.service']->getPeriodForYearAndWeek($year, $week, 'week');
+        $menu = $this->app['menudishes.service']->getForPeriodForOrders($period);
+        $menu = $this->app['menudishes.service']->groupMenuDishes($menu, true);
+
         return $this->app['twig']->render('login/register.twig', array(
+            'period' => $period,
+            'menu' => $menu,
             'cid' => $cid,
         ));
     }

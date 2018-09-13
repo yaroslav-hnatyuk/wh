@@ -10528,8 +10528,12 @@ section[data-section="menu"] {
 
 .order-table .dish-link {
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   position: relative;
+}
+
+.form-bottom form .input-error {
+	border-color: #de995e;
 }
 
 hr.bottom-table-border {

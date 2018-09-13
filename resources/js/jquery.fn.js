@@ -1397,4 +1397,14 @@ $(document).ready(function (){
         return false;
     });
 
+    $("#show-registration-popup").click(function () {
+        var registrationPopup = $("#registration-popup").css('display');
+        if (registrationPopup === 'block') {
+            $("#registration-popup").css('display', 'none');
+        } else {
+            $("#registration-popup").css('display', 'block');
+        }
+        return false;
+    });
+
 });   
