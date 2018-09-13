@@ -161,6 +161,7 @@
             
             <br/><br/><br/>
 
+            <span>Замовте страви  на цілий тиждень та отримайте знижку 5%! (до {{orderHour}}:00 у неділю, що передує тижню замовлень)</span>
             <table class="table order-table" style="margin: 0; min-width: 1170px;">
                 <tr style="background-color:#efefef;">
                     <th style="padding-left: 5px">  
@@ -171,7 +172,10 @@
                              <li><a href="/order?year={{period.next.year}}&week={{period.next.week}}" class="btn">></a></li>
                         </ul>
                     </th>
-                    {# <th style="background-color: #eee;"></th> MANAGER #}
+                    <th>
+                        <span class="day-name">Ціна</span><br/>
+                        <span class="day-date">ккал</span>
+                    </th>
                     {% for date, weekday in period.items %}
                         {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
                             <th style="background-color: #e5feefcc;">
@@ -197,6 +201,7 @@
                 <table class="table order-table" style="cursor: pointer; width: 100%; margin: 0px; min-width: 1170px;">
                     <tr class="group-header" data-group-id="{{group.group_id}}">
                         <th><b style="text-transform: uppercase;">{{ group.group_name}}</b></th>
+                        <th><div>&nbsp;</div></th>
                         {% for date, weekday in period.items %}
                             {% if "now"|date('Y-m-d') == date|date('Y-m-d') %}
                                 <th style="background-color: #e5feef80;"><div>&nbsp;</div></th>
@@ -234,6 +239,8 @@
                             </a>
                         </div>
                         </th>
+
+                        <th>{{ dish.price }}</th>
 
                         {% for date, order in dish.orders %}
                             {% if order.available and order.is_working_day %}
