@@ -136,9 +136,6 @@ class OrdersService extends BaseService
 
     function mergeMenuWithOrders($menu, $orders, $period, $export = false)
     {
-
-        file_put_contents('/tmp/test2.log', 4444);
-
         $result = array();
         $userOrders = array_combine(
             array_keys($period['items']),
@@ -336,15 +333,6 @@ class OrdersService extends BaseService
                 $totalPriceInfo['total_price_with_discount'] += $totalByDays[$day]['total_price_with_discount'];
                 $totalPriceInfo['total_price_discount'] += $totalByDays[$day]['total_price_discount'];
             }
-
-            file_put_contents('/tmp/test.log', print_r(
-                    array(
-                        'total_by_users_and_days' => $totalByDaysAndUsers,
-                        'total_by_days' => $totalByDays,
-                        'total_price_info' => $totalPriceInfo
-                    ), true
-                )
-            );
             
             unset($totalByDaysAndUsers);
     
