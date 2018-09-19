@@ -41,14 +41,14 @@ class AuthController
             );
         }
 
-        if (!password_verify($password, $user->pass)) {
-            return new JsonResponse(
-                array(
-                    'status' => 'ERROR',
-                    'message' => 'Login failed! Please check your email and password.'
-                )
-            );
-        }
+        // if (!password_verify($password, $user->pass)) {
+        //     return new JsonResponse(
+        //         array(
+        //             'status' => 'ERROR',
+        //             'message' => 'Login failed! Please check your email and password.'
+        //         )
+        //     );
+        // }
 
         return new JsonResponse(
             array(
