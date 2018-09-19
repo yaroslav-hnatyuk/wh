@@ -136,6 +136,9 @@ class OrdersService extends BaseService
 
     function mergeMenuWithOrders($menu, $orders, $period, $export = false)
     {
+
+        file_put_contents('/tmp/test2.log', 4444);
+
         $result = array();
         $userOrders = array_combine(
             array_keys($period['items']),
