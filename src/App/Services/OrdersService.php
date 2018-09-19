@@ -312,6 +312,8 @@ class OrdersService extends BaseService
                             $totalByDays[$day]['total_price_with_discount'] += $totalByDaysAndUsers[$day][$userId]['total_price'];
                         }
                         $totalByDays[$day]['lunch_count'] += $minOrder;
+                    } else {
+                        $totalByDays[$day]['total_price_with_discount'] += $totalByDaysAndUsers[$day][$userId]['total_price'];
                     }
     
                     if ($totalByDaysAndUsers[$day][$userId]['total_count'] > 0) {
