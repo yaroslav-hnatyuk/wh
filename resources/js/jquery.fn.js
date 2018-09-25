@@ -468,7 +468,7 @@ $(document).ready(function (){
                     var rating = "";
                     for (var i = 1; i <= 5; i++) {
                         if (dish.rating >= i) {
-                            rating = '<span style="color: #FFA33E;">&#9733;</span>' + rating;
+                            rating = '<span style="color: #dd8e36;">&#9733;</span>' + rating;
                         } else {
                             rating = '<span>&#9734;</span>' + rating;
                         }
@@ -539,7 +539,7 @@ $(document).ready(function (){
                             console.log(mark);
                             ratingHtml += votes + ' - ';
                             for (var i = 0; i < mark; i++) {
-                                ratingHtml += '<span style="color: #FFA33E;">★</span>';
+                                ratingHtml += '<span style="color: #dd8e36;">★</span>';
                             }
                             ratingHtml += '<br/>';
                         }
@@ -1070,7 +1070,7 @@ $(document).ready(function (){
                     $(this).css('color', '#8b8e94');
                 } else {
                     $(this).html('&#9733;');
-                    $(this).css('color', '#FFA33E');
+                    $(this).css('color', '#dd8e36');
                 }
             });
         });
